@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/moment"
+            android:icon="@drawable/ic_action_icon3"
+            android:title="Moment" />
+        <item
+            android:id="@+id/message"
+            android:icon="@drawable/ic_action_icon4"
+            android:title="Message" />
+
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/aristocracy"
+            android:icon="@drawable/ic_action_icon5"
+            android:title="Aristocracy" />
+        <item
+            android:id="@+id/recharge"
+            android:icon="@drawable/ic_action_icon6"
+            android:title="Recharge" />
+
+        <item
+            android:id="@+id/store"
+            android:icon="@drawable/ic_action_icon7"
+            android:title="Store" />
+
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_action_icon8"
+            android:title="Earn Gold" />
+
+    </group>
+
+    <group
+        android:id="@+id/group3"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_action_icon9"
+            android:title="Settings" />
+    </group>
+
+</menu>

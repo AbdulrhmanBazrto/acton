@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorPrimaryDarkSplash">#3b4f77</color>
+    <color name="colorPrimaryDarkMain">#7f7f7e</color>
+
+    <color name="fade_bottom_layout">#1D1D1B</color>
+    <color name="menu_navigation_text_color">#575756</color>
+    <color name="white">#ffffffff</color>
+
+</resources>
