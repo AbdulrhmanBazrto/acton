@@ -19,9 +19,9 @@ public class NewRoomsFragment extends Fragment {
     public NewRoomsFragment() {
     }
 
-    public static RoomFragment newInstance() {
+    public static NewRoomsFragment newInstance() {
 
-        return new RoomFragment();
+        return new NewRoomsFragment();
     }
 
     @Override

@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // init pager with bottom tabs
         setUpViewPager();
 
+        // set default tab
+        setFragmentView(0);
     }
 
     @Override

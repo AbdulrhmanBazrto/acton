@@ -9,4 +9,9 @@
     <string name="room">Room</string>
     <string name="moments">Moments</string>
     <string name="message">Message</string>
+
+    <string name="all">All</string>
+    <string name="new_text">New</string>
+    <string name="explore">Explore</string>
+
 </resources>
