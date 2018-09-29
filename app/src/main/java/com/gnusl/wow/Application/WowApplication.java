@@ -1,6 +1,7 @@
 package com.gnusl.wow.Application;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.gnusl.wow.Managers.FontManager;
 
@@ -10,11 +11,24 @@ import com.gnusl.wow.Managers.FontManager;
 
 public class WowApplication extends Application {
 
+    private static WowApplication applicationInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
+        applicationInstance = this;
+
         // initialize Font Manager
         FontManager.init(getAssets());
     }
+
+    public static WowApplication getApplicationInstance() {
+        return applicationInstance;
+    }
+
+    public static Context getAppContext() {
+        return getApplicationInstance().getApplicationContext();
+    }
+
 }

@@ -98,6 +98,15 @@ public class ExploreRoomsFragment extends Fragment {
 
         exploreSection1.setActivities(activitiesHashTags);
 
+        // set rooms
+        ArrayList<Room> rooms=new ArrayList<>();
+        rooms.add(new Room());
+        rooms.add(new Room());
+        rooms.add(new Room());
+
+        exploreSection2.setRooms(rooms);
+        exploreSection3.setRooms(rooms);
+
         // set sections
         exploreSections.add(exploreSection);
         exploreSections.add(exploreSection1);

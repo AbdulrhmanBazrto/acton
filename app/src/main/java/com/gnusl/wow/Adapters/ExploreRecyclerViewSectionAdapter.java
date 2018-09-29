@@ -119,7 +119,7 @@ public class ExploreRecyclerViewSectionAdapter extends SectionedRecyclerViewAdap
 
         else if (holder instanceof RoomsExploreViewHolder)
 
-            ((RoomsExploreViewHolder) holder).onBind(exploreSection);
+            ((RoomsExploreViewHolder) holder).onBind(context,exploreSection);
 
     }
 
