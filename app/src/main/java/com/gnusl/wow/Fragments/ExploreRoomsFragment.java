@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 import com.gnusl.wow.Adapters.ExploreRecyclerViewSectionAdapter;
 import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
+import com.gnusl.wow.Models.ActivitiesHashTag;
+import com.gnusl.wow.Models.Country;
 import com.gnusl.wow.Models.ExploreSection;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.Room;
@@ -70,6 +72,33 @@ public class ExploreRoomsFragment extends Fragment {
 
         exploreSection.setGifts(gifts);
 
+        // set country
+        ArrayList<Country> countries=new ArrayList<>();
+        countries.add(new Country("KSA"));
+        countries.add(new Country("KSA"));
+        countries.add(new Country("KSA"));
+        countries.add(new Country("KSA"));
+        countries.add(new Country("KSA"));
+        countries.add(new Country("KSA"));
+        countries.add(new Country("KSA"));
+        countries.add(new Country("KSA"));
+
+        exploreSection1.setCountries(countries);
+
+        // set activities
+        ArrayList<ActivitiesHashTag> activitiesHashTags=new ArrayList<>();
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+        activitiesHashTags.add(new ActivitiesHashTag("Sports"));
+
+        exploreSection1.setActivities(activitiesHashTags);
+
+        // set sections
         exploreSections.add(exploreSection);
         exploreSections.add(exploreSection1);
         exploreSections.add(exploreSection2);

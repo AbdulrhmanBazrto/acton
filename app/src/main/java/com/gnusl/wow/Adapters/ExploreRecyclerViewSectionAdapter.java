@@ -115,7 +115,7 @@ public class ExploreRecyclerViewSectionAdapter extends SectionedRecyclerViewAdap
 
         else if (holder instanceof CountriesExploreViewHolder)
 
-            ((CountriesExploreViewHolder) holder).onBind(exploreSection);
+            ((CountriesExploreViewHolder) holder).onBind(context,exploreSection);
 
         else if (holder instanceof RoomsExploreViewHolder)
 
