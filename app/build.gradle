@@ -38,4 +38,5 @@ dependencies {
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar' // smartTabLayout
     //Optional: see how to use the utility.
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
+    implementation 'com.afollestad:sectioned-recyclerview:0.5.0'
 }
