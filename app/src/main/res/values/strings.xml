@@ -14,4 +14,10 @@
     <string name="new_text">New</string>
     <string name="explore">Explore</string>
 
+    <string name="following">Following</string>
+    <string name="featured">Featured</string>
+
+    <string name="follow">Follow</string>
+    <string name="no_moments">No Moments</string>
+
 </resources>

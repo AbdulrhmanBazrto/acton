@@ -15,5 +15,7 @@
     <color name="room_item_content_text_color">#a8a5a3</color>
     <color name="activity_label_text_color">#c9c7c5</color>
     <color name="activity_stroke_label_color">#eeedec</color>
+    <color name="no_moments_label_text_color">#9c9996</color>
+    <color name="no_moments_image_tint_color">#c6c3c1</color>
 
 </resources>
