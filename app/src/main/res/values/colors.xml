@@ -8,6 +8,7 @@
     <color name="colorPrimaryDarkMain">#7f7f7e</color>
 
     <color name="fade_bottom_layout">#1D1D1B</color>
+    <color name="post_feature_title_color">#6c6a69</color>
     <color name="menu_navigation_text_color">#575756</color>
     <color name="white">#ffffffff</color>
     <color name="active_color">#9b5197</color>
@@ -17,5 +18,7 @@
     <color name="activity_stroke_label_color">#eeedec</color>
     <color name="no_moments_label_text_color">#9c9996</color>
     <color name="no_moments_image_tint_color">#c6c3c1</color>
+    <color name="feature_separator_line_color">#f4f3f2</color>
+    <color name="feature_post_like_text_color">#dad8d6</color>
 
 </resources>
