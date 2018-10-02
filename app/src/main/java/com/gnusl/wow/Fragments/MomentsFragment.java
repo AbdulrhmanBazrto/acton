@@ -2,6 +2,7 @@ package com.gnusl.wow.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatImageView;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Adapters.MomentsFragmentPagerAdapter;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
 import com.gnusl.wow.R;
@@ -42,6 +44,10 @@ public class MomentsFragment extends Fragment implements SmartTabLayout.TabProvi
 
         // initialize top bar with viewpager
         initializeSmartTabs();
+
+        // open drawer
+        if (getActivity() instanceof MainActivity)
+            inflatedView.findViewById(R.id.right_icon).setOnClickListener(v->((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START));
 
         return inflatedView;
     }

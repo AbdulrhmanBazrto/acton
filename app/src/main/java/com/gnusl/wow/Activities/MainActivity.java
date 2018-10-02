@@ -249,4 +249,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return inflatedView;
     }
+
+    // getters and setters region
+
+    public DrawerLayout getDrawer() {
+        return drawer;
+    }
+
+    public void setDrawer(DrawerLayout drawer) {
+        this.drawer = drawer;
+    }
+
+    // endregion
 }

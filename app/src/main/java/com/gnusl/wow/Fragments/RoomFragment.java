@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -15,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
 import com.gnusl.wow.R;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -49,12 +51,16 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
         // initialize top bar with viewpager
         initializeSmartTabs();
 
+        // open drawer
+        if (getActivity() instanceof MainActivity)
+            inflatedView.findViewById(R.id.right_icon).setOnClickListener(v->((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START));
+
         return inflatedView;
     }
 
-    private void initializeSmartTabs(){
+    private void initializeSmartTabs() {
 
-        RoomFragmentPagerAdapter roomFragmentPagerAdapter=new RoomFragmentPagerAdapter(getContext(),getFragmentManager(),null);
+        RoomFragmentPagerAdapter roomFragmentPagerAdapter = new RoomFragmentPagerAdapter(getContext(), getFragmentManager(), null);
 
         ViewPager viewPager = (ViewPager) inflatedView.findViewById(R.id.roomviewpager);
         viewPager.setAdapter(roomFragmentPagerAdapter);
