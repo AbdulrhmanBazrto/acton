@@ -15,27 +15,29 @@
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBarSplash">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBarSplash"></activity>
         <activity
             android:name=".Activities.LoginActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBarSplash">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBarSplash"></activity>
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBarMain" >
+            android:theme="@style/AppTheme.NoActionBarMain">
+
+        </activity>
+        <activity android:name=".Activities.RoomTestActivity" />
+        <activity
+            android:name=".Activities.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBarMain">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.RoomTestActivity"></activity>
     </application>
 
 </manifest>
