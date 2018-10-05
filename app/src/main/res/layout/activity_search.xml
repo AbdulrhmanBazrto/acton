@@ -7,6 +7,16 @@
     tools:context="com.gnusl.wow.Activities.SearchActivity">
 
     <include
+        android:id="@+id/search_bar"
         layout="@layout/search_top_bar"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/search_view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
