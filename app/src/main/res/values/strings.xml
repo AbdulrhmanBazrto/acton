@@ -25,4 +25,5 @@
     <string name="search_hint_placeholder">Search for rooms or users</string>
     <string name="search">Search</string>
     <string name="users">Users</string>
+    <string name="rooms">Rooms</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -7,11 +8,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
 import com.gnusl.wow.Adapters.SearchFragmentPagerAdapter;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.KeyboardUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 public class SearchActivity extends AppCompatActivity implements SmartTabLayout.TabProvider{
@@ -21,8 +24,14 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        // back click
+        findViewById(R.id.back_button).setOnClickListener(v->finish());
+
         // initialize tabs pager
         initializeSmartTabs();
+
+        // hide keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void initializeSmartTabs() {
@@ -50,7 +59,7 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
         switch (position) {
 
             case 0:
-                fontedTextView.setText(getString(R.string.room));
+                fontedTextView.setText(getString(R.string.rooms));
                 break;
 
             case 1:

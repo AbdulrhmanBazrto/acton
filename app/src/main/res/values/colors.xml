@@ -21,5 +21,6 @@
     <color name="feature_separator_line_color">#f4f3f2</color>
     <color name="feature_post_like_text_color">#dad8d6</color>
     <color name="search_hint_text_color">#b9d3ea</color>
+    <color name="user_separator_color">#cfcfcf</color>
 
 </resources>

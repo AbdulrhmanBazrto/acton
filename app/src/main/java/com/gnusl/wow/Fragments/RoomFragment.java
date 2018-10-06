@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gnusl.wow.Activities.MainActivity;
+import com.gnusl.wow.Activities.SearchActivity;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
 import com.gnusl.wow.R;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -54,6 +55,13 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
         // open drawer
         if (getActivity() instanceof MainActivity)
             inflatedView.findViewById(R.id.right_icon).setOnClickListener(v->((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START));
+
+        // open search
+        if (getActivity() instanceof MainActivity)
+            inflatedView.findViewById(R.id.search_icon).setOnClickListener(v->{
+
+                startActivity(new Intent(getActivity(),SearchActivity.class));
+            });
 
         return inflatedView;
     }

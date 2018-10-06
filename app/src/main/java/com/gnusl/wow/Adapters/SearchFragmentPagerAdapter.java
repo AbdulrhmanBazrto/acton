@@ -10,6 +10,7 @@ import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Fragments.AllRoomsFragment;
 import com.gnusl.wow.Fragments.ExploreRoomsFragment;
 import com.gnusl.wow.Fragments.NewRoomsFragment;
+import com.gnusl.wow.Fragments.UsersFragment;
 
 public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -27,9 +28,9 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return NewRoomsFragment.newInstance();
-        } else
             return AllRoomsFragment.newInstance();
+        } else
+            return UsersFragment.newInstance();
 
     }
 
