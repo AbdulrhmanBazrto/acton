@@ -21,17 +21,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="65dp"
             android:background="@drawable/user_backround_shape_room_top_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/user_image"
@@ -50,23 +50,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="12dp"
-                app:layout_constraintVertical_bias="0.6"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/user_image"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.6">
 
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="0dp"
-                android:lines="1"
-                android:text="DR.Ahmed Dosary"
-                android:textColor="@color/room_item_title_text_color"
-                android:textSize="13sp"
-                app:layout_constraintStart_toEndOf="@id/start_guideline" />
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="0dp"
+                    android:lines="1"
+                    android:text="DR.Ahmed Dosary"
+                    android:textColor="@color/room_item_title_text_color"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toEndOf="@id/start_guideline" />
 
                 <TextView
                     android:id="@+id/user_Id"
@@ -87,9 +87,9 @@
             android:id="@+id/exit_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginEnd="12dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_action_exit"
-            android:layout_marginEnd="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -98,13 +98,75 @@
             android:id="@+id/more_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_action_more"
-            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/exit_icon"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/score_layout"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar_layout">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/score_user_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/follow_score"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/bg_follow">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/cup_icon"
+                android:layout_width="20dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginStart="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/cup"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/score_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="15dp"
+                android:lines="1"
+                android:text="13.7K"
+                android:textColor="@color/gold_color"
+                android:textSize="13sp"
+                app:layout_constraintStart_toEndOf="@id/cup_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

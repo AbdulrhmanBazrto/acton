@@ -24,5 +24,6 @@
     <color name="feature_post_like_text_color">#dad8d6</color>
     <color name="search_hint_text_color">#b9d3ea</color>
     <color name="user_separator_color">#cfcfcf</color>
+    <color name="gold_color">#e1ad3d</color>
 
 </resources>
