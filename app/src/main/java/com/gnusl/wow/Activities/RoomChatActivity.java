@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
+import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
@@ -26,6 +28,8 @@ public class RoomChatActivity extends AppCompatActivity {
         // users in room
         initializeUsersInRoomAdapter();
 
+        // chat adapter
+        initializeChatAdapter();
     }
 
     private void initializeUsersScore(){
@@ -70,4 +74,26 @@ public class RoomChatActivity extends AppCompatActivity {
         UsersChatRoomRecyclerViewAdapter usersChatRoomRecyclerViewAdapter= new UsersChatRoomRecyclerViewAdapter(this, users);
         recyclerView.setAdapter(usersChatRoomRecyclerViewAdapter);
     }
+
+    private void initializeChatAdapter(){
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.chat_recycler_view);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        ArrayList<ChatMessage> chatMessages= new ArrayList<>();
+        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
+        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
+        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
+        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
+        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
+        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
+
+
+        ChatRecyclerViewAdapter chatRecyclerViewAdapter= new ChatRecyclerViewAdapter(this, chatMessages);
+        recyclerView.setAdapter(chatRecyclerViewAdapter);
+    }
+
 }
