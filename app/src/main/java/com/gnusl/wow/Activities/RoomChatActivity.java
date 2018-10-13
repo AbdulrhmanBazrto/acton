@@ -87,9 +87,6 @@ public class RoomChatActivity extends AppCompatActivity {
         chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
         chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
         chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
-        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
-        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
-        chatMessages.add(new ChatMessage(R.drawable.img1,"الدوسري الأصيل",""));
 
 
         ChatRecyclerViewAdapter chatRecyclerViewAdapter= new ChatRecyclerViewAdapter(this, chatMessages);
