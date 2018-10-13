@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Models.User;
@@ -22,7 +23,8 @@ public class RoomChatActivity extends AppCompatActivity {
         // score user
         initializeUsersScore();
 
-
+        // users in room
+        initializeUsersInRoomAdapter();
 
     }
 
@@ -46,5 +48,26 @@ public class RoomChatActivity extends AppCompatActivity {
 
         UsersScoreRoomRecyclerViewAdapter usersScoreRoomRecyclerViewAdapter= new UsersScoreRoomRecyclerViewAdapter(this, users);
         recyclerView.setAdapter(usersScoreRoomRecyclerViewAdapter);
+    }
+
+    private void initializeUsersInRoomAdapter(){
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.users_recycler_view);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User(R.drawable.img1,"Dr. Ahmed"));
+        users.add(new User(R.drawable.img2,"AB qahtany"));
+        users.add(new User(R.drawable.img3,"AlAnood"));
+        users.add(new User(R.drawable.img1,"Dr. Ahmed"));
+        users.add(new User(R.drawable.img2,"AB qahtany"));
+        users.add(new User(R.drawable.img3,"AlAnood"));
+
+
+        UsersChatRoomRecyclerViewAdapter usersChatRoomRecyclerViewAdapter= new UsersChatRoomRecyclerViewAdapter(this, users);
+        recyclerView.setAdapter(usersChatRoomRecyclerViewAdapter);
     }
 }
