@@ -2,6 +2,7 @@ package com.gnusl.wow.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
 
@@ -65,6 +67,10 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         public RoomViewHolder(View itemView) {
             super(itemView);
 
+            // go to Chat Room
+            itemView.setOnClickListener(v->{
+                context.startActivity(new Intent(context,RoomChatActivity.class));
+            });
         }
 
         public void bind(final Room room, final int position) {
