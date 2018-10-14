@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.User;
@@ -48,17 +49,21 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
         private AppCompatImageView userImage;
+        private TextView messageTextView;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
 
             userImage=(AppCompatImageView) itemView.findViewById(R.id.user_image);
+            messageTextView=(TextView) itemView.findViewById(R.id.message_text_view);
 
         }
 
         public void bind(final ChatMessage chatMessage, final int position) {
 
             userImage.setImageResource(chatMessage.getImageResource());
+
+            messageTextView.setText(chatMessage.getMessage());
         }
 
     }

@@ -39,4 +39,6 @@ dependencies {
     //Optional: see how to use the utility.
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
     implementation 'com.afollestad:sectioned-recyclerview:0.5.0'
+
+    implementation group: 'com.pubnub', name: 'pubnub-gson', version: '4.20.0'
 }
