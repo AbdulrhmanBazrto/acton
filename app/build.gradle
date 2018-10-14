@@ -34,8 +34,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation('org.jitsi.react:jitsi-meet-sdk:+') { transitive = true } // jitsi
-
     implementation 'me.grantland:autofittextview:0.2.1'  // AutoFit TextView
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar' // smartTabLayout
     //Optional: see how to use the utility.
