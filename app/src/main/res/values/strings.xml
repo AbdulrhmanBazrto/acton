@@ -26,4 +26,7 @@
     <string name="search">Search</string>
     <string name="users">Users</string>
     <string name="rooms">Rooms</string>
+
+    <string name="host">fat7al.com</string>
+    <string name="port">3000</string>
 </resources>
