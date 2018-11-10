@@ -11,6 +11,7 @@
     <color name="post_feature_title_color">#6c6a69</color>
     <color name="menu_navigation_text_color">#575756</color>
     <color name="white">#ffffffff</color>
+    <color name="settings_backround_color">#f0f0f0</color>
     <color name="active_color">#9b5197</color>
     <color name="status_bar_room_chat_color">#824c85</color>
     <color name="room_item_title_text_color">#010102</color>
@@ -25,5 +26,7 @@
     <color name="search_hint_text_color">#b9d3ea</color>
     <color name="user_separator_color">#cfcfcf</color>
     <color name="gold_color">#e1ad3d</color>
+    <color name="settings_text_color">#878787</color>
+    <color name="settings_seperator_color">#e3e3e3</color>
 
 </resources>
