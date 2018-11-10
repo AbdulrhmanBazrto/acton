@@ -14,7 +14,7 @@
         android:background="@drawable/side_nav_bar">
 
         <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/right_icon"
+            android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginStart="16dp"

@@ -40,7 +40,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarSplash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activities.LoginActivity"
@@ -66,6 +70,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="@string/host"
                     android:scheme="http" />
@@ -74,13 +79,10 @@
         <activity
             android:name=".Activities.SettingsActivity"
             android:theme="@style/AppTheme.NoActionBarSettings">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".Activities.RechargeActivity"
+            android:theme="@style/AppTheme.NoActionBarSettings">
         </activity>
     </application>
 
