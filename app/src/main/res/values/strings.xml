@@ -21,6 +21,8 @@
     <string name="no_moments">No Moments</string>
 
     <string name="feature_post_content">Moments are usually defined with respect to a fixed reference point, they deal with physical quantities as measured at some distance from that referance point. For example, the moment of force acting on an object, often called torque,is the product of the force and the distance from a reference point</string>
+    <string name="settings">Settings</string>
+    <string name="account">Account</string>
 
     <string name="search_hint_placeholder">Search for rooms or users</string>
     <string name="search">Search</string>

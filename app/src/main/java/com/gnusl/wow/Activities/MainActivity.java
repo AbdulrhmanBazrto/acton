@@ -128,7 +128,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.recharge) {
+        if(id==R.id.moment){
+
+            setFragmentView(1);
+
+        }else if(id==R.id.message){
+
+            setFragmentView(2);
+
+        }else if (id == R.id.recharge) {
 
             startActivity(new Intent(MainActivity.this,RechargeActivity.class));
 
