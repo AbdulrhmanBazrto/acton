@@ -45,4 +45,11 @@ dependencies {
     api 'io.pristine:libjingle:9694@aar' // webRtc
     implementation 'com.github.nkzawa:socket.io-client:0.4.2' // socket io
     implementation 'com.amitshekhar.android:android-networking:1.0.1' // android networking
+
+    // FireBase
+    implementation 'com.google.firebase:firebase-core:15.0.2'
+    implementation 'com.google.firebase:firebase-crash:15.0.2'
+    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+
+    implementation 'com.facebook.android:facebook-login:4.33.0' //Facebook
 }

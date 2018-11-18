@@ -3,6 +3,7 @@ package com.gnusl.wow.Application;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.FacebookSdk;
 import com.gnusl.wow.Managers.FontManager;
 
 /**
@@ -21,6 +22,9 @@ public class WowApplication extends Application {
 
         // initialize Font Manager
         FontManager.init(getAssets());
+
+        // facebook
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     public static WowApplication getApplicationInstance() {
