@@ -120,6 +120,7 @@ public class WebRtcClient {
         message.put("to", to);
         message.put("type", type);
         message.put("payload", payload);
+        message.put("payload", payload);
         client.emit("message", message);
     }
 
@@ -382,6 +383,7 @@ public class WebRtcClient {
         try {
             JSONObject message = new JSONObject();
             message.put("name", name);
+            message.put("channel_id",10);
             client.emit("readyToStream", message);
         } catch (JSONException e) {
             e.printStackTrace();

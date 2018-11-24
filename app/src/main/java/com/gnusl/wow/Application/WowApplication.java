@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.facebook.FacebookSdk;
 import com.gnusl.wow.Managers.FontManager;
+import com.google.firebase.FirebaseApp;
+import com.twitter.sdk.android.core.Twitter;
 
 /**
  * Created by Yehia on 9/21/2018.
@@ -23,8 +25,14 @@ public class WowApplication extends Application {
         // initialize Font Manager
         FontManager.init(getAssets());
 
+        // initialize firebase
+        FirebaseApp.initializeApp(this);
+
         // facebook
         FacebookSdk.sdkInitialize(getApplicationContext());
+
+        // twitter
+        Twitter.initialize(this);
     }
 
     public static WowApplication getApplicationInstance() {

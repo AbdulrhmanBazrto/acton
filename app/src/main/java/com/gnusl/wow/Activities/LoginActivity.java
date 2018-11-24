@@ -1,11 +1,15 @@
 package com.gnusl.wow.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
@@ -14,6 +18,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.error.ANError;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -21,52 +26,93 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.SocialType;
 import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.FontedButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterApiClient;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.twitter.sdk.android.core.models.User;
+import com.twitter.sdk.android.core.services.AccountService;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import retrofit2.Call;
+
 import static android.widget.Toast.LENGTH_LONG;
 
-public class LoginActivity extends AppCompatActivity {
-
-    AppCompatImageView facebookBtn;
+public class LoginActivity extends AppCompatActivity implements ConnectionDelegate {
 
     private ProgressDialog progressDialog;
 
     // facebook
     private CallbackManager callbackManager;
 
+    // Google
+    private final int GOOGLE_LOGIN_REQUEST=900;
+
+    // twitter
+    private TwitterAuthClient mTwitterAuthClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // go to main activity
         findViewById(R.id.wow_login_icon).setOnClickListener(v->{
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                    finish();
-                }
-            },0);
+
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
+
+        });
+
+        findViewById(R.id.facebook_button).setOnClickListener(v->{
+
+            startLoginWithFacebook();
+        });
+
+        findViewById(R.id.google_button).setOnClickListener(v->{
+
+            startLoginWithGoogle();
         });
 
 
-        facebookBtn=findViewById(R.id.facebook_button);
+        findViewById(R.id.twitter_button).setOnClickListener(v->{
 
-
-        facebookBtn.setOnClickListener(v->{
-
-           // startLoginWithFacebook();
+            startLoginWithTwitter();
         });
 
+        // initialize facebook
+        initializeFacebookSDK();
+
+    }
+
+    // Facebook Methods
+    private void initializeFacebookSDK(){
+
+        callbackManager = CallbackManager.Factory.create();
 
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -102,11 +148,17 @@ public class LoginActivity extends AppCompatActivity {
                                             params.setEmail(email);
                                             params.setImage(url);
                                             params.setSocial_id(id);
-                                            params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
                                             params.setSocial_type(SocialType.Facebook.name().toLowerCase());
+                                            params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
+
+                                            Log.d("FACEBOOK name",name);
+                                            Log.d("FACEBOOK email",email);
+                                            Log.d("FACEBOOK url",url);
+                                            Log.d("FACEBOOK id",id);
+                                            Log.d("FACEBOOK firebase",FirebaseInstanceId.getInstance().getToken());
 
                                             // send register
-
+                                            APIConnectionNetwork.LoginBySocial(params,LoginActivity.this);
 
                                             // progress
                                             progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
@@ -143,18 +195,207 @@ public class LoginActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                     }
                 });
-
     }
 
-    // Facebook
     private void startLoginWithFacebook(){
 
         // login with facebook
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile","user_friends","email"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile","email"));
 
         // progress
-        // make progress dialog
         this.progressDialog = ProgressDialog.show(this, "", "Login with facebook account..");
 
     }
+
+    // Google Methods
+    @SuppressLint("RestrictedApi")
+    private void startLoginWithGoogle(){
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestProfile()
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient.signOut();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent,GOOGLE_LOGIN_REQUEST);
+
+    }
+
+    void handleGoogleResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
+            try {
+                GoogleSignInAccount account = result.getSignInAccount();
+                if (account!=null) {
+
+                    Uri photoUrl = account.getPhotoUrl();
+                    // send request
+                    // prepare user credintial
+                    RegisterParams params=new RegisterParams();
+                    params.setName(account.getDisplayName());
+                    params.setEmail(account.getEmail());
+
+                    if (photoUrl !=null)
+                        params.setImage(photoUrl.toString());
+
+                    params.setSocial_id(String.valueOf(account.getId()));
+                    params.setSocial_type(SocialType.Google.name().toLowerCase());
+                    params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
+
+                    // send register
+                    APIConnectionNetwork.LoginBySocial(params,LoginActivity.this);
+
+                    // progress
+                    progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
+
+
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        } else {
+            Log.w("GOOGLE ", CommonStatusCodes.getStatusCodeString(result.getStatus().getStatusCode())+"");
+            Toast.makeText(getApplicationContext(),"error",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+
+    //Twitter Methods
+    private void startLoginWithTwitter(){
+
+        mTwitterAuthClient = new TwitterAuthClient();
+        mTwitterAuthClient.authorize(this, new com.twitter.sdk.android.core.Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> twitterSessionResult) {
+                Log.d("TWITTER ","SUCCESS");
+                TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+                TwitterAuthToken twitterAuthToken = session.getAuthToken();
+                Log.d("TWITTER ","SUCCESS1");
+                String token = twitterAuthToken.token;
+                String secret = twitterAuthToken.secret;
+                loginTwitter(session);
+            }
+
+            @Override
+            public void failure(TwitterException e) {
+                e.printStackTrace();
+                Log.d("TWITTER ",e.toString());
+            }
+        });
+
+
+    }
+
+    private void loginTwitter(TwitterSession session) {
+        TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
+        AccountService accountService = twitterApiClient.getAccountService();
+        Call<User> call = accountService.verifyCredentials(true, true, true);
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void success(Result<com.twitter.sdk.android.core.models.User> result) {
+                User user = result.data;
+
+                Log.d("TWITTER ","SUCCESS2");
+
+                // handle image size
+                String comingImageUrl = user.profileImageUrl;
+                String image_url= comingImageUrl.replaceAll("_normal","");
+
+                // send to api
+
+                // prepare user credintal
+                RegisterParams params=new RegisterParams();
+                params.setName(user.name);
+                params.setEmail(user.email);
+                params.setImage(image_url);
+                params.setSocial_id(String.valueOf(user.getId()));
+                params.setSocial_type(SocialType.Twitter.name().toLowerCase());
+                params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
+
+                // send register
+                APIConnectionNetwork.LoginBySocial(params,LoginActivity.this);
+
+                // progress
+                progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
+
+
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+
+                Log.d("TWITTER ",exception.toString());
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionFailure() {
+
+        Toast.makeText(this, "your credential incorrect", LENGTH_LONG).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+    }
+
+    @Override
+    public void onConnectionError(ANError anError) {
+
+        Toast.makeText(this, "Error Connection try again", LENGTH_LONG).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+    }
+
+    @Override
+    public void onConnectionSuccess(String response) {
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+       // APIUtils.parseNewUserType(response);
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putBoolean("login", true);
+        editor.apply();
+
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+
+        finishAffinity();
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONArray jsonArray) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode==140){
+            if (resultCode==-1){
+                mTwitterAuthClient.onActivityResult(requestCode,resultCode,data);
+            }
+        }else if (requestCode== GOOGLE_LOGIN_REQUEST){
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleGoogleResult(result);
+        }else
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

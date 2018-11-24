@@ -20,6 +20,13 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
+                if(sharedPreferences.getBoolean("login",false)){
+                    startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(SplashActivity.this,LoginActivity.class));
                 finish();
             }
