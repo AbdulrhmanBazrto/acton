@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "628503359741",
+    "firebase_url": "https://wowchatroom.firebaseio.com",
+    "project_id": "wowchatroom",
+    "storage_bucket": "wowchatroom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628503359741:android:da0f384b02c8f8f9",
+        "android_client_info": {
+          "package_name": "com.gnusl.wow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628503359741-n7qb6mu0g4besrgb4ottqciotj05dt2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gnusl.wow",
+            "certificate_hash": "356d68fdfcc33d53a5ec559b3e4a79cd69e79e88"
+          }
+        },
+        {
+          "client_id": "628503359741-upfq9cftij30ke971bhubdctvsfopnas.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gnusl.wow",
+            "certificate_hash": "65ccb1303d66e82c9f5540cc91ddf0dfa9f3292f"
+          }
+        },
+        {
+          "client_id": "628503359741-dub3594fe15in2q0mav6m6v2a0ejkid1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2aW4uiV5H4odrRftcVYnm5t1PzmjPdHg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628503359741-b3dqlebh3rto66efaker5dl5aqatk5o5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

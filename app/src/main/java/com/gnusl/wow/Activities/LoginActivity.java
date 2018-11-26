@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -57,6 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 
 import retrofit2.Call;
 
@@ -104,9 +106,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
             startLoginWithTwitter();
         });
 
+        findViewById(R.id.instagram_button).setOnClickListener(v->{
+
+            signInWithInstagram();
+        });
+
         // initialize facebook
         initializeFacebookSDK();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Check Instagram callback
+        checkForInstagramData();
     }
 
     // Facebook Methods
@@ -333,6 +348,50 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                 Log.d("TWITTER ",exception.toString());
             }
         });
+    }
+
+    // Instagram
+    private void signInWithInstagram() {
+        final Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.scheme("https")
+                .authority("api.instagram.com")
+                .appendPath("oauth")
+                .appendPath("authorize")
+                .appendQueryParameter("client_id", "3709c486cf504bc5ab94a404d4568914")
+                .appendQueryParameter("redirect_uri", "sociallogin://redirect")
+                .appendQueryParameter("response_type", "token");
+        final Intent browser = new Intent(Intent.ACTION_VIEW, uriBuilder.build());
+        startActivity(browser);
+    }
+
+    private void checkForInstagramData() {
+        final Uri data = this.getIntent().getData();
+        if(data != null && data.getScheme().equals("sociallogin") && data.getFragment() != null) {
+            final String accessToken = data.getFragment().replaceFirst("access_token=", "");
+            if (accessToken != null) {
+                handleInstagramSignInResult(new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        // Do nothing, just throw the access token away.
+                        return null;
+                    }
+                });
+            } else {
+                handleInstagramSignInResult(null);
+            }
+        }
+    }
+
+    private void handleInstagramSignInResult(Callable<Void> logout) {
+        if(logout == null) {
+            /* Login error */
+            Toast.makeText(getApplicationContext(), "Login Instagram Error", Toast.LENGTH_SHORT).show();
+        } else {
+            /* Login success */
+            Toast.makeText(getApplicationContext(), "Login Instagram Success", Toast.LENGTH_SHORT).show();
+          /*  Application.getInstance().setLogoutCallable(logout);
+            startActivity(new Intent(this, LoggedInActivity.class));*/
+        }
     }
 
     @Override
