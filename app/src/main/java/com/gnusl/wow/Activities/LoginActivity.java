@@ -111,6 +111,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
             signInWithInstagram();
         });
 
+        findViewById(R.id.accout_button).setOnClickListener(v->{
+
+            startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+        });
+
         // initialize facebook
         initializeFacebookSDK();
 

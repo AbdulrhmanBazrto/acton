@@ -29,4 +29,8 @@
     <color name="settings_text_color">#878787</color>
     <color name="settings_seperator_color">#e3e3e3</color>
 
+    <color name="charcoal_grey">#354745</color>
+    <color name="charcoal_grey_20">#33354745</color>
+    <color name="red">#e55b58</color>
+    <color name="black">#000000</color>
 </resources>
