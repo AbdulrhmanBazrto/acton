@@ -6,9 +6,13 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.RegisterParams;
+import com.gnusl.wow.Models.Room;
+import com.gnusl.wow.Utils.APIUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
@@ -52,7 +56,6 @@ public class APIConnectionNetwork {
                 });
 
     }
-
 
     public static void LoginBySocial(final RegisterParams params, ConnectionDelegate connectionDelegate) {
 
@@ -127,6 +130,90 @@ public class APIConnectionNetwork {
 
                     @Override
                     public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetAllChannels(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Get_Channels_Url.getLink()+"?user_id=-1&city_id=-1&order=asc&skip=0&take=10")
+
+                .addHeaders("Accept","application/json")
+                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("CHANNELS ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("channels")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("channels"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            }
+                            else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("CHANNELS ", anError.getMessage());
+                        Log.d("CHANNELS ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetAllFeaturedPosts(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Get_Featured_Posts_Url.getLink()+"?user_id=-1&take=1&skip=0")
+
+                .addHeaders("Accept","application/json")
+                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("POSTS ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("posts")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("posts"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            }
+                            else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("POSTS ", anError.getMessage());
+                        Log.d("POSTS ", anError.getErrorDetail());
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
