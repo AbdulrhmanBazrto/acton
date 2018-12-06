@@ -33,4 +33,9 @@
     <color name="charcoal_grey_20">#33354745</color>
     <color name="red">#e55b58</color>
     <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="notification_date">#c6c5c6</color>
+    <color name="register_text_color">#71706f</color>
+    <color name="profile_separator_color">#c7c6c7</color>
 </resources>

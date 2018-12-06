@@ -2,6 +2,7 @@ package com.gnusl.wow.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.gnusl.wow.Activities.CommentsPostActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.FeaturePost;
@@ -68,6 +70,14 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         public void bind(final FeaturePost post, final int position) {
 
             // like status
+            handleLikeStatus(post);
+
+            // go to comments activity
+            itemView.setOnClickListener(v->goToCommentActivity());
+        }
+
+        private void handleLikeStatus(FeaturePost post){
+
             //like.setChecked(false);
 
             // like animation
@@ -94,6 +104,14 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 }
             });
+
+        }
+
+        private void goToCommentActivity() {
+
+            Intent intent = new Intent(context, CommentsPostActivity.class);
+            //intent.putExtra(CommentsPostActivity.Post_Key, user_id);
+            context.startActivity(intent);
 
         }
 

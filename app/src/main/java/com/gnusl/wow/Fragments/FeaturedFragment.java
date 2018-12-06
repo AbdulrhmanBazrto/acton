@@ -56,7 +56,12 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        featureRecyclerViewAdapter= new FeatureRecyclerViewAdapter(getContext(), new ArrayList<>());
+        ArrayList<FeaturePost> featurePosts=new ArrayList<>();
+        featurePosts.add(new FeaturePost());
+        featurePosts.add(new FeaturePost());
+        featurePosts.add(new FeaturePost());
+
+        featureRecyclerViewAdapter= new FeatureRecyclerViewAdapter(getContext(), featurePosts);
         recyclerView.setAdapter(featureRecyclerViewAdapter);
 
         return inflatedView;
@@ -78,7 +83,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
         if (isVisibleToUser && inflatedView != null && featureRecyclerViewAdapter!=null && featureRecyclerViewAdapter.getFeaturePosts().isEmpty()) {
 
             // send request
-            sendPostsRequest();
+           // sendPostsRequest();
         }
     }
 

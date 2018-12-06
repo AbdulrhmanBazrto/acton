@@ -45,4 +45,6 @@
 
     <string name="email_or_phone">Email Or Phone</string>
     <string name="password">Password</string>
+
+    <string name="write_comment">write comment</string>
 </resources>

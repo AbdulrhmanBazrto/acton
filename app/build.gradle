@@ -79,6 +79,9 @@ dependencies {
 
     // like animation
     implementation 'com.github.varunest:sparkbutton:1.0.6'
+
+    implementation project(':SlidingActivity')
+    implementation 'com.klinkerapps:peekview:1.2.3'
 }
 
 apply plugin: 'com.google.gms.google-services'
