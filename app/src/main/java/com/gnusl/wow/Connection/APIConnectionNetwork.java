@@ -222,5 +222,36 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void UpdateLike(int postId,ConnectionDelegate connectionDelegate) {
 
+        AndroidNetworking.put(APILinks.Update_Like_Url.getLink()+"?post_id="+postId)
+
+                .addHeaders("Accept","application/json")
+                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Like ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Like ", anError.getMessage());
+                        Log.d("Like ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
 }

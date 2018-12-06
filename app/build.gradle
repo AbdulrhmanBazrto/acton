@@ -76,6 +76,9 @@ dependencies {
     implementation('com.twitter.sdk.android:twitter:3.2.0@aar') {
         transitive = true
     }
+
+    // like animation
+    implementation 'com.github.varunest:sparkbutton:1.0.6'
 }
 
 apply plugin: 'com.google.gms.google-services'

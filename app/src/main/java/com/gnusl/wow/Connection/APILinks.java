@@ -13,7 +13,9 @@ public enum APILinks {
     Get_Channels_Url(Base_API_Url.getLink()+"channel"),
 
     // Posts
-    Get_Featured_Posts_Url(Base_API_Url.getLink()+"post");
+    Get_Featured_Posts_Url(Base_API_Url.getLink()+"post"),
+
+    Update_Like_Url(Base_API_Url.getLink()+"like");
 
     private String link;
     APILinks(String link){
