@@ -254,4 +254,47 @@ public class APIConnectionNetwork {
                 });
 
     }
+
+    public static void GetAllComments(int postId,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Get_Comments_Url.getLink()+"?post_id="+postId+"&take=10&skip=0")
+
+                .addHeaders("Accept","application/json")
+                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Comments ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("comments")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("comments"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            }
+                            else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Comments ", anError.getMessage());
+                        Log.d("Comments ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
 }

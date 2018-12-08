@@ -38,4 +38,8 @@
     <color name="notification_date">#c6c5c6</color>
     <color name="register_text_color">#71706f</color>
     <color name="profile_separator_color">#c7c6c7</color>
+    <color name="color_msg_comment">#fff2f2f2</color>
+    <color name="create_account_shape_transparent">#4c000000</color>
+    <color name="color_bg_blue_teacher_item">#2172b8</color>
+    <color name="teacher_text_color">#595756</color>
 </resources>

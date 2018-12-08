@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:src="@drawable/img1"
+        app:civ_border_color="#EEEEEE"
+        app:civ_border_width="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"/>
+
+    <com.gnusl.wow.Views.AutoFitFontedTextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:lines="1"
+        android:layout_marginStart="5dp"
+        android:text="أحمد برقاوي-طالب"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toTopOf="@id/msg_layout"
+        app:layout_constraintStart_toEndOf="@id/profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:typefaceAsset="fonts/Assaf_Font.ttf" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/msg_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="2dp"
+        android:gravity="start"
+        android:padding="5dp"
+        android:background="@drawable/backround_msg_comment_shape"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tags_recycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:gravity="right|center_vertical"
+            android:textColor="@color/teacher_text_color"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/msg"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:typefaceAsset="fonts/Assaf_Font.ttf" />
+
+        <com.gnusl.wow.Views.AutoFitFontedTextView
+            android:id="@+id/msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="@color/teacher_text_color"
+            android:textSize="16sp"
+            android:layout_marginEnd="5dp"
+            android:text="لا يوجد لنا فروع خارج عمان.."
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:typefaceAsset="fonts/Assaf_Font.ttf" />
+
+
+        <com.gnusl.wow.Views.AutoFitFontedTextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/create_account_shape_transparent"
+            android:textSize="12sp"
+            android:lines="1"
+            android:text="2018/1/17"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:typefaceAsset="fonts/Assaf_Font.ttf" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.constraint.ConstraintLayout>

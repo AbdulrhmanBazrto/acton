@@ -73,7 +73,7 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             handleLikeStatus(post);
 
             // go to comments activity
-            itemView.setOnClickListener(v->goToCommentActivity());
+            itemView.setOnClickListener(v->goToCommentActivity(post.getId()));
         }
 
         private void handleLikeStatus(FeaturePost post){
@@ -107,10 +107,10 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         }
 
-        private void goToCommentActivity() {
+        private void goToCommentActivity(int postId) {
 
             Intent intent = new Intent(context, CommentsPostActivity.class);
-            //intent.putExtra(CommentsPostActivity.Post_Key, user_id);
+            intent.putExtra(CommentsPostActivity.POST_ID, postId);
             context.startActivity(intent);
 
         }
