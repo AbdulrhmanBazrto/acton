@@ -90,7 +90,7 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-       // send_button.setOnClickListener(v->clickSendComment());
+        send_button.setOnClickListener(v->clickSendComment());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -116,6 +116,22 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
 
         // send request
         APIConnectionNetwork.GetAllComments(postId,this);
+    }
+
+    private void clickSendComment(){
+
+        if(message_edit_text.getText().toString().isEmpty())
+            Toast.makeText(this,"you must have message",Toast.LENGTH_SHORT).show();
+
+        else {
+
+            // add comment
+            APIConnectionNetwork.AddNewComment(message_edit_text.getText().toString(),postId,this);
+
+            // clear message
+            message_edit_text.setText("");
+        }
+
     }
 
     @Override
@@ -154,6 +170,8 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
+        // refresh comments
+        APIConnectionNetwork.GetAllComments(postId,this);
     }
 
     @Override

@@ -15,9 +15,13 @@ public enum APILinks {
     // Posts
     Get_Featured_Posts_Url(Base_API_Url.getLink()+"post"),
 
+    // like
     Update_Like_Url(Base_API_Url.getLink()+"like"),
 
-    Get_Comments_Url(Base_API_Url.getLink()+"comment");
+    // Comments
+    Get_Comments_Url(Base_API_Url.getLink()+"comment"),
+
+    Add_Comment_Url(Base_API_Url.getLink()+"comment");
 
     private String link;
     APILinks(String link){

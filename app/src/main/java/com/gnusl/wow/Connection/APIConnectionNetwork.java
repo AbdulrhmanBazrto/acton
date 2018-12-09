@@ -297,4 +297,39 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void AddNewComment(String comment,int postId,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.Add_Comment_Url.getLink())
+
+                .addHeaders("Accept","application/json")
+                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addBodyParameter("comment", comment)
+                .addBodyParameter("post_id", String.valueOf(postId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("New Comment ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("New Comment ", anError.getMessage());
+                        Log.d("New Comment ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
 }
