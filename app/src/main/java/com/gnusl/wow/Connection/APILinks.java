@@ -14,6 +14,7 @@ public enum APILinks {
 
     // Posts
     Get_Featured_Posts_Url(Base_API_Url.getLink()+"post"),
+    Create_Post_Url(Base_API_Url.getLink()+"post"),
 
     // like
     Update_Like_Url(Base_API_Url.getLink()+"like"),

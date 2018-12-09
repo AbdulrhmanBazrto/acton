@@ -332,4 +332,39 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void CreateNewPost(String description,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.Create_Post_Url.getLink())
+
+                .addHeaders("Accept","application/json")
+                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addBodyParameter("description", description)
+                .addBodyParameter("image", "simon.jpg")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("New Post ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("New Post ", anError.getMessage());
+                        Log.d("New Post ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
 }

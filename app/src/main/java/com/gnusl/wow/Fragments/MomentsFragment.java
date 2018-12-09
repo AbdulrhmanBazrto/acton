@@ -1,5 +1,6 @@
 package com.gnusl.wow.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.gnusl.wow.Activities.CreatePostActivity;
 import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Adapters.MomentsFragmentPagerAdapter;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
@@ -49,9 +51,12 @@ public class MomentsFragment extends Fragment implements SmartTabLayout.TabProvi
         if (getActivity() instanceof MainActivity)
             inflatedView.findViewById(R.id.right_icon).setOnClickListener(v->((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START));
 
+        // open create post
+        if (getActivity() instanceof MainActivity)
+            inflatedView.findViewById(R.id.search_icon).setOnClickListener(v->goToCreatePostActivity());
+
         return inflatedView;
     }
-
 
     private void initializeSmartTabs(){
 
@@ -89,6 +94,11 @@ public class MomentsFragment extends Fragment implements SmartTabLayout.TabProvi
         }
 
         return inflatedView;
+    }
+
+    private void goToCreatePostActivity(){
+
+        getActivity().startActivity(new Intent(getActivity(),CreatePostActivity.class));
     }
 
     @Override

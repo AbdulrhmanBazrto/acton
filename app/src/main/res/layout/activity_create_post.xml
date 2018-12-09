@@ -34,6 +34,7 @@
             android:gravity="center"
             app:civ_border_color="#EEEEEE"
             app:civ_border_width="2dp"
+            android:src="@drawable/img1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +74,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.gnusl.wow.Views.FontedTextView
+                <com.gnusl.wow.Views.FontedEditText
                     android:id="@+id/text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

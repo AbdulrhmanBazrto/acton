@@ -125,7 +125,9 @@
             android:excludeFromRecents="true"
             android:taskAffinity=""
             android:theme="@style/CommentsActivityTheme" />
-        <activity android:name=".Activities.CreatePostActivity"></activity>
+        <activity
+            android:name=".Activities.CreatePostActivity"
+            android:theme="@style/CreatePostTheme"></activity>
     </application>
 
 </manifest>

@@ -48,4 +48,6 @@
 
     <string name="write_comment">write comment</string>
     <string name="what_you_think">what do you think ?</string>
+    <string name="create_post">Create Post</string>
+    <string name="action_share">Share</string>
 </resources>
