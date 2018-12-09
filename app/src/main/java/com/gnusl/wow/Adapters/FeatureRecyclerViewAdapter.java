@@ -64,8 +64,11 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         private AppCompatImageView post_icon;
         private AppCompatImageView post_image;
+        private AppCompatImageView message_icon;
         private TextView text_content;
         private TextView post_title;
+        private TextView message_number;
+        private TextView like_number;
 
         private SparkButton like;
 
@@ -74,8 +77,11 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             post_icon = (AppCompatImageView) itemView.findViewById(R.id.post_icon);
             post_image = (AppCompatImageView) itemView.findViewById(R.id.post_image);
+            message_icon = (AppCompatImageView) itemView.findViewById(R.id.message_icon);
             text_content = (TextView) itemView.findViewById(R.id.text_content);
             post_title = (TextView) itemView.findViewById(R.id.post_title);
+            message_number = (TextView) itemView.findViewById(R.id.message_number);
+            like_number = (TextView) itemView.findViewById(R.id.like_number);
             like = (SparkButton) itemView.findViewById(R.id.like_icon);
         }
 
@@ -104,8 +110,14 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             // like status
             handleLikeStatus(post);
 
+            // likes numbers
+            like_number.setText(String.valueOf(post.getNumLikes()));
+
+            // comments numbers
+            message_number.setText(String.valueOf(post.getNumComments()));
+
             // go to comments activity
-            itemView.setOnClickListener(v->goToCommentActivity(post.getId()));
+            message_icon.setOnClickListener(v->goToCommentActivity(post.getId()));
         }
 
         private void handleLikeStatus(FeaturePost post){

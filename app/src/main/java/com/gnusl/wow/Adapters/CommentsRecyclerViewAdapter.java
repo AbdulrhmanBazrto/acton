@@ -93,7 +93,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         public void bind(final Comment comment, final int position) {
 
             // change orintation
-            itemView.setLayoutDirection(position % 2 == 0 ? View.LAYOUT_DIRECTION_LTR : View.LAYOUT_DIRECTION_RTL);
+           // itemView.setLayoutDirection(position % 2 == 0 ? View.LAYOUT_DIRECTION_LTR : View.LAYOUT_DIRECTION_RTL);
 
             // name
             user_name.setText(comment.getUser().getName());
@@ -108,20 +108,6 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
             // date
             date.setText(comment.getCreatedAt().split(" ")[0]);
-
-          /*  if (comment.getTags() != null) {
-                if (comment.getTags().size() > 0) {
-                    tags_recycler_view.setVisibility(View.VISIBLE);
-                    tags_recycler_view.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true));
-                    tags_recycler_view.setHasFixedSize(true);
-                    List<User> users = new ArrayList<>();
-                    for (int i = 0; i < comment.getTags().size(); i++) {
-                        users.add(comment.getTags().get(i).getUser());
-                    }
-                    TagsRecyclerViewAdpter tagsRecyclerViewAdpter = new TagsRecyclerViewAdpter(context, users);
-                    tags_recycler_view.setAdapter(tagsRecyclerViewAdpter);
-                }
-            }*/
 
         }
 
