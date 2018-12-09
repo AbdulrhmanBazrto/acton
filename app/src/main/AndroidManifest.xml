@@ -119,13 +119,13 @@
             android:theme="@style/AppTheme.NoActionBarSettings" />
         <activity
             android:name=".Activities.RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBarSettings"/>
-
+            android:theme="@style/AppTheme.NoActionBarSettings" />
         <activity
             android:name=".Activities.CommentsPostActivity"
             android:excludeFromRecents="true"
             android:taskAffinity=""
-            android:theme="@style/CommentsActivityTheme"/>
+            android:theme="@style/CommentsActivityTheme" />
+        <activity android:name=".Activities.CreatePostActivity"></activity>
     </application>
 
 </manifest>
