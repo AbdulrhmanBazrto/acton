@@ -12,23 +12,8 @@ public class User {
 
     private int id;
     private String name;
-    private String email;
-    private String emailVerifiedAt;
-    private String createdAt;
-    private String updatedAt;
-    private String mobile;
-    private String type;
-    private String ipAddress;
-    private String fcmToken;
-    private String lastLogin;
-    private double lon;
-    private double lat;
     private String image;
-    private int socialId;
-    private String socialType;
-    private int cityId;
-    private String privacy;
-    private String language;
+    private String image_url;
 
     public User(){}
 
@@ -40,24 +25,9 @@ public class User {
         User user = new User();
 
         user.setId(jsonObject.optInt("id"));
-        user.setEmail(jsonObject.optString("email"));
-        user.setEmailVerifiedAt(jsonObject.optString("email_verified_at"));
-        user.setCreatedAt(jsonObject.optString("created_at"));
-        user.setUpdatedAt(jsonObject.optString("updated_at"));
-        user.setMobile(jsonObject.optString("mobile"));
-        user.setType(jsonObject.optString("type"));
-        user.setIpAddress(jsonObject.optString("ip_address"));
-        user.setFcmToken(jsonObject.optString("fcm_token"));
-        user.setLastLogin(jsonObject.optString("last_login"));
-        user.setLon(jsonObject.optDouble("lon"));
-        user.setLat(jsonObject.optDouble("lat"));
+        user.setName(jsonObject.optString("name"));
         user.setImage(jsonObject.optString("image"));
-        user.setSocialId(jsonObject.optInt("social_id"));
-        user.setSocialType(jsonObject.optString("social_type"));
-        user.setCityId(jsonObject.optInt("city_id"));
-        user.setPrivacy(jsonObject.optString("privacy"));
-        user.setLanguage(jsonObject.optString("language"));
-
+        user.setImage_url(jsonObject.optString("image_url"));
 
         return user;
     }
@@ -86,94 +56,6 @@ public class User {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmailVerifiedAt() {
-        return emailVerifiedAt;
-    }
-
-    public void setEmailVerifiedAt(String emailVerifiedAt) {
-        this.emailVerifiedAt = emailVerifiedAt;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getFcmToken() {
-        return fcmToken;
-    }
-
-    public void setFcmToken(String fcmToken) {
-        this.fcmToken = fcmToken;
-    }
-
-    public String getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(String lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
     public String getImage() {
         return image;
     }
@@ -182,46 +64,13 @@ public class User {
         this.image = image;
     }
 
-    public int getSocialId() {
-        return socialId;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setSocialId(int socialId) {
-        this.socialId = socialId;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
-
-    public String getSocialType() {
-        return socialType;
-    }
-
-    public void setSocialType(String socialType) {
-        this.socialType = socialType;
-    }
-
-    public int getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(int cityId) {
-        this.cityId = cityId;
-    }
-
-    public String getPrivacy() {
-        return privacy;
-    }
-
-    public void setPrivacy(String privacy) {
-        this.privacy = privacy;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
 
     // for temp
     private int imageResource;

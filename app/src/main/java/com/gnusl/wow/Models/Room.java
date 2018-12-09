@@ -24,6 +24,10 @@ public class Room {
     private int priority;
     private String createdAt;
     private String updatedAt;
+    private String description;
+    private String backgroundUrl;
+    private String countryCodeUrl;
+    private User user;
 
     public static Room newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -44,6 +48,19 @@ public class Room {
         room.setPriority(jsonObject.optInt("priority"));
         room.setCreatedAt(jsonObject.optString("created_at"));
         room.setUpdatedAt(jsonObject.optString("updated_at"));
+        room.setDescription(jsonObject.optString("description"));
+        room.setBackgroundUrl(jsonObject.optString("background_url"));
+        room.setCountryCodeUrl(jsonObject.optString("country_code_url"));
+
+        // user
+        if(jsonObject.has("user")) {
+            try {
+                room.setUser(User.newInstance(jsonObject.getJSONObject("user")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         return room;
     }
@@ -158,5 +175,37 @@ public class Room {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getBackgroundUrl() {
+        return backgroundUrl;
+    }
+
+    public void setBackgroundUrl(String backgroundUrl) {
+        this.backgroundUrl = backgroundUrl;
+    }
+
+    public String getCountryCodeUrl() {
+        return countryCodeUrl;
+    }
+
+    public void setCountryCodeUrl(String countryCodeUrl) {
+        this.countryCodeUrl = countryCodeUrl;
     }
 }

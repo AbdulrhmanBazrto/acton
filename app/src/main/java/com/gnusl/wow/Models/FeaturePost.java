@@ -20,6 +20,7 @@ public class FeaturePost {
     private String updatedAt;
     private int numLikes;
     private int numComments;
+    private User user;
 
     public static FeaturePost newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -36,6 +37,15 @@ public class FeaturePost {
         post.setUpdatedAt(jsonObject.optString("updated_at"));
         post.setNumLikes(jsonObject.optInt("num_likes"));
         post.setNumComments(jsonObject.optInt("num_comments"));
+
+        // user
+        if(jsonObject.has("user")) {
+            try {
+                post.setUser(User.newInstance(jsonObject.getJSONObject("user")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         return post;
     }
@@ -118,5 +128,13 @@ public class FeaturePost {
 
     public void setNumComments(int numComments) {
         this.numComments = numComments;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

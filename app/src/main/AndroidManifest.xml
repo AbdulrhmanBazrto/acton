@@ -29,9 +29,9 @@
     <application
         android:name=".Application.WowApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher_wow"
+        android:icon="@drawable/ic_launcher_acton"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_launcher_wow"
+        android:roundIcon="@drawable/ic_launcher_acton"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

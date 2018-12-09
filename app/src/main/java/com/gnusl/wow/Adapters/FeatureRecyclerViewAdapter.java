@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.CommentsPostActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Models.FeaturePost;
@@ -59,15 +62,44 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public class FeaturePostViewHolder extends RecyclerView.ViewHolder {
 
+        private AppCompatImageView post_icon;
+        private AppCompatImageView post_image;
+        private TextView text_content;
+        private TextView post_title;
+
         private SparkButton like;
 
         public FeaturePostViewHolder(View itemView) {
             super(itemView);
 
+            post_icon = (AppCompatImageView) itemView.findViewById(R.id.post_icon);
+            post_image = (AppCompatImageView) itemView.findViewById(R.id.post_image);
+            text_content = (TextView) itemView.findViewById(R.id.text_content);
+            post_title = (TextView) itemView.findViewById(R.id.post_title);
             like = (SparkButton) itemView.findViewById(R.id.like_icon);
         }
 
         public void bind(final FeaturePost post, final int position) {
+
+            // content
+            if (post.getDescription() != null && !post.getDescription().isEmpty())
+                text_content.setText(post.getDescription());
+
+            // post image
+            if (post.getImage() != null && !post.getImage().isEmpty())
+                Glide.with(context)
+                        .load(post.getImage())
+                        .into(post_image);
+
+            // user name
+            if (post.getUser() != null && post.getUser().getName()!=null && !post.getUser().getName().isEmpty())
+                post_title.setText(post.getUser().getName());
+
+            // user image
+            if (post.getUser() != null && post.getUser().getImage_url()!=null && !post.getUser().getImage_url().isEmpty())
+                Glide.with(context)
+                        .load(post.getUser().getImage_url())
+                        .into(post_icon);
 
             // like status
             handleLikeStatus(post);

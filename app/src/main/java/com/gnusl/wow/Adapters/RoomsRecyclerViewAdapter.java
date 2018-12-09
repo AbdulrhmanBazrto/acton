@@ -16,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
@@ -64,12 +66,25 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public class RoomViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView title;
+        private TextView content;
+        private AppCompatImageView room_image;
+        private AppCompatImageView flag_image;
+        private TextView user_number;
+
+
         public RoomViewHolder(View itemView) {
             super(itemView);
 
+            title = (TextView) itemView.findViewById(R.id.title);
+            content = (TextView) itemView.findViewById(R.id.content);
+            user_number = (TextView) itemView.findViewById(R.id.user_number);
+            room_image = (AppCompatImageView) itemView.findViewById(R.id.room_image);
+            flag_image = (AppCompatImageView) itemView.findViewById(R.id.flag_image);
+
             // go to Chat Room
-            itemView.setOnClickListener(v->{
-                context.startActivity(new Intent(context,RoomChatActivity.class));
+            itemView.setOnClickListener(v -> {
+                context.startActivity(new Intent(context, RoomChatActivity.class));
             });
         }
 
@@ -86,6 +101,31 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 int deviceheight = displaymetrics.heightPixels / 4;
 
                 itemView.getLayoutParams().width = (int) devicewidth;
+
+            }
+
+            if (room != null) {
+
+                // title
+                if (room.getName() != null && !room.getName().isEmpty())
+                    title.setText(room.getName());
+
+                // content
+                if (room.getDescription() != null && !room.getDescription().isEmpty())
+                    content.setText(room.getDescription());
+
+                // room image
+                if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty())
+                    Glide.with(context)
+                            .load(room.getBackgroundUrl())
+                            .into(room_image);
+
+
+                // flag image
+                if (room.getCountryCodeUrl() != null && !room.getCountryCodeUrl().isEmpty())
+                    Glide.with(context)
+                            .load(room.getCountryCodeUrl())
+                            .into(flag_image);
 
             }
         }

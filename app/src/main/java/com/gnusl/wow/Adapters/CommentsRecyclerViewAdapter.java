@@ -99,9 +99,9 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             user_name.setText(comment.getUser().getName());
 
             // image
-          /*  Glide.with(context)
-                    .load(APILinks.Base_Images_Url.getLink() + comment.getUser().getImage())
-                    .into(profile_image);*/
+            Glide.with(context)
+                    .load(comment.getUser().getImage_url())
+                    .into(profile_image);
 
             // comment msg
             msg.setText(comment.getComment());
