@@ -38,6 +38,7 @@ import com.gnusl.wow.Views.FontedEditText;
 import com.gnusl.wow.Views.FontedTextView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -57,7 +58,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
     BroadcastReceiver imageBroadcastReceiver;
     GridView gridView;
     //MediaGridViewAdapter adapter;
-
+    private boolean mustBeRefreshPosts = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
     public void openGallery() {
 
-      //  HomeScreenMediaChooser.startMediaChooser(this, false);
+        //  HomeScreenMediaChooser.startMediaChooser(this, false);
 
     }
 
@@ -104,7 +105,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
             this.progressDialog = ProgressDialog.show(this, "", "uploading your post..");
 
             // send request
-            APIConnectionNetwork.CreateNewPost(text.getText().toString(),this);
+            APIConnectionNetwork.CreateNewPost(text.getText().toString(), this);
 
         }
 
@@ -172,8 +173,9 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         if (progressDialog != null)
             progressDialog.dismiss();
 
-        if(jsonObject.has("post_id")) {
+        if (jsonObject.has("post_id")) {
             Toast.makeText(this, "success share..", Toast.LENGTH_SHORT).show();
+            mustBeRefreshPosts = true;
             finish();
         }
     }
@@ -186,5 +188,9 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        // send
+        if (mustBeRefreshPosts)
+            EventBus.getDefault().post("Refresh_Posts");
     }
 }

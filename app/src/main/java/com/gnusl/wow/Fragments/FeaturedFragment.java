@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,13 @@ import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -75,12 +79,13 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && inflatedView != null && featureRecyclerViewAdapter!=null && featureRecyclerViewAdapter.getFeaturePosts().isEmpty()) {
+        if (isVisibleToUser && inflatedView != null) {
 
             // send request
             sendPostsRequest();
         }
     }
+
 
     @Override
     public void onConnectionFailure() {
@@ -126,5 +131,25 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
         if (progressDialog != null)
             progressDialog.dismiss();
     }
+
+    @Subscribe
+    public void onRefreshPostsEvent(String message) {
+
+        if(message.equalsIgnoreCase("Refresh_Posts"))
+            getActivity().runOnUiThread(()->sendPostsRequest());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
 }
 
