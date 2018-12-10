@@ -15,6 +15,7 @@ import com.gnusl.wow.Utils.APIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Locale;
 
 public class APIConnectionNetwork {
@@ -22,7 +23,7 @@ public class APIConnectionNetwork {
 
     public static void Login(final String email, final String phone, final String password, final String fcm_token, ConnectionDelegate connectionDelegate) {
 
-        Log.d("LOGIN ",fcm_token!=null ? fcm_token:"");
+        Log.d("LOGIN ", fcm_token != null ? fcm_token : "");
 
         AndroidNetworking.post(APILinks.Login_Url.getLink())
 
@@ -140,10 +141,10 @@ public class APIConnectionNetwork {
 
     public static void GetAllChannels(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Get_Channels_Url.getLink()+"?user_id=-1&city_id=-1&order=asc&skip=0&take=10")
+        AndroidNetworking.get(APILinks.Get_Channels_Url.getLink() + "?user_id=-1&city_id=-1&order=asc&skip=0&take=10")
 
-                .addHeaders("Accept","application/json")
-                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -161,8 +162,7 @@ public class APIConnectionNetwork {
                                     e.printStackTrace();
                                     connectionDelegate.onConnectionFailure();
                                 }
-                            }
-                            else
+                            } else
                                 connectionDelegate.onConnectionFailure();
                         }
                     }
@@ -182,10 +182,10 @@ public class APIConnectionNetwork {
 
     public static void GetAllFeaturedPosts(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Get_Featured_Posts_Url.getLink()+"?user_id=-1&take=1&skip=0")
+        AndroidNetworking.get(APILinks.Get_Featured_Posts_Url.getLink() + "?user_id=-1&take=50&skip=0")
 
-                .addHeaders("Accept","application/json")
-                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -203,8 +203,7 @@ public class APIConnectionNetwork {
                                     e.printStackTrace();
                                     connectionDelegate.onConnectionFailure();
                                 }
-                            }
-                            else
+                            } else
                                 connectionDelegate.onConnectionFailure();
                         }
                     }
@@ -222,12 +221,12 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void UpdateLike(int postId,ConnectionDelegate connectionDelegate) {
+    public static void UpdateLike(int postId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.put(APILinks.Update_Like_Url.getLink()+"?post_id="+postId)
+        AndroidNetworking.put(APILinks.Update_Like_Url.getLink() + "?post_id=" + postId)
 
-                .addHeaders("Accept","application/json")
-                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -255,12 +254,12 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetAllComments(int postId,ConnectionDelegate connectionDelegate) {
+    public static void GetAllComments(int postId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Get_Comments_Url.getLink()+"?post_id="+postId+"&take=10&skip=0")
+        AndroidNetworking.get(APILinks.Get_Comments_Url.getLink() + "?post_id=" + postId + "&take=10&skip=0")
 
-                .addHeaders("Accept","application/json")
-                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -278,8 +277,7 @@ public class APIConnectionNetwork {
                                     e.printStackTrace();
                                     connectionDelegate.onConnectionFailure();
                                 }
-                            }
-                            else
+                            } else
                                 connectionDelegate.onConnectionFailure();
                         }
                     }
@@ -297,12 +295,12 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void AddNewComment(String comment,int postId,ConnectionDelegate connectionDelegate) {
+    public static void AddNewComment(String comment, int postId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.post(APILinks.Add_Comment_Url.getLink())
 
-                .addHeaders("Accept","application/json")
-                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
                 .addBodyParameter("comment", comment)
                 .addBodyParameter("post_id", String.valueOf(postId))
                 .setPriority(Priority.MEDIUM)
@@ -332,14 +330,14 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void CreateNewPost(String description,ConnectionDelegate connectionDelegate) {
+    public static void CreateNewPost(String description, String imageName, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.post(APILinks.Create_Post_Url.getLink())
 
-                .addHeaders("Accept","application/json")
-                .addHeaders("Authorization",APIUtils.getAuthorization())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
                 .addBodyParameter("description", description)
-                .addBodyParameter("image", "simon.jpg")
+                .addBodyParameter("image", imageName != null ? imageName : "simon.jpg")
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -367,4 +365,37 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void UploadImage(File imageFile, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.upload(APILinks.Upload_Image_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addMultipartFile("file", imageFile)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Upload Image ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Upload Image ", anError.getMessage());
+                        Log.d("Upload Image ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
 }

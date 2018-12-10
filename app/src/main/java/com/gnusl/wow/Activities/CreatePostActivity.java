@@ -1,13 +1,17 @@
 package com.gnusl.wow.Activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,22 +34,32 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Adapters.MediaGridViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
 import com.gnusl.wow.Views.FontedEditText;
 import com.gnusl.wow.Views.FontedTextView;
+import com.learnncode.mediachooser.MediaChooser;
+import com.learnncode.mediachooser.activity.HomeScreenMediaChooser;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
+import static com.gnusl.wow.Utils.PermissionsUtils.CALENDAR_PERMISSION;
+import static com.gnusl.wow.Utils.PermissionsUtils.CAMERA_PERMISSIONS_REQUEST;
+import static com.gnusl.wow.Utils.PermissionsUtils.GALLERY_PERMISSIONS_REQUEST;
+import static com.gnusl.wow.Utils.PermissionsUtils.checkCameraPermissions;
+import static com.gnusl.wow.Utils.PermissionsUtils.checkReadGalleryPermissions;
 
 public class CreatePostActivity extends AppCompatActivity implements ConnectionDelegate {
 
@@ -57,7 +71,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
     BroadcastReceiver videoBroadcastReceiver;
     BroadcastReceiver imageBroadcastReceiver;
     GridView gridView;
-    //MediaGridViewAdapter adapter;
+    MediaGridViewAdapter adapter;
     private boolean mustBeRefreshPosts = false;
 
     @Override
@@ -77,11 +91,29 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         }
 
+        // Media Picker
+        InitializeMediaPicker();
+
+    }
+
+    private void setAdapter(List<String> filePathList) {
+        adapter.addAll(filePathList);
+        adapter.notifyDataSetChanged();
     }
 
     public void openGallery() {
 
-        //  HomeScreenMediaChooser.startMediaChooser(this, false);
+        if (checkReadGalleryPermissions(this)) {
+
+            HomeScreenMediaChooser.startMediaChooser(this, true);
+
+        } else {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    GALLERY_PERMISSIONS_REQUEST);
+
+        }
 
     }
 
@@ -92,6 +124,11 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         text = (FontedEditText) findViewById(R.id.text);
         gridView = (GridView) findViewById(R.id.gridView);
 
+        profile_image.setOnClickListener(v -> {
+
+            openGallery();
+        });
+
     }
 
     private void shareYourPost() {
@@ -101,13 +138,66 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         else {
 
-            // make progress dialog
-            this.progressDialog = ProgressDialog.show(this, "", "uploading your post..");
+            ArrayList<File> files=adapter.getImagesAsFiles();
 
-            // send request
-            APIConnectionNetwork.CreateNewPost(text.getText().toString(), this);
+            if(!files.isEmpty()){
+
+                // make progress dialog
+                this.progressDialog = ProgressDialog.show(this, "", "uploading your Image..");
+
+                // upload image
+                APIConnectionNetwork.UploadImage(adapter.getImagesAsFiles().get(0),this);
+
+            }else
+                sendUploadPostRequest(null);
 
         }
+
+    }
+
+    private void sendUploadPostRequest(String imageName){
+
+        // make progress dialog
+        this.progressDialog = ProgressDialog.show(this, "", "uploading your post..");
+
+        // send request
+        APIConnectionNetwork.CreateNewPost(text.getText().toString(),imageName, this);
+    }
+
+    private void InitializeMediaPicker() {
+
+        adapter = new MediaGridViewAdapter(this, 0, new ArrayList<>());
+        gridView.setAdapter(adapter);
+
+        videoBroadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Toast.makeText(CreatePostActivity.this, "yippiee Video ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreatePostActivity.this, "Video SIZE :" + intent.getStringArrayListExtra("list").size(), Toast.LENGTH_SHORT).show();
+                setAdapter(intent.getStringArrayListExtra("list"));
+            }
+        };
+
+
+        imageBroadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(CreatePostActivity.this, "yippiee Image ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreatePostActivity.this, "Image SIZE :" + intent.getStringArrayListExtra("list").size(), Toast.LENGTH_SHORT).show();
+                setAdapter(intent.getStringArrayListExtra("list"));
+            }
+        };
+
+
+        IntentFilter videoIntentFilter = new IntentFilter(MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+        registerReceiver(videoBroadcastReceiver, videoIntentFilter);
+
+        IntentFilter imageIntentFilter = new IntentFilter(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+        registerReceiver(imageBroadcastReceiver, imageIntentFilter);
+        MediaChooser.showCameraVideoView(false);
 
     }
 
@@ -177,11 +267,47 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
             Toast.makeText(this, "success share..", Toast.LENGTH_SHORT).show();
             mustBeRefreshPosts = true;
             finish();
+
+        }else if(jsonObject.has("image")){
+
+            // upload post
+            try {
+                sendUploadPostRequest(jsonObject.getString("image"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onConnectionSuccess(JSONArray jsonArray) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == GALLERY_PERMISSIONS_REQUEST) {
+
+
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0) {
+                if (grantResults.length == 1) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED && permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                        //Coming from profile
+                        HomeScreenMediaChooser.startMediaChooser(this, true);
+
+                    } else {
+                        Toast.makeText(this, R.string.grant_equired_permissions_please, Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+            }
+
+        }
 
     }
 

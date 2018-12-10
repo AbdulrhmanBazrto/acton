@@ -50,4 +50,5 @@
     <string name="what_you_think">what do you think ?</string>
     <string name="create_post">Create Post</string>
     <string name="action_share">Share</string>
+    <string name="grant_equired_permissions_please">Grant required permissions please!</string>
 </resources>

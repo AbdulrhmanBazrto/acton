@@ -81,6 +81,7 @@ dependencies {
     implementation 'com.github.varunest:sparkbutton:1.0.6'
 
     implementation project(':SlidingActivity')
+    implementation project(':MediaChooser')
     implementation 'com.klinkerapps:peekview:1.2.3'
     implementation 'com.mikhaellopez:circularimageview:3.0.2'
     implementation 'com.github.bumptech.glide:glide:4.6.1'

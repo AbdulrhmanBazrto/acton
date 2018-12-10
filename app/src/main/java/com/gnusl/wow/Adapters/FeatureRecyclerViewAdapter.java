@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.CommentsPostActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Connection.APILinks;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.R;
@@ -94,7 +95,7 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             // post image
             if (post.getImage() != null && !post.getImage().isEmpty())
                 Glide.with(context)
-                        .load(post.getImage())
+                        .load(APILinks.Base_Media_Url.getLink()+post.getImage())
                         .into(post_image);
 
             // user name

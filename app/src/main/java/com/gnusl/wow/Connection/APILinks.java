@@ -3,6 +3,7 @@ package com.gnusl.wow.Connection;
 public enum APILinks {
 
     Base_API_Url("http://wow.gnusl.com/api/"),
+    Base_Media_Url("http://wow.gnusl.com/public/uploads/"),
 
     // User
     Register_Url(Base_API_Url.getLink()+"register"),
@@ -15,6 +16,7 @@ public enum APILinks {
     // Posts
     Get_Featured_Posts_Url(Base_API_Url.getLink()+"post"),
     Create_Post_Url(Base_API_Url.getLink()+"post"),
+    Upload_Image_Url(Base_API_Url.getLink()+"image/upload"),
 
     // like
     Update_Like_Url(Base_API_Url.getLink()+"like"),

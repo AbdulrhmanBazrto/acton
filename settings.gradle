@@ -1,1 +1,1 @@
-include ':app', ':SlidingActivity'
+include ':app', ':SlidingActivity', ':MediaChooser'
