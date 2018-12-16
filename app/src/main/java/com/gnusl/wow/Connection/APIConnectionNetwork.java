@@ -141,7 +141,7 @@ public class APIConnectionNetwork {
 
     public static void GetAllChannels(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Get_Channels_Url.getLink() + "?user_id=-1&city_id=-1&order=asc&skip=0&take=10")
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "?user_id=-1&city_id=-1&order=asc&skip=0&take=10")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -391,6 +391,81 @@ public class APIConnectionNetwork {
 
                         Log.d("Upload Image ", anError.getMessage());
                         Log.d("Upload Image ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetChannelsTypes(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Get_Channels_Type_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Channels Types ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("channel_types")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("channel_types"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Channels Types ", anError.getMessage());
+                        Log.d("Channels Types ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void CreateNewRoom(int roomTypeId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.Channels_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("channel_type_id", String.valueOf(roomTypeId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Create Channel ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Create Channel ", anError.getMessage());
+                        Log.d("Create Channel ", anError.getErrorDetail());
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);

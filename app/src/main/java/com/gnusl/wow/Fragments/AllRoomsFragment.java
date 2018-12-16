@@ -1,6 +1,7 @@
 package com.gnusl.wow.Fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.gnusl.wow.Activities.CreateRoomActivity;
 import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
@@ -58,6 +60,11 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
         roomsRecyclerViewAdapter = new RoomsRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(roomsRecyclerViewAdapter);
 
+        // go to create room
+        inflatedView.setOnClickListener(v->{
+
+            getActivity().startActivity(new Intent(getActivity(),CreateRoomActivity.class));
+        });
 
         return inflatedView;
     }

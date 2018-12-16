@@ -150,11 +150,14 @@
             android:theme="@style/CommentsActivityTheme" />
         <activity
             android:name=".Activities.CreatePostActivity"
-            android:theme="@style/CreatePostTheme"></activity>
+            android:theme="@style/CreatePostTheme" />
         <activity
             android:name="com.learnncode.mediachooser.activity.HomeScreenMediaChooser"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarMain" />
+        <activity
+            android:name=".Activities.CreateRoomActivity"
+            android:theme="@style/AppTheme.NoActionBarSettings"></activity>
     </application>
 
 </manifest>

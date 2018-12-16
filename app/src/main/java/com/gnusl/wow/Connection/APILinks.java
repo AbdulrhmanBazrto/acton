@@ -11,7 +11,8 @@ public enum APILinks {
     Login_Social_Url(Base_API_Url.getLink()+"login_social"),
 
     // Channels
-    Get_Channels_Url(Base_API_Url.getLink()+"channel"),
+    Channels_Url(Base_API_Url.getLink()+"channel"),
+    Get_Channels_Type_Url(Channels_Url.getLink()+"/types"),
 
     // Posts
     Get_Featured_Posts_Url(Base_API_Url.getLink()+"post"),

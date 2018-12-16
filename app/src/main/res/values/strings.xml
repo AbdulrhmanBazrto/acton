@@ -51,4 +51,9 @@
     <string name="create_post">Create Post</string>
     <string name="action_share">Share</string>
     <string name="grant_equired_permissions_please">Grant required permissions please!</string>
+
+    <string name="room_capacity_content">Max %1$s users in the room at the same time \n(Room Owner not includes)</string>
+    <string name="room_admins_content">Max 7 admins</string>
+    <string name="room_members_content">Max %1$s room members</string>
+    <string name="room_level_content">Room upgrade rate increases to %1$s time</string>
 </resources>

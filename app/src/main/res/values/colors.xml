@@ -11,6 +11,7 @@
     <color name="post_feature_title_color">#6c6a69</color>
     <color name="menu_navigation_text_color">#575756</color>
     <color name="white">#ffffffff</color>
+    <color name="create_room_backround_color">#fcfcfc</color>
     <color name="settings_backround_color">#f0f0f0</color>
     <color name="active_color">#9b5197</color>
     <color name="status_bar_room_chat_color">#824c85</color>
