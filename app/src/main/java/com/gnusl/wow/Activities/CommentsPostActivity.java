@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Adapters.CommentsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.CommentActionsDelegate;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Comment;
 import com.gnusl.wow.Models.FeaturePost;
@@ -36,7 +37,7 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class CommentsPostActivity extends SlidingActivity implements ConnectionDelegate {
+public class CommentsPostActivity extends SlidingActivity implements ConnectionDelegate, CommentActionsDelegate {
 
     public static String POST_ID="post_id";
 
@@ -103,7 +104,7 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
 
         comments_recycler_view.setNestedScrollingEnabled(true);
 
-        commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter(this, new ArrayList<>(), getContentScroller());
+        commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter(this, new ArrayList<>(), getContentScroller(),this);
         comments_recycler_view.setAdapter(commentsRecyclerViewAdapter);
     }
 
@@ -189,5 +190,23 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
             progressBar.setVisibility(View.GONE);
             comments_recycler_view.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onEditComment(Comment comment) {
+
+    }
+
+    @Override
+    public void onDeleteComment(Comment comment) {
+
+        // send delete request
+        APIConnectionNetwork.DeleteComment(comment.getId(),this);
+
+        // show progress
+        progressBar.setVisibility(View.VISIBLE);
+
+        comments_recycler_view.setVisibility(View.GONE);
+
     }
 }

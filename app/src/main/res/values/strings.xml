@@ -45,6 +45,8 @@
 
     <string name="email_or_phone">Email Or Phone</string>
     <string name="password">Password</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
     <string name="write_comment">write comment</string>
     <string name="what_you_think">what do you think ?</string>

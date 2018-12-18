@@ -8,13 +8,19 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Connection.APILinks;
+import com.gnusl.wow.Delegates.CommentActionsDelegate;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Comment;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
@@ -28,16 +34,17 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private Context context;
     private List<Comment> comments;
-
     private boolean isLoading = false;
+    private CommentActionsDelegate commentActionsDelegate;
 
     private static int COMMENT_HOLDER = 0;
     private static int LOAD_MORE_HOLDER = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public CommentsRecyclerViewAdapter(Context context, List<Comment> comments, ViewGroup scrollView) {
+    public CommentsRecyclerViewAdapter(Context context, List<Comment> comments, ViewGroup scrollView,CommentActionsDelegate commentActionsDelegate) {
         this.context = context;
         this.comments = comments;
+        this.commentActionsDelegate=commentActionsDelegate;
 
     }
 
@@ -108,6 +115,35 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
             // date
             date.setText(comment.getCreatedAt().split(" ")[0]);
+
+
+            itemView.setOnLongClickListener(v->{
+
+                PopupMenu dropDownMenu = new PopupMenu(context,itemView);
+                dropDownMenu.getMenuInflater().inflate(R.menu.comment_menu_option, dropDownMenu.getMenu());
+                dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        switch(menuItem.getItemId()){
+
+                            case R.id.edit_comment:
+
+                                break;
+
+                            case R.id.delete_comment:
+
+                                commentActionsDelegate.onDeleteComment(comment);
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
+                dropDownMenu.show();
+
+            return true;});
 
         }
 

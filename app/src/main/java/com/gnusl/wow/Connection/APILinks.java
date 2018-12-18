@@ -23,7 +23,7 @@ public enum APILinks {
     Update_Like_Url(Base_API_Url.getLink()+"like"),
 
     // Comments
-    Get_Comments_Url(Base_API_Url.getLink()+"comment"),
+    Comments_Url(Base_API_Url.getLink()+"comment"),
 
     Add_Comment_Url(Base_API_Url.getLink()+"comment");
 

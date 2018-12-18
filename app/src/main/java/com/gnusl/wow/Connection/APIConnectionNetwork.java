@@ -256,7 +256,7 @@ public class APIConnectionNetwork {
 
     public static void GetAllComments(int postId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Get_Comments_Url.getLink() + "?post_id=" + postId + "&take=10&skip=0")
+        AndroidNetworking.get(APILinks.Comments_Url.getLink() + "?post_id=" + postId + "&take=10&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -466,6 +466,40 @@ public class APIConnectionNetwork {
 
                         Log.d("Create Channel ", anError.getMessage());
                         Log.d("Create Channel ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void DeleteComment(int commentId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.delete(APILinks.Comments_Url.getLink()+"?comment_id="+String.valueOf(commentId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Delete Comment ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Delete Comment ", anError.getMessage());
+                        Log.d("Delete Comment ", anError.getErrorDetail());
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
