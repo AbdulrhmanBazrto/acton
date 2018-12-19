@@ -474,6 +474,41 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void UpdateComment(int commentId, String content,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Comments_Url.getLink()+"?comment_id="+String.valueOf(commentId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .addBodyParameter("comment",content)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Update Comment ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Update Comment ", anError.getMessage());
+                        Log.d("Update Comment ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void DeleteComment(int commentId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.delete(APILinks.Comments_Url.getLink()+"?comment_id="+String.valueOf(commentId))
@@ -507,4 +542,5 @@ public class APIConnectionNetwork {
                 });
 
     }
+
 }

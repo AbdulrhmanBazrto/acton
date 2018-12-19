@@ -130,6 +130,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
                             case R.id.edit_comment:
 
+                                commentActionsDelegate.onEditComment(comment);
                                 break;
 
                             case R.id.delete_comment:

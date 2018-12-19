@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -10,11 +11,13 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Adapters.CommentsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
@@ -48,6 +51,7 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
     private int postId;
     private AppCompatImageView send_button;
     private FontedEditText message_edit_text;
+    ProgressDialog progressDialog;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -150,6 +154,9 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
             progressBar.setVisibility(View.GONE);
             comments_recycler_view.setVisibility(View.VISIBLE);
         }
+
+        if(progressDialog!=null)
+            progressDialog.dismiss();
     }
 
     @Override
@@ -161,6 +168,9 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
             progressBar.setVisibility(View.GONE);
             comments_recycler_view.setVisibility(View.VISIBLE);
         }
+
+        if(progressDialog!=null)
+            progressDialog.dismiss();
     }
 
     @Override
@@ -170,6 +180,14 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
 
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
+
+        if(progressDialog!=null)
+            progressDialog.dismiss();
+
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+            comments_recycler_view.setVisibility(View.VISIBLE);
+        }
 
         // refresh comments
         APIConnectionNetwork.GetAllComments(postId,this);
@@ -190,11 +208,29 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
             progressBar.setVisibility(View.GONE);
             comments_recycler_view.setVisibility(View.VISIBLE);
         }
+
+        if(progressDialog!=null)
+            progressDialog.dismiss();
     }
 
     @Override
     public void onEditComment(Comment comment) {
 
+        // show popup
+        new MaterialDialog.Builder(this)
+                .title("Edit your Comment")
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input("Enter your comment", comment.getComment(), new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        // Do something
+
+                        progressDialog = ProgressDialog.show(CommentsPostActivity.this, "", "update your comment..");
+
+                        // send request
+                        APIConnectionNetwork.UpdateComment(comment.getId(),input.toString(),CommentsPostActivity.this);
+                    }
+                }).show();
     }
 
     @Override
