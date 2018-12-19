@@ -182,7 +182,7 @@ public class APIConnectionNetwork {
 
     public static void GetAllFeaturedPosts(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Get_Featured_Posts_Url.getLink() + "?user_id=-1&take=50&skip=0")
+        AndroidNetworking.get(APILinks.Featured_Posts_Url.getLink() + "?user_id=-1&take=50&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -332,7 +332,7 @@ public class APIConnectionNetwork {
 
     public static void CreateNewPost(String description, String imageName, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.post(APILinks.Create_Post_Url.getLink())
+        AndroidNetworking.post(APILinks.Featured_Posts_Url.getLink())
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -535,6 +535,75 @@ public class APIConnectionNetwork {
 
                         Log.d("Delete Comment ", anError.getMessage());
                         Log.d("Delete Comment ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void UpdatePost(int postId, String description,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Comments_Url.getLink()+"?comment_id="+String.valueOf(postId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                //.addBodyParameter("comment",content)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Update Comment ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Update Comment ", anError.getMessage());
+                        Log.d("Update Comment ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void DeletePost(int postId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.delete(APILinks.Featured_Posts_Url.getLink()+"?post_id="+String.valueOf(postId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Delete Post ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Delete Post ", anError.getMessage());
+                        Log.d("Delete Post", anError.getErrorDetail());
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);

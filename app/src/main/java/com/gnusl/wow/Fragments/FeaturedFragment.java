@@ -1,10 +1,14 @@
 package com.gnusl.wow.Fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +20,7 @@ import com.gnusl.wow.Adapters.FeatureRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
@@ -34,7 +39,7 @@ import static android.widget.Toast.LENGTH_SHORT;
  * Created by Yehia on 9/30/2018.
  */
 
-public class FeaturedFragment extends Fragment implements ConnectionDelegate {
+public class FeaturedFragment extends Fragment implements ConnectionDelegate, PostActionsDelegate {
 
     private View inflatedView;
     private FeatureRecyclerViewAdapter featureRecyclerViewAdapter;
@@ -60,7 +65,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        featureRecyclerViewAdapter= new FeatureRecyclerViewAdapter(getContext(), new ArrayList<>());
+        featureRecyclerViewAdapter = new FeatureRecyclerViewAdapter(getContext(), new ArrayList<>(), this);
         recyclerView.setAdapter(featureRecyclerViewAdapter);
 
         return inflatedView;
@@ -115,13 +120,20 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
+        // dismiss
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+        // refresh posts
+        sendPostsRequest();
+
     }
 
     @Override
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<FeaturePost> featurePosts=FeaturePost.parseJSONArray(jsonArray);
+        ArrayList<FeaturePost> featurePosts = FeaturePost.parseJSONArray(jsonArray);
 
         // notify
         featureRecyclerViewAdapter.setFeaturePosts(featurePosts);
@@ -135,8 +147,8 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
     @Subscribe
     public void onRefreshPostsEvent(String message) {
 
-        if(message.equalsIgnoreCase("Refresh_Posts"))
-            getActivity().runOnUiThread(()->sendPostsRequest());
+        if (message.equalsIgnoreCase("Refresh_Posts"))
+            getActivity().runOnUiThread(() -> sendPostsRequest());
     }
 
     @Override
@@ -151,5 +163,36 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onEditPost(FeaturePost post) {
+
+
+    }
+
+    @Override
+    public void onDeletePost(FeaturePost post) {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.are_you_sure_delete_post));
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ok",
+                (dialog, which) -> {
+
+                    // make progress dialog
+                    this.progressDialog = ProgressDialog.show(getContext(), "", "Deleting your post..");
+
+                    // send request
+                    APIConnectionNetwork.DeletePost(post.getId(), this);
+
+                    // dismiss
+                    dialog.dismiss();
+                });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "cancel",
+                (dialog, which) -> {
+                    dialog.dismiss();
+                });
+        alertDialog.show();
+    }
 }
 

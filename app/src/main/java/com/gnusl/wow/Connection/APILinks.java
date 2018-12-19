@@ -15,8 +15,7 @@ public enum APILinks {
     Get_Channels_Type_Url(Channels_Url.getLink()+"/types"),
 
     // Posts
-    Get_Featured_Posts_Url(Base_API_Url.getLink()+"post"),
-    Create_Post_Url(Base_API_Url.getLink()+"post"),
+    Featured_Posts_Url(Base_API_Url.getLink()+"post"),
     Upload_Image_Url(Base_API_Url.getLink()+"image/upload"),
 
     // like

@@ -8,15 +8,18 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.CommentsPostActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Connection.APILinks;
+import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.R;
@@ -33,10 +36,12 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private Context context;
     private ArrayList<FeaturePost> featurePosts;
+    private PostActionsDelegate postActionsDelegate;
 
-    public FeatureRecyclerViewAdapter(Context context, ArrayList<FeaturePost> featurePosts) {
+    public FeatureRecyclerViewAdapter(Context context, ArrayList<FeaturePost> featurePosts,PostActionsDelegate postActionsDelegate) {
         this.context = context;
         this.featurePosts = featurePosts;
+        this.postActionsDelegate=postActionsDelegate;
     }
 
     @Override
@@ -66,6 +71,7 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         private AppCompatImageView post_icon;
         private AppCompatImageView post_image;
         private AppCompatImageView message_icon;
+        private AppCompatImageView more_icon;
         private TextView text_content;
         private TextView post_title;
         private TextView message_number;
@@ -79,6 +85,7 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             post_icon = (AppCompatImageView) itemView.findViewById(R.id.post_icon);
             post_image = (AppCompatImageView) itemView.findViewById(R.id.post_image);
             message_icon = (AppCompatImageView) itemView.findViewById(R.id.message_icon);
+            more_icon = (AppCompatImageView) itemView.findViewById(R.id.more_icon);
             text_content = (TextView) itemView.findViewById(R.id.text_content);
             post_title = (TextView) itemView.findViewById(R.id.post_title);
             message_number = (TextView) itemView.findViewById(R.id.message_number);
@@ -119,6 +126,35 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             // go to comments activity
             message_icon.setOnClickListener(v->goToCommentActivity(post.getId()));
+
+            more_icon.setOnClickListener(v->{
+
+                PopupMenu dropDownMenu = new PopupMenu(context,more_icon);
+                dropDownMenu.getMenuInflater().inflate(R.menu.comment_menu_option, dropDownMenu.getMenu());
+                dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        switch(menuItem.getItemId()){
+
+                            case R.id.edit_comment:
+
+                                postActionsDelegate.onEditPost(post);
+                                break;
+
+                            case R.id.delete_comment:
+
+                                postActionsDelegate.onDeletePost(post);
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
+                dropDownMenu.show();
+            });
+
         }
 
         private void handleLikeStatus(FeaturePost post){
