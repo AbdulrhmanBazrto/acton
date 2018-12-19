@@ -2,6 +2,7 @@ package com.gnusl.wow.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.gnusl.wow.Activities.CreatePostActivity;
 import com.gnusl.wow.Adapters.FeatureRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
@@ -166,7 +168,9 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
     @Override
     public void onEditPost(FeaturePost post) {
 
-
+        Intent intent=new Intent(getActivity(),CreatePostActivity.class);
+        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY,post);
+        startActivity(intent);
     }
 
     @Override

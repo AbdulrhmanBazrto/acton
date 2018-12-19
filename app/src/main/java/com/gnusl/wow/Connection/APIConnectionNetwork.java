@@ -545,19 +545,19 @@ public class APIConnectionNetwork {
 
     public static void UpdatePost(int postId, String description,ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.put(APILinks.Comments_Url.getLink()+"?comment_id="+String.valueOf(postId))
+        AndroidNetworking.put(APILinks.Featured_Posts_Url.getLink()+"?post_id="+String.valueOf(postId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
                 .addHeaders("Content-Type","application/x-www-form-urlencoded")
-                //.addBodyParameter("comment",content)
+                .addBodyParameter("description",description)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Log.d("Update Comment ", response.toString());
+                        Log.d("Update Post ", response.toString());
 
                         // handle parse user data
                         if (connectionDelegate != null) {
@@ -568,8 +568,8 @@ public class APIConnectionNetwork {
                     @Override
                     public void onError(ANError anError) {
 
-                        Log.d("Update Comment ", anError.getMessage());
-                        Log.d("Update Comment ", anError.getErrorDetail());
+                        Log.d("Update Post ", anError.getMessage());
+                        Log.d("Update Post ", anError.getErrorDetail());
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);

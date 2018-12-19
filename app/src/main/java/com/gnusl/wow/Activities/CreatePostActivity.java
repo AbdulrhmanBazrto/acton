@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.gnusl.wow.Adapters.MediaGridViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
 import com.gnusl.wow.Views.FontedEditText;
@@ -63,11 +64,13 @@ import static com.gnusl.wow.Utils.PermissionsUtils.checkReadGalleryPermissions;
 
 public class CreatePostActivity extends AppCompatActivity implements ConnectionDelegate {
 
+    public static String UPDATE_POST_KEY="update_post_key";
     private CircularImageView profile_image;
     private AutoFitFontedTextView name;
     private FontedEditText text;
     private ProgressDialog progressDialog;
-
+    private FeaturePost featurePost;
+    private boolean isEditMode=false;
     BroadcastReceiver videoBroadcastReceiver;
     BroadcastReceiver imageBroadcastReceiver;
     GridView gridView;
@@ -83,6 +86,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         toolbar.setTitle(getResources().getString(R.string.create_post));
         setSupportActionBar(toolbar);
 
+        // find views
         finViews();
 
         if (getSupportActionBar() != null) {
@@ -94,6 +98,28 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         // Media Picker
         InitializeMediaPicker();
 
+        // check mode
+        CheckEditMode();
+    }
+
+    private void CheckEditMode(){
+
+        // handle edit mode
+        if(getIntent().hasExtra(UPDATE_POST_KEY)){
+            isEditMode=true;
+
+            featurePost=getIntent().getParcelableExtra(UPDATE_POST_KEY);
+
+            // text
+            text.setText(featurePost.getDescription());
+            text.setSelection(featurePost.getDescription().length());
+
+            // user image
+            if (featurePost.getUser() != null && featurePost.getUser().getImage_url()!=null && !featurePost.getUser().getImage_url().isEmpty())
+                Glide.with(this)
+                        .load(featurePost.getUser().getImage_url())
+                        .into(profile_image);
+        }
     }
 
     private void setAdapter(List<String> filePathList) {
@@ -157,11 +183,23 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
     private void sendUploadPostRequest(String imageName){
 
-        // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "uploading your post..");
+        if(!isEditMode) {
 
-        // send request
-        APIConnectionNetwork.CreateNewPost(text.getText().toString(),imageName, this);
+            // make progress dialog
+            this.progressDialog = ProgressDialog.show(this, "", "uploading your post..");
+
+            // send request
+            APIConnectionNetwork.CreateNewPost(text.getText().toString(), imageName, this);
+
+        }else {
+
+            // make progress dialog
+            this.progressDialog = ProgressDialog.show(this, "", "Updating your post..");
+
+            // send request
+            APIConnectionNetwork.UpdatePost(featurePost.getId(),text.getText().toString(), this);
+
+        }
     }
 
     private void InitializeMediaPicker() {
@@ -268,7 +306,13 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
             mustBeRefreshPosts = true;
             finish();
 
-        }else if(jsonObject.has("image")){
+        }else if(jsonObject.has("success")) { // update post
+
+            Toast.makeText(this, "success updating..", Toast.LENGTH_SHORT).show();
+            mustBeRefreshPosts = true;
+            finish();
+
+        } else if(jsonObject.has("image")){
 
             // upload post
             try {

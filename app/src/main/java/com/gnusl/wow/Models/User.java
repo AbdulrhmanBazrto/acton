@@ -1,12 +1,15 @@
 package com.gnusl.wow.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class User {
+public class User implements Parcelable {
 
     // for api
 
@@ -16,6 +19,26 @@ public class User {
     private String image_url;
 
     public User(){}
+
+    protected User(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        image = in.readString();
+        image_url = in.readString();
+        imageResource = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public static User newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -98,5 +121,19 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(image);
+        dest.writeString(image_url);
+        dest.writeInt(imageResource);
     }
 }

@@ -1,16 +1,20 @@
 package com.gnusl.wow.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Yehia on 10/1/2018.
  */
 
-public class FeaturePost {
+public class FeaturePost implements Parcelable {
 
     private int id;
     private int userId;
@@ -21,6 +25,31 @@ public class FeaturePost {
     private int numLikes;
     private int numComments;
     private User user;
+
+    public FeaturePost(){}
+
+    protected FeaturePost(Parcel in) {
+        id = in.readInt();
+        userId = in.readInt();
+        description = in.readString();
+        image = in.readString();
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        numLikes = in.readInt();
+        numComments = in.readInt();
+    }
+
+    public static final Creator<FeaturePost> CREATOR = new Creator<FeaturePost>() {
+        @Override
+        public FeaturePost createFromParcel(Parcel in) {
+            return new FeaturePost(in);
+        }
+
+        @Override
+        public FeaturePost[] newArray(int size) {
+            return new FeaturePost[size];
+        }
+    };
 
     public static FeaturePost newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -136,5 +165,22 @@ public class FeaturePost {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(userId);
+        dest.writeString(description);
+        dest.writeString(image);
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
+        dest.writeInt(numLikes);
+        dest.writeInt(numComments);
     }
 }
