@@ -43,4 +43,7 @@
     <color name="create_account_shape_transparent">#4c000000</color>
     <color name="color_bg_blue_teacher_item">#2172b8</color>
     <color name="teacher_text_color">#595756</color>
+
+    <color name="shadow">#51000000</color>
+    <color name="white_three">#f8f8f8</color>
 </resources>

@@ -157,7 +157,7 @@
             android:theme="@style/AppTheme.NoActionBarMain" />
         <activity
             android:name=".Activities.CreateRoomActivity"
-            android:theme="@style/AppTheme.NoActionBarSettings"></activity>
+            android:theme="@style/AppTheme.NoActionBarSettings" />
     </application>
 
 </manifest>

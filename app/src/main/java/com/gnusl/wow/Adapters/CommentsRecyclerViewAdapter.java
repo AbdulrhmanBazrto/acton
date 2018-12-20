@@ -41,7 +41,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private static int LOAD_MORE_HOLDER = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public CommentsRecyclerViewAdapter(Context context, List<Comment> comments, ViewGroup scrollView,CommentActionsDelegate commentActionsDelegate) {
+    public CommentsRecyclerViewAdapter(Context context, List<Comment> comments,CommentActionsDelegate commentActionsDelegate) {
         this.context = context;
         this.comments = comments;
         this.commentActionsDelegate=commentActionsDelegate;

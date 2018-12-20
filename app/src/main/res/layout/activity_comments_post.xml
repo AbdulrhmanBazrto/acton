@@ -2,34 +2,48 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_insights_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context="com.gnusl.wow.Activities.CommentsPostActivity">
+    android:background="@android:color/transparent">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+    <com.gnusl.wow.Views.NestedStickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/white_rounded"
+        android:overScrollMode="never"
+        android:paddingTop="10dp"
+        android:scrollbars="none">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_comments"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:clipToPadding="false"
-            android:paddingTop="10dp"
-            android:visibility="invisible" />
+            android:layout_height="match_parent"
+            android:background="@drawable/white_rounded"
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical">
 
-    </android.support.v4.widget.NestedScrollView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:clipToPadding="false"
+                android:paddingTop="10dp"
+                android:paddingBottom="50dp"
+                android:visibility="invisible" />
+
+
+        </LinearLayout>
+
+    </com.gnusl.wow.Views.NestedStickyScrollView>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
-
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -113,5 +127,6 @@
 
     </android.support.constraint.ConstraintLayout>
 
-
 </FrameLayout>
+
+

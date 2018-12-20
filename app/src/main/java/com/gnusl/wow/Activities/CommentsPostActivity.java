@@ -26,6 +26,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Comment;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.R;
+import com.gnusl.wow.SlidingPopUp.PopupActivity;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Views.FontedEditText;
 import com.klinker.android.sliding.MultiShrinkScroller;
@@ -40,7 +41,7 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class CommentsPostActivity extends SlidingActivity implements ConnectionDelegate, CommentActionsDelegate {
+public class CommentsPostActivity extends PopupActivity implements ConnectionDelegate, CommentActionsDelegate {
 
     public static String POST_ID="post_id";
 
@@ -55,16 +56,9 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void init(Bundle savedInstanceState) {
-
-        setPrimaryColors(
-                getResources().getColor(R.color.transparent),
-                getResources().getColor(R.color.colorPrimaryDarkMain)
-        );
-
-        setContent(R.layout.activity_comments_post);
-        setHeaderContent(R.layout.post_test);
-        enableFullscreen();
+    protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_comments_post);
+        super.onCreate(savedInstanceState);
 
         // find views
         findViews();
@@ -79,13 +73,16 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
 
         // send comments request
         sendCommentsRequest();
+    }
+
+    @Override
+    public void didAppear() {
 
     }
 
     private void findViews(){
 
         comments_recycler_view=(RecyclerView) findViewById(R.id.recycler_view_comments);
-        nestedScrollView=(NestedScrollView) findViewById(R.id.nestedScrollView);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
 
@@ -108,7 +105,7 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
 
         comments_recycler_view.setNestedScrollingEnabled(true);
 
-        commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter(this, new ArrayList<>(), getContentScroller(),this);
+        commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter(this, new ArrayList<>(),this);
         comments_recycler_view.setAdapter(commentsRecyclerViewAdapter);
     }
 
@@ -137,12 +134,6 @@ public class CommentsPostActivity extends SlidingActivity implements ConnectionD
             message_edit_text.setText("");
         }
 
-    }
-
-    @Override
-    protected void configureScroller(MultiShrinkScroller scroller) {
-        super.configureScroller(scroller);
-        scroller.setIntermediateHeaderHeightRatio(1);
     }
 
     @Override
