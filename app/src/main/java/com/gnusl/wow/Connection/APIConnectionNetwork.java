@@ -221,6 +221,47 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void GetAllFollowingPosts(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Posts_By_Following.getLink() + "?take=50&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Following POSTS ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("posts")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("posts"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Following POSTS ", anError.getMessage());
+                        Log.d("Following POSTS ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void UpdateLike(int postId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Update_Like_Url.getLink() + "?post_id=" + postId)
@@ -297,7 +338,7 @@ public class APIConnectionNetwork {
 
     public static void AddNewComment(String comment, int postId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.post(APILinks.Add_Comment_Url.getLink())
+        AndroidNetworking.post(APILinks.Comments_Url.getLink())
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())

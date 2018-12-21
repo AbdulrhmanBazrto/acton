@@ -24,7 +24,9 @@ public enum APILinks {
     // Comments
     Comments_Url(Base_API_Url.getLink()+"comment"),
 
-    Add_Comment_Url(Base_API_Url.getLink()+"comment");
+    // Following
+    Follow_Url(Base_API_Url.getLink()+"follow"),
+    Posts_By_Following(Follow_Url.getLink()+"/post");
 
     private String link;
     APILinks(String link){

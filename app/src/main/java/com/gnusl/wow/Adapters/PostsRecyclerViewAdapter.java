@@ -32,16 +32,18 @@ import java.util.ArrayList;
  * Created by Yehia on 10/1/2018.
  */
 
-public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private ArrayList<FeaturePost> featurePosts;
     private PostActionsDelegate postActionsDelegate;
+    private boolean isFollowing;
 
-    public FeatureRecyclerViewAdapter(Context context, ArrayList<FeaturePost> featurePosts,PostActionsDelegate postActionsDelegate) {
+    public PostsRecyclerViewAdapter(Context context, ArrayList<FeaturePost> featurePosts, PostActionsDelegate postActionsDelegate, boolean isFollowing) {
         this.context = context;
         this.featurePosts = featurePosts;
         this.postActionsDelegate=postActionsDelegate;
+        this.isFollowing=isFollowing;
     }
 
     @Override
@@ -128,6 +130,9 @@ public class FeatureRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             message_icon.setOnClickListener(v->goToCommentActivity(post.getId()));
 
             more_icon.setOnClickListener(v->{
+
+                if(isFollowing)
+                    return;
 
                 PopupMenu dropDownMenu = new PopupMenu(context,more_icon);
                 dropDownMenu.getMenuInflater().inflate(R.menu.comment_menu_option, dropDownMenu.getMenu());

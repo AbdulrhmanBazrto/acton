@@ -1,16 +1,12 @@
 package com.gnusl.wow.Fragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +14,11 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Activities.CreatePostActivity;
-import com.gnusl.wow.Adapters.FeatureRecyclerViewAdapter;
-import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
+import com.gnusl.wow.Adapters.PostsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
-import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -44,7 +37,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class FeaturedFragment extends Fragment implements ConnectionDelegate, PostActionsDelegate {
 
     private View inflatedView;
-    private FeatureRecyclerViewAdapter featureRecyclerViewAdapter;
+    private PostsRecyclerViewAdapter postsRecyclerViewAdapter;
     private ProgressDialog progressDialog;
 
     public FeaturedFragment() {
@@ -67,8 +60,8 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        featureRecyclerViewAdapter = new FeatureRecyclerViewAdapter(getContext(), new ArrayList<>(), this);
-        recyclerView.setAdapter(featureRecyclerViewAdapter);
+        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(getContext(), new ArrayList<>(), this,false);
+        recyclerView.setAdapter(postsRecyclerViewAdapter);
 
         return inflatedView;
     }
@@ -138,8 +131,8 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
         ArrayList<FeaturePost> featurePosts = FeaturePost.parseJSONArray(jsonArray);
 
         // notify
-        featureRecyclerViewAdapter.setFeaturePosts(featurePosts);
-        featureRecyclerViewAdapter.notifyDataSetChanged();
+        postsRecyclerViewAdapter.setFeaturePosts(featurePosts);
+        postsRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
         if (progressDialog != null)
