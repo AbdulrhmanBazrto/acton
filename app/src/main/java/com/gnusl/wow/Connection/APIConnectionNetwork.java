@@ -653,4 +653,72 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void SendMessageByChannel(String message, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.Channels_Url.getLink()+"/"+String.valueOf(channelId)+"/"+"message")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("message", message)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Send Message", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Send Message ", anError.getMessage());
+                        Log.d("Send Message ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void UploadRoomBackround(int channelId,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink()+"?channel_id="+String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Update Comment ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Update Comment ", anError.getMessage());
+                        Log.d("Update Comment ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
 }

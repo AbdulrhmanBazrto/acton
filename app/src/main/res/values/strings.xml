@@ -59,4 +59,6 @@
     <string name="room_admins_content">Max 7 admins</string>
     <string name="room_members_content">Max %1$s room members</string>
     <string name="room_level_content">Room upgrade rate increases to %1$s time</string>
+    <string name="Settings">الإعدادات</string>
+    <string name="backround">الخلفية</string>
 </resources>

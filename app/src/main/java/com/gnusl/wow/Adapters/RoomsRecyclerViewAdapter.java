@@ -82,10 +82,6 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             room_image = (AppCompatImageView) itemView.findViewById(R.id.room_image);
             flag_image = (AppCompatImageView) itemView.findViewById(R.id.flag_image);
 
-            // go to Chat Room
-            itemView.setOnClickListener(v -> {
-                context.startActivity(new Intent(context, RoomChatActivity.class));
-            });
         }
 
         public void bind(final Room room, final int position) {
@@ -127,9 +123,21 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                             .load(room.getCountryCodeUrl())
                             .into(flag_image);
 
+                // go to Chat Room
+                itemView.setOnClickListener(v -> {
+
+                    goToRoomChannel(room.getId());
+                });
+
             }
         }
 
+        private void goToRoomChannel(int channelId){
+
+            Intent intent=new Intent(context, RoomChatActivity.class);
+            intent.putExtra(RoomChatActivity.CHANNEL_KEY,channelId);
+            context.startActivity(intent);
+        }
     }
 
     // region setters and getters

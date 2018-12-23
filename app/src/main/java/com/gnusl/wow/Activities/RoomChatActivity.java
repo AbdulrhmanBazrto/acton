@@ -1,13 +1,19 @@
 package com.gnusl.wow.Activities;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,9 +32,12 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
+import com.gnusl.wow.Adapters.MediaGridViewAdapter;
 import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SoftInputDelegate;
 import com.gnusl.wow.Fragments.RoomChatFragment;
 import com.gnusl.wow.Models.ChatMessage;
@@ -42,6 +51,8 @@ import com.gnusl.wow.WebRtcClient.PermissionChecker;
 import com.gnusl.wow.WebRtcClient.WebRtcClient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.learnncode.mediachooser.MediaChooser;
+import com.learnncode.mediachooser.activity.HomeScreenMediaChooser;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
@@ -59,11 +70,18 @@ import org.webrtc.MediaStream;
 import org.webrtc.VideoRenderer;
 import org.webrtc.VideoRendererGui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.RtcListener, CallDelegate,SoftInputDelegate {
+import static com.gnusl.wow.Utils.PermissionsUtils.GALLERY_PERMISSIONS_REQUEST;
+import static com.gnusl.wow.Utils.PermissionsUtils.checkReadGalleryPermissions;
+
+public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.RtcListener, CallDelegate,SoftInputDelegate, ConnectionDelegate {
+
+    public final static String CHANNEL_KEY="channel_key";
+    private int channelId;
 
     private final static int VIDEO_CALL_SENT = 666;
     private static final String VIDEO_CODEC_VP9 = "VP9";
@@ -93,6 +111,9 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     private static final String[] RequiredPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
     protected PermissionChecker permissionChecker = new PermissionChecker();
+    BroadcastReceiver videoBroadcastReceiver;
+    BroadcastReceiver imageBroadcastReceiver;
+    private RoomChatFragment roomChatFragment;
 
     private View softInputKeyboardLayout;
     private EditText messageEditText;
@@ -102,16 +123,30 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
 
+        if(getIntent().hasExtra(CHANNEL_KEY))
+            channelId=getIntent().getIntExtra(CHANNEL_KEY,-1);
+
         // WebRtc implementation
         AudioConferenceWebRtcImplementation();
 
         // inflate room chat fragment
         FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame_container, RoomChatFragment.newInstance()).commit();
+        roomChatFragment=RoomChatFragment.newInstance();
+        fragmentTransaction.replace(R.id.frame_container,roomChatFragment).commit();
+
+        // initialize views
+        initViews();
+
+        // init media
+        InitializeMediaPicker();
+    }
+
+    private void initViews(){
 
         softInputKeyboardLayout=findViewById(R.id.input_layout);
         messageEditText=findViewById(R.id.message_edit_text);
 
+        findViewById(R.id.send_button).setOnClickListener(v->SendMessageRequest());
     }
 
     private void AudioConferenceWebRtcImplementation(){
@@ -288,12 +323,6 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                 scalingType, false);*/
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        permissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
     public static void GetStreamClients(final String callId, final CallDelegate callDelegate) {
 
         AndroidNetworking.get("http://fat7al.com:3000/streams.json")
@@ -334,6 +363,96 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                     }
                 });
 
+
+    }
+
+    private void InitializeMediaPicker() {
+
+      /*  videoBroadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Toast.makeText(RoomChatActivity.this, "yippiee Video ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomChatActivity.this, "Video SIZE :" + intent.getStringArrayListExtra("list").size(), Toast.LENGTH_SHORT).show();
+                //setAdapter(intent.getStringArrayListExtra("list"));
+            }
+        };*/
+
+
+        imageBroadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(RoomChatActivity.this, "yippiee Image ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RoomChatActivity.this, "Image SIZE :" + intent.getStringArrayListExtra("list").size(), Toast.LENGTH_SHORT).show();
+
+                // change room backround
+                changeRoomBackround(intent.getStringArrayListExtra("list"));
+
+            }
+        };
+
+
+      //  IntentFilter videoIntentFilter = new IntentFilter(MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+        //registerReceiver(videoBroadcastReceiver, videoIntentFilter);
+
+        IntentFilter imageIntentFilter = new IntentFilter(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+        registerReceiver(imageBroadcastReceiver, imageIntentFilter);
+        MediaChooser.showCameraVideoView(false);
+
+    }
+
+    public void openGallery() {
+
+        if (checkReadGalleryPermissions(this)) {
+
+            HomeScreenMediaChooser.startMediaChooser(this, true);
+
+        } else {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    GALLERY_PERMISSIONS_REQUEST);
+
+        }
+
+    }
+    private void changeRoomBackround(List<String> filePathList){
+
+        // create file image
+        File mediaFile = new File(filePathList.get(0));
+
+        if (!(mediaFile.getPath().contains("mp4") || mediaFile.getPath().contains("wmv") ||
+                mediaFile.getPath().contains("avi") || mediaFile.getPath().contains("3gp"))) {
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPurgeable = true;
+            options.inSampleSize = 2;
+            Bitmap myBitmap = BitmapFactory.decodeFile(mediaFile.getAbsolutePath(), options);
+            ((AppCompatImageView)findViewById(R.id.backround_image)).setImageBitmap(myBitmap);
+        }
+
+        // TODO : upload image
+
+    }
+
+    private void SendMessageRequest(){
+
+        if(messageEditText.getText().toString().isEmpty())
+            Toast.makeText(this,"you must have message",Toast.LENGTH_SHORT).show();
+
+        else {
+
+            // send message
+            APIConnectionNetwork.SendMessageByChannel(messageEditText.getText().toString(),channelId,this);
+
+            // share on pubnup
+            roomChatFragment.ShareMessageOnPubnub(messageEditText.getText().toString());
+
+            // clear message
+            messageEditText.setText("");
+        }
 
     }
 
@@ -379,5 +498,59 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
         // show keyboard
         KeyboardUtils.showSoftKeyboardForEditText(this,messageEditText);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == GALLERY_PERMISSIONS_REQUEST) {
+
+
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0) {
+                if (grantResults.length == 1) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED && permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                        //Coming from profile
+                        HomeScreenMediaChooser.startMediaChooser(this, true);
+
+                    } else {
+                        Toast.makeText(this, R.string.grant_equired_permissions_please, Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+            }
+
+        }else
+            permissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    }
+
+
+    @Override
+    public void onConnectionFailure() {
+
+    }
+
+    @Override
+    public void onConnectionError(ANError anError) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(String response) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONArray jsonArray) {
+
     }
 }

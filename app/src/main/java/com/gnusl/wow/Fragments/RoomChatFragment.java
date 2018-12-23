@@ -16,12 +16,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.gnusl.wow.Activities.RoomChatActivity;
+import com.gnusl.wow.Activities.RoomSettingsActivity;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.MessageRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
@@ -50,6 +53,10 @@ public class RoomChatFragment extends Fragment {
 
     private View inflatedView;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
+
+    // pubnub
+    private PubNub pubnub;
+    String channelName = "awesomeChannel";
 
     public RoomChatFragment() {
     }
@@ -99,6 +106,34 @@ public class RoomChatFragment extends Fragment {
             ((RoomChatActivity) getActivity()).onRequestToShowKeyboard();
 
             inflatedView.findViewById(R.id.frame).setVisibility(View.VISIBLE);
+        });
+
+        inflatedView.findViewById(R.id.more_icon).setOnClickListener(v -> {
+
+            PopupMenu dropDownMenu = new PopupMenu(getContext(),inflatedView.findViewById(R.id.more_icon));
+            dropDownMenu.getMenuInflater().inflate(R.menu.more_room_option, dropDownMenu.getMenu());
+            dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+
+                    switch(menuItem.getItemId()){
+
+                        case R.id.settings_action:
+
+                            startActivity(new Intent(getActivity(),RoomSettingsActivity.class));
+                            break;
+
+                        case R.id.backround_action:
+
+                            ((RoomChatActivity)getActivity()).openGallery();
+                            break;
+                    }
+
+                    return true;
+                }
+            });
+            dropDownMenu.show();
         });
 
     }
@@ -168,15 +203,7 @@ public class RoomChatFragment extends Fragment {
         pnConfiguration.setSubscribeKey("demo");
         pnConfiguration.setPublishKey("demo");
 
-        PubNub pubnub = new PubNub(pnConfiguration);
-
-        String channelName = "awesomeChannel";
-
-        // create message payload using Gson
-        JsonObject messageJsonObject = new JsonObject();
-        messageJsonObject.addProperty("msg", "hello");
-
-        System.out.println("Message to send: " + messageJsonObject.toString());
+        this.pubnub = new PubNub(pnConfiguration);
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -262,31 +289,32 @@ public class RoomChatFragment extends Fragment {
 
         pubnub.subscribe().channels(Arrays.asList(channelName)).execute();
 
-        // send when click on music
-        inflatedView.findViewById(R.id.music_image).setOnClickListener(v -> {
+    }
 
-            //SendMessagePopup.show(this);
-            pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
-                @Override
-                public void onResponse(PNPublishResult result, PNStatus status) {
-                    // Check whether request successfully completed or not.
-                    if (!status.isError()) {
+    public void ShareMessageOnPubnub(String message){
 
-                        // Message successfully published to specified channel.
-                    }
-                    // Request processing failed.
-                    else {
+        // create message payload using Gson
+        JsonObject messageJsonObject = new JsonObject();
+        messageJsonObject.addProperty("msg", message);
 
-                        // Handle message publish error. Check 'category' property to find out possible issue
-                        // because of which request did fail.
-                        //
-                        // Request can be resent using: [status retry];
-                    }
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                // Check whether request successfully completed or not.
+                if (!status.isError()) {
+
+                    // Message successfully published to specified channel.
                 }
-            });
+                // Request processing failed.
+                else {
 
+                    // Handle message publish error. Check 'category' property to find out possible issue
+                    // because of which request did fail.
+                    //
+                    // Request can be resent using: [status retry];
+                }
+            }
         });
-
     }
 
 }
