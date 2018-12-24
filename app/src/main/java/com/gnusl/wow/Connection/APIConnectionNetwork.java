@@ -687,20 +687,21 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void UploadRoomBackround(int channelId,ConnectionDelegate connectionDelegate) {
+    public static void ChangeRoomBackground(String backroundName,int channelId,ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Channels_Url.getLink()+"?channel_id="+String.valueOf(channelId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
                 .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .addBodyParameter("background_path",backroundName)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Log.d("Update Comment ", response.toString());
+                        Log.d("Change Background", response.toString());
 
                         // handle parse user data
                         if (connectionDelegate != null) {
@@ -711,8 +712,8 @@ public class APIConnectionNetwork {
                     @Override
                     public void onError(ANError anError) {
 
-                        Log.d("Update Comment ", anError.getMessage());
-                        Log.d("Update Comment ", anError.getErrorDetail());
+                        Log.d("Change Background ", anError.getMessage());
+                        Log.d("Change Background ", anError.getErrorDetail());
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);

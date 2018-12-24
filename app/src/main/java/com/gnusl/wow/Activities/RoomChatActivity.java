@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -75,6 +76,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.widget.Toast.LENGTH_LONG;
 import static com.gnusl.wow.Utils.PermissionsUtils.GALLERY_PERMISSIONS_REQUEST;
 import static com.gnusl.wow.Utils.PermissionsUtils.checkReadGalleryPermissions;
 
@@ -117,6 +119,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     private View softInputKeyboardLayout;
     private EditText messageEditText;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -388,7 +391,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                 Toast.makeText(RoomChatActivity.this, "Image SIZE :" + intent.getStringArrayListExtra("list").size(), Toast.LENGTH_SHORT).show();
 
                 // change room backround
-                changeRoomBackround(intent.getStringArrayListExtra("list"));
+                changeRoomBackground(intent.getStringArrayListExtra("list"));
 
             }
         };
@@ -418,7 +421,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         }
 
     }
-    private void changeRoomBackround(List<String> filePathList){
+    private void changeRoomBackground(List<String> filePathList){
 
         // create file image
         File mediaFile = new File(filePathList.get(0));
@@ -434,6 +437,11 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         }
 
         // TODO : upload image
+        // make progress dialog
+        this.progressDialog = ProgressDialog.show(this, "", "change your background..");
+
+        // upload image
+        APIConnectionNetwork.UploadImage(mediaFile,this);
 
     }
 
@@ -532,11 +540,19 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     @Override
     public void onConnectionFailure() {
 
+        Toast.makeText(this, "failure response..", LENGTH_LONG).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
     }
 
     @Override
     public void onConnectionError(ANError anError) {
 
+        Toast.makeText(this, "error Connection try again", LENGTH_LONG).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
     }
 
     @Override
@@ -546,6 +562,21 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
+
+        if(jsonObject.has("image")){
+
+            // upload post
+            try {
+                APIConnectionNetwork.ChangeRoomBackground(jsonObject.getString("image"),channelId,this);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return;
+        }
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
 
     }
 
