@@ -12,6 +12,7 @@ public enum APILinks {
 
     // Channels
     Channels_Url(Base_API_Url.getLink()+"channel"),
+    Channels_Lock_Type_Url(Channels_Url.getLink()+"/lock_types"),
     Get_Channels_Type_Url(Channels_Url.getLink()+"/types"),
 
     // Posts

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.AccountFragment;
+import com.gnusl.wow.Fragments.RoomLockFragment;
 import com.gnusl.wow.Fragments.RoomSettingsFragment;
 import com.gnusl.wow.Fragments.SettingsFragment;
 import com.gnusl.wow.Models.Room;
@@ -50,6 +51,13 @@ public class RoomSettingsActivity extends AppCompatActivity {
                 titleTv.setText(getResources().getString(R.string.Settings));
                 currentFragment=RoomSettingsFragment.newInstance();
                 break;
+
+            case RoomLockFragment:
+
+                titleTv.setText(getResources().getString(R.string.room_lock));
+                currentFragment=RoomLockFragment.newInstance();
+                break;
+
 
         }
 

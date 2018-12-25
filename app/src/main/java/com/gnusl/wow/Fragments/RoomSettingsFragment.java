@@ -79,6 +79,12 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
                         }
                     }).show();
         });
+
+
+        inflatedView.findViewById(R.id.room_lock_layout).setOnClickListener(v->{
+
+           activity.makeFragment(FragmentTags.RoomLockFragment);
+        });
     }
 
     @Override

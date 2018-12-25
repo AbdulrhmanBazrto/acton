@@ -45,7 +45,6 @@ import com.gnusl.wow.Fragments.RoomChatFragment;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
-import com.gnusl.wow.Popups.SendMessagePopup;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.KeyboardUtils;
 import com.gnusl.wow.WebRtcClient.CallDelegate;

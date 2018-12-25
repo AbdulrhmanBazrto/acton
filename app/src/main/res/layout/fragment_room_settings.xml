@@ -96,6 +96,7 @@
                 android:background="@color/settings_seperator_color" />
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/room_lock_layout"
                 android:layout_width="match_parent"
                 android:layout_height="45dp">
 
@@ -105,7 +106,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:lines="1"
-                    android:text="إشعار عام"
+                    android:text="قفل الغرفة"
                     android:textColor="@color/settings_text_color"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="parent"

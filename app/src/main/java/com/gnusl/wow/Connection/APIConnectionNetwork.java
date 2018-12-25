@@ -757,4 +757,82 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void SetRoomPassWord(String password,int channelId,int channelTypeId,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink()+"?channel_id="+String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .addBodyParameter("is_active","0")
+                .addBodyParameter("has_password","1")
+                .addBodyParameter("password",password)
+                .addBodyParameter("channel_type_id",String.valueOf(channelTypeId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Set Password", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Set Password ", anError.getMessage());
+                        Log.d("Set Password ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetRoomLockType(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Lock_Type_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Lock Type ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("lock_types")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("lock_types"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Lock Type ", anError.getMessage());
+                        Log.d("Lock Type ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
 }
