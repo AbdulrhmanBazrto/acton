@@ -722,4 +722,39 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void ChangeRoomName(String name,int channelId,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink()+"?channel_id="+String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .addBodyParameter("name",name)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
 }

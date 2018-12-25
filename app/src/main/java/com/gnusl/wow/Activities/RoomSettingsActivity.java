@@ -10,9 +10,13 @@ import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.AccountFragment;
 import com.gnusl.wow.Fragments.RoomSettingsFragment;
 import com.gnusl.wow.Fragments.SettingsFragment;
+import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
 
 public class RoomSettingsActivity extends AppCompatActivity {
+
+    public final static String CHANNEL_KEY="channel_key";
+    private Room room;
 
     TextView titleTv;
     Fragment currentFragment;
@@ -21,6 +25,9 @@ public class RoomSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_settings);
+
+        if(getIntent().hasExtra(CHANNEL_KEY))
+            setRoom(getIntent().getParcelableExtra(CHANNEL_KEY));
 
         titleTv=findViewById(R.id.title);
 
@@ -48,6 +55,14 @@ public class RoomSettingsActivity extends AppCompatActivity {
 
         fragmentTransaction.replace(R.id.frame_container,currentFragment).commit();
 
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     @Override

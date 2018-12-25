@@ -32,6 +32,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.MediaGridViewAdapter;
 import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
@@ -42,6 +43,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SoftInputDelegate;
 import com.gnusl.wow.Fragments.RoomChatFragment;
 import com.gnusl.wow.Models.ChatMessage;
+import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.SendMessagePopup;
 import com.gnusl.wow.R;
@@ -80,10 +82,10 @@ import static android.widget.Toast.LENGTH_LONG;
 import static com.gnusl.wow.Utils.PermissionsUtils.GALLERY_PERMISSIONS_REQUEST;
 import static com.gnusl.wow.Utils.PermissionsUtils.checkReadGalleryPermissions;
 
-public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.RtcListener, CallDelegate,SoftInputDelegate, ConnectionDelegate {
+public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.RtcListener, CallDelegate, SoftInputDelegate, ConnectionDelegate {
 
-    public final static String CHANNEL_KEY="channel_key";
-    private int channelId;
+    public final static String CHANNEL_KEY = "channel_key";
+    private Room room;
 
     private final static int VIDEO_CALL_SENT = 666;
     private static final String VIDEO_CODEC_VP9 = "VP9";
@@ -126,16 +128,16 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_chat);
 
-        if(getIntent().hasExtra(CHANNEL_KEY))
-            channelId=getIntent().getIntExtra(CHANNEL_KEY,-1);
+        if (getIntent().hasExtra(CHANNEL_KEY))
+            setRoom(getIntent().getParcelableExtra(CHANNEL_KEY));
 
         // WebRtc implementation
         AudioConferenceWebRtcImplementation();
 
         // inflate room chat fragment
-        FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-        roomChatFragment=RoomChatFragment.newInstance();
-        fragmentTransaction.replace(R.id.frame_container,roomChatFragment).commit();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        roomChatFragment = RoomChatFragment.newInstance();
+        fragmentTransaction.replace(R.id.frame_container, roomChatFragment).commit();
 
         // initialize views
         initViews();
@@ -144,19 +146,26 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         InitializeMediaPicker();
     }
 
-    private void initViews(){
+    private void initViews() {
 
-        softInputKeyboardLayout=findViewById(R.id.input_layout);
-        messageEditText=findViewById(R.id.message_edit_text);
+        softInputKeyboardLayout = findViewById(R.id.input_layout);
+        messageEditText = findViewById(R.id.message_edit_text);
 
-        findViewById(R.id.send_button).setOnClickListener(v->SendMessageRequest());
+        findViewById(R.id.send_button).setOnClickListener(v -> SendMessageRequest());
+
+        // set data
+        // room image
+        if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty())
+            Glide.with(this)
+                    .load(room.getBackgroundUrl())
+                    .into(((AppCompatImageView) findViewById(R.id.backround_image)));
     }
 
-    private void AudioConferenceWebRtcImplementation(){
+    private void AudioConferenceWebRtcImplementation() {
 
         getWindow().addFlags(
-               // WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                         WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                // WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                         | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                         //| WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -182,7 +191,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                 LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING,
                 LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING, scalingType, true);*/
 
-       // Initialize WebRtc Client
+        // Initialize WebRtc Client
         initializeWebRtcClient();
 
         final Intent intent = getIntent();
@@ -257,7 +266,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     public void onCallReady(String callId) {
 
         // send request to know how much clients to make call with them
-        GetStreamClients(callId,this);
+        GetStreamClients(callId, this);
 
     }
 
@@ -335,10 +344,10 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                     @Override
                     public void onResponse(JSONArray response) {
 
-                        Log.d("STREAMS ",response.toString());
+                        Log.d("STREAMS ", response.toString());
 
                         // check have ids
-                        if(response!=null && response.length()!=0) {
+                        if (response != null && response.length() != 0) {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject jsonObject = response.getJSONObject(i);
@@ -353,7 +362,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                                     e.printStackTrace();
                                 }
                             }
-                        }else
+                        } else
                             callDelegate.onReadyToCall(callId);
 
 
@@ -362,7 +371,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                     @Override
                     public void onError(ANError anError) {
 
-                        Log.d("ERROR ",anError.getMessage());
+                        Log.d("ERROR ", anError.getMessage());
                     }
                 });
 
@@ -397,7 +406,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         };
 
 
-      //  IntentFilter videoIntentFilter = new IntentFilter(MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
+        //  IntentFilter videoIntentFilter = new IntentFilter(MediaChooser.VIDEO_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
         //registerReceiver(videoBroadcastReceiver, videoIntentFilter);
 
         IntentFilter imageIntentFilter = new IntentFilter(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
@@ -421,7 +430,8 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         }
 
     }
-    private void changeRoomBackground(List<String> filePathList){
+
+    private void changeRoomBackground(List<String> filePathList) {
 
         // create file image
         File mediaFile = new File(filePathList.get(0));
@@ -433,7 +443,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             options.inPurgeable = true;
             options.inSampleSize = 2;
             Bitmap myBitmap = BitmapFactory.decodeFile(mediaFile.getAbsolutePath(), options);
-            ((AppCompatImageView)findViewById(R.id.backround_image)).setImageBitmap(myBitmap);
+            ((AppCompatImageView) findViewById(R.id.backround_image)).setImageBitmap(myBitmap);
         }
 
         // TODO : upload image
@@ -441,19 +451,19 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         this.progressDialog = ProgressDialog.show(this, "", "change your background..");
 
         // upload image
-        APIConnectionNetwork.UploadImage(mediaFile,this);
+        APIConnectionNetwork.UploadImage(mediaFile, this);
 
     }
 
-    private void SendMessageRequest(){
+    private void SendMessageRequest() {
 
-        if(messageEditText.getText().toString().isEmpty())
-            Toast.makeText(this,"you must have message",Toast.LENGTH_SHORT).show();
+        if (messageEditText.getText().toString().isEmpty())
+            Toast.makeText(this, "you must have message", Toast.LENGTH_SHORT).show();
 
         else {
 
             // send message
-            APIConnectionNetwork.SendMessageByChannel(messageEditText.getText().toString(),channelId,this);
+            APIConnectionNetwork.SendMessageByChannel(messageEditText.getText().toString(), getRoom().getId(), this);
 
             // share on pubnup
             roomChatFragment.ShareMessageOnPubnub(messageEditText.getText().toString());
@@ -464,13 +474,21 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     @Override
     public void makeCallTO(String callerId) {
 
         if (callerId != null) {
             try {
                 answer(callerId);
-                Log.d("onCallReady callerId ",callerId);
+                Log.d("onCallReady callerId ", callerId);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -480,8 +498,8 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     @Override
     public void onReadyToCall(String callId) {
 
-        Log.d("onCallReady callId ",callId);
-       // call(callId);
+        Log.d("onCallReady callId ", callId);
+        // call(callId);
 
         // start streaming on server
         if (PermissionChecker.hasPermissions(this, RequiredPermissions)) {
@@ -505,7 +523,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         messageEditText.requestFocus();
 
         // show keyboard
-        KeyboardUtils.showSoftKeyboardForEditText(this,messageEditText);
+        KeyboardUtils.showSoftKeyboardForEditText(this, messageEditText);
     }
 
     @Override
@@ -531,7 +549,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
             }
 
-        }else
+        } else
             permissionChecker.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     }
@@ -563,11 +581,11 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
-        if(jsonObject.has("image")){
+        if (jsonObject.has("image")) {
 
             // upload post
             try {
-                APIConnectionNetwork.ChangeRoomBackground(jsonObject.getString("image"),channelId,this);
+                APIConnectionNetwork.ChangeRoomBackground(jsonObject.getString("image"), getRoom().getId(), this);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

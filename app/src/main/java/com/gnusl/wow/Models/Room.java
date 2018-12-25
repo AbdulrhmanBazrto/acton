@@ -1,5 +1,8 @@
 package com.gnusl.wow.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +13,7 @@ import java.util.ArrayList;
  * Created by Yehia on 9/27/2018.
  */
 
-public class Room {
+public class Room implements Parcelable {
 
     private int id;
     private String name;
@@ -28,6 +31,39 @@ public class Room {
     private String backgroundUrl;
     private String countryCodeUrl;
     private User user;
+
+    public Room(){}
+
+    protected Room(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        isActive = in.readByte() != 0;
+        hasPassword = in.readByte() != 0;
+        password = in.readString();
+        userId = in.readInt();
+        isFree = in.readByte() != 0;
+        subscriptionPrice = in.readDouble();
+        backgroundPath = in.readString();
+        priority = in.readInt();
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        description = in.readString();
+        backgroundUrl = in.readString();
+        countryCodeUrl = in.readString();
+        user = in.readParcelable(User.class.getClassLoader());
+    }
+
+    public static final Creator<Room> CREATOR = new Creator<Room>() {
+        @Override
+        public Room createFromParcel(Parcel in) {
+            return new Room(in);
+        }
+
+        @Override
+        public Room[] newArray(int size) {
+            return new Room[size];
+        }
+    };
 
     public static Room newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -207,5 +243,30 @@ public class Room {
 
     public void setCountryCodeUrl(String countryCodeUrl) {
         this.countryCodeUrl = countryCodeUrl;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeByte((byte) (isActive ? 1 : 0));
+        parcel.writeByte((byte) (hasPassword ? 1 : 0));
+        parcel.writeString(password);
+        parcel.writeInt(userId);
+        parcel.writeByte((byte) (isFree ? 1 : 0));
+        parcel.writeDouble(subscriptionPrice);
+        parcel.writeString(backgroundPath);
+        parcel.writeInt(priority);
+        parcel.writeString(createdAt);
+        parcel.writeString(updatedAt);
+        parcel.writeString(description);
+        parcel.writeString(backgroundUrl);
+        parcel.writeString(countryCodeUrl);
+        parcel.writeParcelable(user, i);
     }
 }

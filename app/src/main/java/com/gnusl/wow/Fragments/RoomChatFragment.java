@@ -121,7 +121,7 @@ public class RoomChatFragment extends Fragment {
 
                         case R.id.settings_action:
 
-                            startActivity(new Intent(getActivity(),RoomSettingsActivity.class));
+                            goToRoomSettingsActivity();
                             break;
 
                         case R.id.backround_action:
@@ -136,6 +136,13 @@ public class RoomChatFragment extends Fragment {
             dropDownMenu.show();
         });
 
+    }
+
+    private void goToRoomSettingsActivity(){
+
+        Intent intent=new Intent(getActivity(),RoomSettingsActivity.class);
+        intent.putExtra(RoomSettingsActivity.CHANNEL_KEY,((RoomChatActivity)getActivity()).getRoom());
+        startActivity(intent);
     }
 
     private void initializeUsersScore() {

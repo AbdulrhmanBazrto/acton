@@ -126,16 +126,16 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 // go to Chat Room
                 itemView.setOnClickListener(v -> {
 
-                    goToRoomChannel(room.getId());
+                    goToRoomChannel(room);
                 });
 
             }
         }
 
-        private void goToRoomChannel(int channelId){
+        private void goToRoomChannel(Room room){
 
             Intent intent=new Intent(context, RoomChatActivity.class);
-            intent.putExtra(RoomChatActivity.CHANNEL_KEY,channelId);
+            intent.putExtra(RoomChatActivity.CHANNEL_KEY,room);
             context.startActivity(intent);
         }
     }
