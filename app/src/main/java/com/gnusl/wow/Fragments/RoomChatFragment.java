@@ -1,6 +1,8 @@
 package com.gnusl.wow.Fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.media.AudioManager;
@@ -23,14 +25,18 @@ import android.view.WindowManager;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Activities.RoomSettingsActivity;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.MessageRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Message;
+import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.google.gson.JsonElement;
@@ -45,14 +51,21 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static android.widget.Toast.LENGTH_SHORT;
 
-public class RoomChatFragment extends Fragment {
 
+public class RoomChatFragment extends Fragment implements ConnectionDelegate {
+
+    private RoomChatActivity activity;
     private View inflatedView;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
+    private ProgressDialog progressDialog;
 
     // pubnub
     private PubNub pubnub;
@@ -90,6 +103,17 @@ public class RoomChatFragment extends Fragment {
 
         // pubnub implementation
         PubnubImplementation();
+
+        // get messages
+        sendChannelsRequest();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if(context instanceof RoomChatActivity)
+            activity= (RoomChatActivity) context;
     }
 
     private void initializeViews() {
@@ -196,11 +220,7 @@ public class RoomChatFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        ArrayList<ChatMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(new ChatMessage(R.drawable.img1, "الدوسري الأصيل", "شباب ما هي أعراض القولون؟"));
-
-
-        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(getContext(), chatMessages);
+        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(chatRecyclerViewAdapter);
     }
 
@@ -276,7 +296,7 @@ public class RoomChatFragment extends Fragment {
                 // show message
                 getActivity().runOnUiThread(() -> {
 
-                    chatRecyclerViewAdapter.getChatMessages().add(new ChatMessage(R.drawable.img1, "الدوسري الأصيل", msg));
+                    chatRecyclerViewAdapter.getChatMessages().add(new ChatMessage());
                     chatRecyclerViewAdapter.notifyDataSetChanged();
                 });
 
@@ -324,6 +344,63 @@ public class RoomChatFragment extends Fragment {
         });
     }
 
+    private void sendChannelsRequest() {
+
+        // make progress dialog
+        this.progressDialog = ProgressDialog.show(getContext(), "", "loading messages..");
+
+        // send request
+        APIConnectionNetwork.GetAllRoomMessages(activity.getRoom().getId(),this);
+    }
+
+    @Override
+    public void onConnectionFailure() {
+
+        Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+    }
+
+    @Override
+    public void onConnectionError(ANError anError) {
+
+        Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+    }
+
+    @Override
+    public void onConnectionSuccess(String response) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONArray jsonArray) {
+
+        // parsing
+        ArrayList<ChatMessage> chatMessages=ChatMessage.parseJSONArray(jsonArray);
+
+        ArrayList<ChatMessage> messages=new ArrayList<>();
+        for(int i=chatMessages.size()-1;i>=0;i--)
+            messages.add(chatMessages.get(i));
+
+        // notify
+        chatRecyclerViewAdapter.setChatMessages(messages);
+        chatRecyclerViewAdapter.notifyDataSetChanged();
+
+        // dismiss
+        if (progressDialog != null)
+            progressDialog.dismiss();
+    }
 }
 
 

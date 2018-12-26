@@ -835,4 +835,45 @@ public class APIConnectionNetwork {
                 });
 
     }
+
+    public static void GetAllRoomMessages(int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/"+String.valueOf(channelId)+"/message?skip=0&take=10")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Room Messages ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("messages")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("messages"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Room Messages ", anError.getMessage());
+                        Log.d("Room Messages ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
 }

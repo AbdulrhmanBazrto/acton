@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
@@ -37,7 +38,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((MessageViewHolder)holder).bind(getChatMessages().get(position), position);
+        ((MessageViewHolder) holder).bind(getChatMessages().get(position), position);
 
     }
 
@@ -49,21 +50,33 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
         private AppCompatImageView userImage;
+        private TextView userName;
         private TextView messageTextView;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
 
-            userImage=(AppCompatImageView) itemView.findViewById(R.id.user_image);
-            messageTextView=(TextView) itemView.findViewById(R.id.message_text_view);
+            userImage = (AppCompatImageView) itemView.findViewById(R.id.user_image);
+            userName = (TextView) itemView.findViewById(R.id.user_name);
+            messageTextView = (TextView) itemView.findViewById(R.id.message_text_view);
 
         }
 
         public void bind(final ChatMessage chatMessage, final int position) {
 
-            userImage.setImageResource(chatMessage.getImageResource());
+            // user name
+            if (chatMessage.getUser() != null)
+                userName.setText(chatMessage.getUser().getName());
 
+            // message
             messageTextView.setText(chatMessage.getMessage());
+
+            // user image
+            if (chatMessage.getUser() != null && chatMessage.getUser().getImage_url() != null && !chatMessage.getUser().getImage_url().isEmpty())
+                Glide.with(context)
+                        .load(chatMessage.getUser().getImage_url())
+                        .into(userImage);
+
         }
 
     }
