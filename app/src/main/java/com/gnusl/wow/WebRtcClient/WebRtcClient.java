@@ -39,6 +39,7 @@ public class WebRtcClient {
     private VideoSource videoSource;
     private RtcListener mListener;
     private Socket client;
+    private int channelId;
 
     /**
      * Implement this interface to be notified of events.
@@ -305,7 +306,7 @@ public class WebRtcClient {
         endPoints[peer.endPoint] = false;
     }
 
-    public WebRtcClient(RtcListener listener, String host, PeerConnectionParameters params, EGLContext mEGLcontext) {
+    public WebRtcClient(RtcListener listener, String host, PeerConnectionParameters params, EGLContext mEGLcontext,int channelId) {
         mListener = listener;
         pcParams = params;
         PeerConnectionFactory.initializeAndroidGlobals(listener, true, true,
@@ -313,6 +314,7 @@ public class WebRtcClient {
         factory = new PeerConnectionFactory();
         MessageHandler messageHandler = new MessageHandler();
 
+        this.channelId=channelId;
         try {
             client = IO.socket(host);
         } catch (URISyntaxException e) {
@@ -383,7 +385,7 @@ public class WebRtcClient {
         try {
             JSONObject message = new JSONObject();
             message.put("name", name);
-            message.put("channel_id",10);
+            message.put("channel_id",channelId);
             client.emit("readyToStream", message);
         } catch (JSONException e) {
             e.printStackTrace();

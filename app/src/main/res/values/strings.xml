@@ -29,7 +29,7 @@
     <string name="users">Users</string>
     <string name="rooms">Rooms</string>
 
-    <string name="host">fat7al.com</string>
+    <string name="host">gnusl.com</string>
     <string name="port">3000</string>
 
     <string name="facebook_app_id">368435650570560</string>
@@ -50,6 +50,7 @@
     <string name="are_you_sure_delete_post">Are you sure to delete this post?</string>
 
     <string name="write_comment">write comment</string>
+    <string name="write_message">write Message</string>
     <string name="what_you_think">what do you think ?</string>
     <string name="create_post">Create Post</string>
     <string name="action_share">Share</string>

@@ -8,7 +8,9 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
@@ -37,7 +39,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((UserViewHolder)holder).bind(getUsers().get(position), position);
+        ((UserViewHolder) holder).bind(getUsers().get(position), position);
 
     }
 
@@ -49,17 +51,29 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
         private AppCompatImageView userImage;
+        private TextView userName;
 
         public UserViewHolder(View itemView) {
             super(itemView);
 
-            userImage=(AppCompatImageView) itemView.findViewById(R.id.user_image);
+            userImage = (AppCompatImageView) itemView.findViewById(R.id.user_image);
+            userName = (TextView) itemView.findViewById(R.id.user_name);
 
         }
 
         public void bind(final User user, final int position) {
 
-            userImage.setImageResource(user.getImageResource());
+
+            // name
+            if (user.getName() != null && !user.getName().isEmpty())
+                userName.setText(user.getName());
+
+            // user image
+            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+                Glide.with(context)
+                        .load(user.getImage_url())
+                        .into(userImage);
+
         }
 
     }

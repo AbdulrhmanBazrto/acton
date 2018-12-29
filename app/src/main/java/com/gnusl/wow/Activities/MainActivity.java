@@ -23,17 +23,21 @@ import android.view.ViewGroup;
 
 import com.gnusl.wow.Adapters.MainFragmentPagerAdapter;
 import com.gnusl.wow.Delegates.PagerDelegate;
+import com.gnusl.wow.Enums.FragmentTags;
+import com.gnusl.wow.Fragments.MessagesContainerFragment;
+import com.gnusl.wow.Fragments.MessagesFragment;
 import com.gnusl.wow.Styles.CustomTypefaceSpan;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.FontedTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, PagerDelegate,SmartTabLayout.TabProvider {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, PagerDelegate, SmartTabLayout.TabProvider {
 
     private DrawerLayout drawer;
     private ViewPager viewPager;
     private MainFragmentPagerAdapter pagerAdapter;
     private SmartTabLayout viewPagerTab;
+    private Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +70,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // set custom font for navigation drawer items
         Menu m = navigationView.getMenu();
-        for (int i=0;i<m.size();i++) {
+        for (int i = 0; i < m.size(); i++) {
             MenuItem mi = m.getItem(i);
 
             //for aapplying a font to subMenu ...
             SubMenu subMenu = mi.getSubMenu();
-            if (subMenu!=null && subMenu.size() >0 ) {
-                for (int j=0; j <subMenu.size();j++) {
+            if (subMenu != null && subMenu.size() > 0) {
+                for (int j = 0; j < subMenu.size(); j++) {
                     MenuItem subMenuItem = subMenu.getItem(j);
                     applyFontToMenuItem(subMenuItem);
                 }
@@ -96,7 +100,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            // message section logic
+            if (getmCurrentFragment() instanceof MessagesContainerFragment) {
+
+                if(!(((MessagesContainerFragment)getmCurrentFragment()).getmCurrentFragment() instanceof MessagesFragment))
+                    ((MessagesContainerFragment)getmCurrentFragment()).replaceFragment(FragmentTags.MessagesFragment);
+
+            } else
+                super.onBackPressed();
         }
     }
 
@@ -128,21 +140,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(id==R.id.moment){
+        if (id == R.id.moment) {
 
             setFragmentView(1);
 
-        }else if(id==R.id.message){
+        } else if (id == R.id.message) {
 
             setFragmentView(2);
 
-        }else if (id == R.id.recharge) {
+        } else if (id == R.id.recharge) {
 
-            startActivity(new Intent(MainActivity.this,RechargeActivity.class));
+            startActivity(new Intent(MainActivity.this, RechargeActivity.class));
 
         } else if (id == R.id.settings) {
 
-            startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -153,13 +165,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void applyFontToMenuItem(MenuItem mi) {
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/SFUIText-Regular.ttf");
         SpannableString mNewTitle = new SpannableString(mi.getTitle());
-        mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         //mNewTitle.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, mNewTitle.length(), 0); Use this if you want to center the items
         mi.setTitle(mNewTitle);
     }
 
 
-    private void findViews(){
+    private void findViews() {
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         viewPager = (ViewPager) findViewById(R.id.pager_container);
@@ -199,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // set tab colored
         View view = viewPagerTab.getTabAt(position);
         view.findViewById(R.id.root_view).setBackgroundColor(getResources().getColor(R.color.white));
-        ((FontedTextView)view.findViewById(R.id.title)).setTextColor(getResources().getColor(R.color.active_color));
-        ((AppCompatImageView)view.findViewById(R.id.icon)).setColorFilter(getResources().getColor(R.color.active_color));
+        ((FontedTextView) view.findViewById(R.id.title)).setTextColor(getResources().getColor(R.color.active_color));
+        ((AppCompatImageView) view.findViewById(R.id.icon)).setColorFilter(getResources().getColor(R.color.active_color));
 
         // set default for all tabs
         for (int i = 0; i < pagerAdapter.getCount(); i++)
@@ -208,8 +220,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 View defaultView = viewPagerTab.getTabAt(i);
                 defaultView.findViewById(R.id.root_view).setBackgroundColor(Color.TRANSPARENT);
-                ((FontedTextView)defaultView.findViewById(R.id.title)).setTextColor(getResources().getColor(R.color.white));
-                ((AppCompatImageView)defaultView.findViewById(R.id.icon)).setColorFilter(Color.WHITE);
+                ((FontedTextView) defaultView.findViewById(R.id.title)).setTextColor(getResources().getColor(R.color.white));
+                ((AppCompatImageView) defaultView.findViewById(R.id.icon)).setColorFilter(Color.WHITE);
             }
 
     }
@@ -218,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onReplaceFragment(Fragment fragment, int position) {
 
+        setmCurrentFragment(fragment);
     }
 
     @Override
@@ -262,6 +275,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void setDrawer(DrawerLayout drawer) {
         this.drawer = drawer;
+    }
+
+    public Fragment getmCurrentFragment() {
+        return mCurrentFragment;
+    }
+
+    public void setmCurrentFragment(Fragment mCurrentFragment) {
+        this.mCurrentFragment = mCurrentFragment;
     }
 
     // endregion

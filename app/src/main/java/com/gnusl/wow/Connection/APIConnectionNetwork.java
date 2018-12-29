@@ -5,13 +5,16 @@ import android.util.Log;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Utils.APIUtils;
+import com.gnusl.wow.WebRtcClient.CallDelegate;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -515,14 +518,14 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void UpdateComment(int commentId, String content,ConnectionDelegate connectionDelegate) {
+    public static void UpdateComment(int commentId, String content, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.put(APILinks.Comments_Url.getLink()+"?comment_id="+String.valueOf(commentId))
+        AndroidNetworking.put(APILinks.Comments_Url.getLink() + "?comment_id=" + String.valueOf(commentId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addHeaders("Content-Type","application/x-www-form-urlencoded")
-                .addBodyParameter("comment",content)
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("comment", content)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -552,11 +555,11 @@ public class APIConnectionNetwork {
 
     public static void DeleteComment(int commentId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.delete(APILinks.Comments_Url.getLink()+"?comment_id="+String.valueOf(commentId))
+        AndroidNetworking.delete(APILinks.Comments_Url.getLink() + "?comment_id=" + String.valueOf(commentId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -584,14 +587,14 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void UpdatePost(int postId, String description,ConnectionDelegate connectionDelegate) {
+    public static void UpdatePost(int postId, String description, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.put(APILinks.Featured_Posts_Url.getLink()+"?post_id="+String.valueOf(postId))
+        AndroidNetworking.put(APILinks.Featured_Posts_Url.getLink() + "?post_id=" + String.valueOf(postId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addHeaders("Content-Type","application/x-www-form-urlencoded")
-                .addBodyParameter("description",description)
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("description", description)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -621,11 +624,11 @@ public class APIConnectionNetwork {
 
     public static void DeletePost(int postId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.delete(APILinks.Featured_Posts_Url.getLink()+"?post_id="+String.valueOf(postId))
+        AndroidNetworking.delete(APILinks.Featured_Posts_Url.getLink() + "?post_id=" + String.valueOf(postId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addHeaders("Content-Type","application/x-www-form-urlencoded")
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -655,7 +658,7 @@ public class APIConnectionNetwork {
 
     public static void SendMessageByChannel(String message, int channelId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.post(APILinks.Channels_Url.getLink()+"/"+String.valueOf(channelId)+"/"+"message")
+        AndroidNetworking.post(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/" + "message")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -666,7 +669,7 @@ public class APIConnectionNetwork {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Log.d("Send Message", response.toString());
+                        Log.d("Send MessageSection", response.toString());
 
                         // handle parse user data
                         if (connectionDelegate != null) {
@@ -677,8 +680,8 @@ public class APIConnectionNetwork {
                     @Override
                     public void onError(ANError anError) {
 
-                        Log.d("Send Message ", anError.getMessage());
-                        Log.d("Send Message ", anError.getErrorDetail());
+                        Log.d("Send MessageSection ", anError.getMessage());
+                        Log.d("Send MessageSection ", anError.getErrorDetail());
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
@@ -687,14 +690,14 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void ChangeRoomBackground(String backroundName,int channelId,ConnectionDelegate connectionDelegate) {
+    public static void ChangeRoomBackground(String backroundName, int channelId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.put(APILinks.Channels_Url.getLink()+"?channel_id="+String.valueOf(channelId))
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addHeaders("Content-Type","application/x-www-form-urlencoded")
-                .addBodyParameter("background_path",backroundName)
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("background_path", backroundName)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -722,14 +725,14 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void ChangeRoomName(String name,int channelId,ConnectionDelegate connectionDelegate) {
+    public static void ChangeRoomName(String name, int channelId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.put(APILinks.Channels_Url.getLink()+"?channel_id="+String.valueOf(channelId))
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addHeaders("Content-Type","application/x-www-form-urlencoded")
-                .addBodyParameter("name",name)
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("name", name)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -757,17 +760,17 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void SetRoomPassWord(String password,int channelId,int channelTypeId,ConnectionDelegate connectionDelegate) {
+    public static void SetRoomPassWord(String password, int channelId, int channelTypeId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.put(APILinks.Channels_Url.getLink()+"?channel_id="+String.valueOf(channelId))
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addHeaders("Content-Type","application/x-www-form-urlencoded")
-                .addBodyParameter("is_active","0")
-                .addBodyParameter("has_password","1")
-                .addBodyParameter("password",password)
-                .addBodyParameter("channel_type_id",String.valueOf(channelTypeId))
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("is_active", "0")
+                .addBodyParameter("has_password", "1")
+                .addBodyParameter("password", password)
+                .addBodyParameter("channel_type_id", String.valueOf(channelTypeId))
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -838,7 +841,7 @@ public class APIConnectionNetwork {
 
     public static void GetAllRoomMessages(int channelId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/"+String.valueOf(channelId)+"/message?skip=0&take=10")
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/message?skip=0&take=10")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -876,4 +879,207 @@ public class APIConnectionNetwork {
                 });
 
     }
+
+    public static void GetStreamClients(final int channelId, final String callId, final CallDelegate callDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_Socket_Streaming_Url.getLink() + String.valueOf(channelId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("STREAMS ", response.toString());
+
+                        // check have ids
+                        if (response != null && response.length() != 0) {
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject jsonObject = response.getJSONObject(i);
+
+                                    // make call
+                                    String callerId = jsonObject.getString("id");
+
+                                    // if(!callerId.equalsIgnoreCase(callId))
+                                    callDelegate.makeCallTO(callerId);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else
+                            callDelegate.onReadyToCall(callId);
+
+
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("STREAMS ERROR ", anError.getMessage());
+                        Log.d("STREAMS ERROR ", anError.getErrorBody());
+                        Log.d("STREAMS ERROR ", anError.getErrorDetail());
+                    }
+                });
+
+    }
+
+    public static void SearchForUsers(String content, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Search_User_Url.getLink() + "?name=" + content + "&take=10&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Search Result ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("users")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("users"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Search Result  ", anError.getMessage());
+                        Log.d("Search Result  ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void SendMessageToUser(String message, int userIdTo, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.Message_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("user_id_to", String.valueOf(userIdTo))
+                .addBodyParameter("message", message)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Send Message To user ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Send Message To user ", anError.getMessage());
+                        Log.d("Send Message To user ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetMessagesByUser(int userId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Message_Url.getLink()+"?user_id="+String.valueOf(userId)+"&take=10&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Messages From User ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("messages")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("messages"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Messages From User ", anError.getMessage());
+                        Log.d("Messages From User ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetUsersMessages(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Message_Url.getLink()+"/users")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Messages Users ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("messages")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("messages"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Messages Users ", anError.getMessage());
+                        Log.d("Messages Users ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
 }

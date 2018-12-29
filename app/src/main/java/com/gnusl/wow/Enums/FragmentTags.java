@@ -10,5 +10,8 @@ public enum FragmentTags {
     AccountFragment,
     RoomSettingsFragment,
     RoomLockFragment,
+    MessagesFragment,
+    UsersMessagesFragment,
+
 
 }

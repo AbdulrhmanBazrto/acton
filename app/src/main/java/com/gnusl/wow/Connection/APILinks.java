@@ -4,11 +4,14 @@ public enum APILinks {
 
     Base_API_Url("http://wow.gnusl.com/api/"),
     Base_Media_Url("http://wow.gnusl.com/public/uploads/"),
+    Base_Socket_Streaming_Url("http://gnusl.com:3000/streams/"),
 
     // User
+    Base_User_Url(Base_API_Url.getLink()+"user/"),
     Register_Url(Base_API_Url.getLink()+"register"),
     Login_Url(Base_API_Url.getLink()+"login"),
     Login_Social_Url(Base_API_Url.getLink()+"login_social"),
+    Search_User_Url(Base_User_Url.getLink()+"search"),
 
     // Channels
     Channels_Url(Base_API_Url.getLink()+"channel"),
@@ -24,6 +27,9 @@ public enum APILinks {
 
     // Comments
     Comments_Url(Base_API_Url.getLink()+"comment"),
+
+    // Message
+    Message_Url(Base_API_Url.getLink()+"message"),
 
     // Following
     Follow_Url(Base_API_Url.getLink()+"follow"),

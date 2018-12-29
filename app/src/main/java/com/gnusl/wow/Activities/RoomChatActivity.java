@@ -232,7 +232,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         audioManager.setMode(isWiredHeadsetOn ? AudioManager.MODE_IN_CALL : AudioManager.MODE_IN_COMMUNICATION);
         audioManager.setSpeakerphoneOn(!isWiredHeadsetOn);
 
-        client = new WebRtcClient(this, mSocketAddress, params, VideoRendererGui.getEGLContext());
+        client = new WebRtcClient(this, mSocketAddress, params, VideoRendererGui.getEGLContext(), getRoom().getId());
     }
 
     @Override
@@ -264,8 +264,13 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     @Override
     public void onCallReady(String callId) {
 
+        // start streaming on server
+        if (PermissionChecker.hasPermissions(this, RequiredPermissions)) {
+            client.start("Audio_Conference_android_test");
+        }
+
         // send request to know how much clients to make call with them
-        GetStreamClients(callId, this);
+        APIConnectionNetwork.GetStreamClients(getRoom().getId(), callId, this);
 
     }
 
@@ -332,49 +337,6 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                 LOCAL_X_CONNECTING, LOCAL_Y_CONNECTING,
                 LOCAL_WIDTH_CONNECTING, LOCAL_HEIGHT_CONNECTING,
                 scalingType, false);*/
-    }
-
-    public static void GetStreamClients(final String callId, final CallDelegate callDelegate) {
-
-        AndroidNetworking.get("http://fat7al.com:3000/streams.json")
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-
-                        Log.d("STREAMS ", response.toString());
-
-                        // check have ids
-                        if (response != null && response.length() != 0) {
-                            for (int i = 0; i < response.length(); i++) {
-                                try {
-                                    JSONObject jsonObject = response.getJSONObject(i);
-
-                                    // make call
-                                    String callerId = jsonObject.getString("id");
-
-                                    // if(!callerId.equalsIgnoreCase(callId))
-                                    callDelegate.makeCallTO(callerId);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        } else
-                            callDelegate.onReadyToCall(callId);
-
-
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-
-                        Log.d("ERROR ", anError.getMessage());
-                    }
-                });
-
-
     }
 
     private void InitializeMediaPicker() {

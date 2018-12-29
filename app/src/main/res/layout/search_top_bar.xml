@@ -55,6 +55,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/search_icon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginLeft="8dp"
@@ -67,13 +68,17 @@
             </android.support.constraint.ConstraintLayout>
 
             <EditText
+                android:id="@+id/search_edit_text"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:background="@android:color/transparent"
                 android:hint="@string/search_hint_placeholder"
                 android:textColor="@color/search_hint_text_color"
                 android:textColorHint="@color/search_hint_text_color"
                 android:textSize="12sp"
+                android:lines="1"
+                android:maxLines="1"
+                android:imeOptions="actionSearch"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/search_image_layout"

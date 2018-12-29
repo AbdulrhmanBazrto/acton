@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/profile_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:src="@drawable/icon1"
+        app:civ_border_color="#EEEEEE"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <com.gnusl.wow.Views.FontedTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:lines="1"
+        android:text="اسم المستخدم"
+        android:textColor="@color/colorPrimary"
+        android:textSize="21sp"
+        app:layout_constraintBottom_toBottomOf="@id/profile_image"
+        app:layout_constraintEnd_toStartOf="@id/profile_image"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profile_image"
+        app:layout_constraintVertical_bias="0.1"
+        app:typefaceAsset="fonts/Assaf_Font.ttf" />
+
+    <com.gnusl.wow.Views.AutoFitFontedTextView
+        android:id="@+id/notification_text"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="right|center_vertical"
+        android:lines="1"
+        android:text=""
+        android:textColor="@color/teacher_text_color"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/date"
+        app:layout_constraintEnd_toStartOf="@id/profile_image"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintVertical_bias="1"
+        app:typefaceAsset="fonts/Assaf_Font.ttf" />
+
+
+    <com.gnusl.wow.Views.FontedTextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="right|center_vertical"
+        android:lines="1"
+        android:text=" 2/8/2018 2,20 ص"
+        android:textColor="@color/create_account_shape_transparent"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/profile_image"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notification_text"
+        app:layout_constraintVertical_bias="0.1"
+        app:typefaceAsset="fonts/Assaf_Font.ttf" />
+
+
+</android.support.constraint.ConstraintLayout>

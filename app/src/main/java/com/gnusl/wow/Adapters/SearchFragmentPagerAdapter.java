@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.gnusl.wow.Delegates.PagerDelegate;
+import com.gnusl.wow.Delegates.SearchByUsersDelegate;
 import com.gnusl.wow.Fragments.AllRoomsFragment;
 import com.gnusl.wow.Fragments.ExploreRoomsFragment;
 import com.gnusl.wow.Fragments.NewRoomsFragment;
@@ -28,7 +29,7 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return AllRoomsFragment.newInstance();
+            return NewRoomsFragment.newInstance();
         } else
             return UsersFragment.newInstance();
 

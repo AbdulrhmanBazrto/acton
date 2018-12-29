@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Activities.RoomChatActivity">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/backround_image"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_messeges_conversation"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/room_chat_backround"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <FrameLayout
-        android:id="@+id/frame_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:clipToPadding="false"
+        android:paddingTop="10dp"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintBottom_toTopOf="@id/input_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,11 +23,10 @@
         android:id="@+id/input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:visibility="gone"
+        android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <View
             android:layout_width="0dp"
@@ -73,7 +65,7 @@
                 android:background="@drawable/backround_add_comment_placeholder"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
-                android:hint="@string/write_comment"
+                android:hint="@string/write_message"
                 android:inputType="textMultiLine|textShortMessage"
                 android:minHeight="40dp"
                 android:paddingStart="20dp"
@@ -90,5 +82,28 @@
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/bigImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:visibility="gone"/>
+
+    <com.gnusl.wow.Views.FontedTextView
+        android:id="@+id/state_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tw__composer_red"
+        android:gravity="center_vertical|center"
+        android:text="لا يوجد اتصال بالانترنت"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:typefaceAsset="fonts/Assaf_Font.ttf"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -12,7 +12,7 @@
             android:icon="@drawable/ic_action_icon3"
             android:title="Moment" />
         <item
-            android:id="@+id/message"
+            android:id="@+id/messageSection"
             android:icon="@drawable/ic_action_icon4"
             android:title="Message" />
 

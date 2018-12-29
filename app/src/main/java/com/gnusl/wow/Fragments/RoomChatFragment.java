@@ -1,27 +1,18 @@
 package com.gnusl.wow.Fragments;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.media.AudioManager;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -29,14 +20,11 @@ import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Activities.RoomSettingsActivity;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
-import com.gnusl.wow.Adapters.MessageRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.ChatMessage;
-import com.gnusl.wow.Models.Message;
-import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.google.gson.JsonElement;
@@ -105,7 +93,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         PubnubImplementation();
 
         // get messages
-        sendChannelsRequest();
+       // sendChannelsRequest();
     }
 
     @Override
@@ -252,7 +240,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
                                 // Check whether request successfully completed or not.
                                 if (!status.isError()) {
 
-                                    // Message successfully published to specified channel.
+                                    // MessageSection successfully published to specified channel.
                                 }
                                 // Request processing failed.
                                 else {
@@ -280,10 +268,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
             public void message(PubNub pubnub, PNMessageResult message) {
                 // Handle new message stored in message.message
                 if (message.getChannel() != null) {
-                    // Message has been received on channel group stored in
+                    // MessageSection has been received on channel group stored in
                     // message.getChannel()
                 } else {
-                    // Message has been received on channel stored in
+                    // MessageSection has been received on channel stored in
                     // message.getSubscription()
                 }
 
@@ -330,7 +318,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
                 // Check whether request successfully completed or not.
                 if (!status.isError()) {
 
-                    // Message successfully published to specified channel.
+                    // MessageSection successfully published to specified channel.
                 }
                 // Request processing failed.
                 else {

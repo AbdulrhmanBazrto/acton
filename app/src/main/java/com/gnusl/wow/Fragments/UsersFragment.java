@@ -10,15 +10,17 @@ import android.view.ViewGroup;
 
 import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersRecyclerViewAdapter;
+import com.gnusl.wow.Delegates.SearchByUsersDelegate;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
 import java.util.ArrayList;
 
-public class UsersFragment extends Fragment {
+public class UsersFragment extends Fragment implements SearchByUsersDelegate {
 
     private View inflatedView;
+    UsersRecyclerViewAdapter usersRecyclerViewAdapter;
 
     public UsersFragment() {
     }
@@ -33,28 +35,27 @@ public class UsersFragment extends Fragment {
 
         inflatedView = inflater.inflate(R.layout.fragment_users, container, false);
 
-
         RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.users_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        ArrayList<User> users = new ArrayList<>();
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img2));
-        users.add(new User(R.drawable.img3));
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img2));
-        users.add(new User(R.drawable.img3));
-
-
-        UsersRecyclerViewAdapter usersRecyclerViewAdapter= new UsersRecyclerViewAdapter(getContext(), users);
+        usersRecyclerViewAdapter= new UsersRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(usersRecyclerViewAdapter);
 
         return inflatedView;
     }
 
+    @Override
+    public void onSearchResultDone(ArrayList<User> users) {
+
+        // refresh
+        if(usersRecyclerViewAdapter!=null){
+            usersRecyclerViewAdapter.setUsers(users);
+            usersRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -63,7 +64,6 @@ public class UsersFragment extends Fragment {
 
         }
     }
-
 }
 
 

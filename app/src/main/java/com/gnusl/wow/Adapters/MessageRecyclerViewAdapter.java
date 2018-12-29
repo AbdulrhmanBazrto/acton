@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.gnusl.wow.Models.Message;
-import com.gnusl.wow.Models.Message;
+import com.gnusl.wow.Delegates.MessageSectionDelegate;
+import com.gnusl.wow.Models.MessageSection;
 import com.gnusl.wow.R;
 
 import java.util.ArrayList;
@@ -17,11 +17,13 @@ import java.util.ArrayList;
 public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private ArrayList<Message> messages;
+    private ArrayList<MessageSection> messageSections;
+    private MessageSectionDelegate messageSectionDelegate;
 
-    public MessageRecyclerViewAdapter(Context context, ArrayList<Message> messages) {
+    public MessageRecyclerViewAdapter(Context context, ArrayList<MessageSection> messageSections,MessageSectionDelegate messageSectionDelegate) {
         this.context = context;
-        this.messages = messages;
+        this.messageSections = messageSections;
+        this.messageSectionDelegate=messageSectionDelegate;
     }
 
     @Override
@@ -37,13 +39,13 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((MessageViewHolder)holder).bind(getMessages().get(position), position);
+        ((MessageViewHolder) holder).bind(getMessageSections().get(position), position);
 
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return messageSections.size();
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -54,28 +56,43 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         public MessageViewHolder(View itemView) {
             super(itemView);
 
-            imageIcon=(AppCompatImageView) itemView.findViewById(R.id.image_icon);
-            content=(TextView) itemView.findViewById(R.id.content_text);
+            imageIcon = (AppCompatImageView) itemView.findViewById(R.id.image_icon);
+            content = (TextView) itemView.findViewById(R.id.content_text);
 
         }
 
-        public void bind(final Message message, final int position) {
+        public void bind(final MessageSection messageSection, final int position) {
 
-            imageIcon.setImageResource(message.getImageResource());
+            imageIcon.setImageResource(messageSection.getImageResource());
 
-            content.setText(message.getContent());
+            content.setText(messageSection.getContent());
+
+            itemView.setOnClickListener(v->{
+
+                switch (messageSection.getImageResource()) {
+
+                    case R.drawable.friends:
+
+                        messageSectionDelegate.onClickFriendsSection();
+                        break;
+
+                    case R.drawable.system:
+
+                        break;
+                }
+            });
         }
 
     }
 
     // region setters and getters
 
-    public ArrayList<Message> getMessages() {
-        return messages;
+    public ArrayList<MessageSection> getMessageSections() {
+        return messageSections;
     }
 
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
+    public void setMessageSections(ArrayList<MessageSection> messageSections) {
+        this.messageSections = messageSections;
     }
 
     // endregion

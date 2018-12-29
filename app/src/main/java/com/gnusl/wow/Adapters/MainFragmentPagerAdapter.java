@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.gnusl.wow.Delegates.PagerDelegate;
+import com.gnusl.wow.Fragments.MessagesContainerFragment;
 import com.gnusl.wow.Fragments.MessagesFragment;
 import com.gnusl.wow.Fragments.MomentsFragment;
 import com.gnusl.wow.Fragments.RoomFragment;
@@ -35,7 +36,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
         } else if (position == 1){
             return MomentsFragment.newInstance();
         } else
-            return MessagesFragment.newInstance();
+            return MessagesContainerFragment.newInstance();
 
     }
 
