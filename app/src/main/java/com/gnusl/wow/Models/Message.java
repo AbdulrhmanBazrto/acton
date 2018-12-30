@@ -13,6 +13,8 @@ public class Message {
     private int user_id_to;
     private String message;
     private String created_at;
+    private User userFrom;
+    private User userTo;
 
     public static Message newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -26,6 +28,24 @@ public class Message {
         message.setUser_id_to(jsonObject.optInt("user_id_to"));
         message.setMessage(jsonObject.optString("message"));
         message.setCreated_at(jsonObject.optString("created_at"));
+
+        // user from
+        if(jsonObject.has("user_from")) {
+            try {
+                message.setUserFrom(User.newInstance(jsonObject.getJSONObject("user_from")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // user to
+        if(jsonObject.has("user_to")) {
+            try {
+                message.setUserTo(User.newInstance(jsonObject.getJSONObject("user_to")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         return message;
     }
@@ -84,5 +104,21 @@ public class Message {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public User getUserFrom() {
+        return userFrom;
+    }
+
+    public void setUserFrom(User userFrom) {
+        this.userFrom = userFrom;
+    }
+
+    public User getUserTo() {
+        return userTo;
+    }
+
+    public void setUserTo(User userTo) {
+        this.userTo = userTo;
     }
 }

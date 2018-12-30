@@ -30,6 +30,7 @@ public enum APILinks {
 
     // Message
     Message_Url(Base_API_Url.getLink()+"message"),
+    System_Message_Url(Base_API_Url.getLink()+"system/message"),
 
     // Following
     Follow_Url(Base_API_Url.getLink()+"follow"),

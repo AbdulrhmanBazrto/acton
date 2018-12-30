@@ -2,7 +2,6 @@ package com.gnusl.wow.Adapters;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
@@ -15,41 +14,35 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
-import com.gnusl.wow.Connection.APILinks;
 import com.gnusl.wow.Delegates.MessageImageDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
-import com.gnusl.wow.Models.Message;
+import com.gnusl.wow.Models.SystemMessage;
+import com.gnusl.wow.Models.SystemMessage;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
+import com.gnusl.wow.Views.FontedTextView;
 import com.klinker.android.sliding.TouchlessScrollView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SystemMessagesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<Message> messages;
+    private List<SystemMessage> messages;
 
     private OnLoadMoreListener loadMoreListener;
     private boolean isLoading = false;
     private int updatedPosition;
 
-    private static int MESSAGE_HOLDER_LTR = 0;
-    private static int MESSAGE_HOLDER_RTL = 1;
-    private static int MESSAGE_IMAGE_HOLDER_LTR = 3;
-    private static int MESSAGE_IMAGR_HOLDER_RTL = 4;
+    private static int MESSAGE_HOLDER = 0;
     private static int LOAD_MORE_HOLDER = 2;
 
     MessageImageDelegate messageImageDelegate;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public MessagesConversationRecyclerViewAdapter(Context context, List<Message> messages, ViewGroup scrollView, OnLoadMoreListener delegate) {
+    public SystemMessagesRecyclerViewAdapter(Context context, List<SystemMessage> messages, ViewGroup scrollView, OnLoadMoreListener delegate) {
         this.context = context;
         this.messages = messages;
         this.loadMoreListener = delegate;
@@ -131,18 +124,9 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
-        if (viewType == MESSAGE_HOLDER_LTR) {
-            view = inflater.inflate(R.layout.message_conversation_view_holder_ltr, parent, false);
+        if (viewType == MESSAGE_HOLDER) {
+            view = inflater.inflate(R.layout.system_message_view_holder, parent, false);
             return new MessegeViewHolder(view);
-        } else if (viewType == MESSAGE_HOLDER_RTL) {
-            view = inflater.inflate(R.layout.message_conversation_view_holder_rtl, parent, false);
-            return new MessegeViewHolder(view);
-        } else if (viewType == MESSAGE_IMAGR_HOLDER_RTL) {
-            view = inflater.inflate(R.layout.message_image_conversation_view_holder_rtl, parent, false);
-            return new MessegeImageViewHolder(view);
-        } else if (viewType == MESSAGE_IMAGE_HOLDER_LTR) {
-            view = inflater.inflate(R.layout.message_image_conversation_view_holder_ltr, parent, false);
-            return new MessegeImageViewHolder(view);
         } else {
             view = inflater.inflate(R.layout.load_more_view_holder, parent, false);
             return new LoadingViewHolder(view);
@@ -155,9 +139,6 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
 
         if (holder instanceof MessegeViewHolder)
             ((MessegeViewHolder) holder).bind(messages.get(updatedPosition), updatedPosition);
-        else if (holder instanceof MessegeImageViewHolder)
-
-            ((MessegeImageViewHolder) holder).bind(messages.get(updatedPosition), updatedPosition);
         else
             ((LoadingViewHolder) holder).bind();
     }
@@ -178,14 +159,7 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
         if (isLoading && position == 0)
             return LOAD_MORE_HOLDER;
 
-        // return position % 2 == 0 ? MESSAGE_HOLDER_LTR: MESSAGE_HOLDER_RTL;
-
-       /* if (messages.get(updatedPosition).getMessage().contains(".png")|| messages.get(updatedPosition).getMessage().contains(".jpg"))
-            return User.isFromUser(messages.get(updatedPosition)) ? MESSAGE_IMAGR_HOLDER_RTL : MESSAGE_IMAGE_HOLDER_LTR;
-        else
-            return User.isFromUser(messages.get(updatedPosition)) ? MESSAGE_HOLDER_RTL : MESSAGE_HOLDER_LTR;*/
-
-        return MESSAGE_HOLDER_LTR;
+        return MESSAGE_HOLDER;
     }
 
 
@@ -205,111 +179,28 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
 
     public class MessegeViewHolder extends RecyclerView.ViewHolder {
 
-        private CircularImageView profile_image;
-        private AutoFitFontedTextView user_name;
-        private AutoFitFontedTextView msg;
-
+        private AutoFitFontedTextView dateTv;
+        private FontedTextView msg;
 
         public MessegeViewHolder(View itemView) {
             super(itemView);
 
-            profile_image = (CircularImageView) itemView.findViewById(R.id.profile_image);
-            user_name = (AutoFitFontedTextView) itemView.findViewById(R.id.user_name);
-            msg = (AutoFitFontedTextView) itemView.findViewById(R.id.msg);
+            dateTv = (AutoFitFontedTextView) itemView.findViewById(R.id.date_text_view);
+            msg = (FontedTextView) itemView.findViewById(R.id.msg);
         }
 
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-        public void bind(final Message message, final int position) {
-
-            // change orintation
-            //itemView.setLayoutDirection(position % 2 == 0 ? View.LAYOUT_DIRECTION_LTR : View.LAYOUT_DIRECTION_RTL);
+        public void bind(final SystemMessage message, final int position) {
 
             // handle from user meesage
-            if (message.getUserFrom() != null) {
 
-                User user = message.getUserFrom();
+            dateTv.setText(message.getCreated_at());
 
-                // name
-                user_name.setText(user.getName());
-
-                // image
-                if (user.getImage_url() != null && !user.getImage_url().equalsIgnoreCase("null"))
-                    Glide.with(context)
-                            .load(user.getImage_url())
-                            .into(profile_image);
-
-            }
-
-            // comment msg
-            msg.setText(message.getMessage());
+            // msg
+            msg.setText(message.getSystemMessage());
 
         }
 
-    }
-
-
-    public class MessegeImageViewHolder extends RecyclerView.ViewHolder {
-
-        private CircularImageView profile_image;
-        private AutoFitFontedTextView user_name;
-        private AppCompatImageView msg;
-
-
-        public MessegeImageViewHolder(View itemView) {
-            super(itemView);
-
-            profile_image = (CircularImageView) itemView.findViewById(R.id.profile_image);
-            user_name = (AutoFitFontedTextView) itemView.findViewById(R.id.user_name);
-            msg = itemView.findViewById(R.id.msg);
-        }
-
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-        public void bind(final Message message, final int position) {
-
-            // change orintation
-            //   itemView.setLayoutDirection(position % 2 == 0 ? View.LAYOUT_DIRECTION_LTR : View.LAYOUT_DIRECTION_RTL);
-
-            // handle from user meesage
-           /* User user;
-            if (User.isFromUser(messages.get(position)))
-                user = message.getFrom_user();
-            else
-                user = message.getTo_user();
-
-            // name
-            user_name.setText(user.getName());
-
-            // image
-            if (user.getImage() != null && !user.getImage().equalsIgnoreCase("null"))
-                Glide.with(context)
-                        .load(APILinks.Base_Images_Url.getLink() + user.getImage())
-                        .into(profile_image);
-
-            // comment msg
-            Glide.with(context).load(APILinks.Base_Images_Url.getLink()+message.getMessage()).into(msg);
-            msg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        messageImageDelegate.openImages(((BitmapDrawable)msg.getDrawable()).getBitmap());
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                }
-            });*/
-
-
-        }
-
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
     }
 
     public boolean isLoading() {
@@ -322,6 +213,14 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
         notifyDataSetChanged();
     }
 
+    public List<SystemMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<SystemMessage> messages) {
+        this.messages = messages;
+    }
+
     public void clearList() {
         messages.clear();
     }
@@ -331,4 +230,3 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
 }
-

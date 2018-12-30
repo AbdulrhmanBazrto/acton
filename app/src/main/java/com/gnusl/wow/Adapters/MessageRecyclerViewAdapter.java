@@ -78,6 +78,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                     case R.drawable.system:
 
+                        messageSectionDelegate.onClickSystemMessagesSection();
                         break;
                 }
             });

@@ -78,6 +78,14 @@ public class MessagesContainerFragment extends Fragment implements MessageSectio
                 transaction.commit();
 
                 break;
+
+            case SystemMessagesFragment:
+
+                mCurrentFragment = SystemMessagesFragment.newInstance();
+                transaction.replace(R.id.frame_container, mCurrentFragment);// newInstance() is a static factory method.
+                transaction.commit();
+
+                break;
         }
     }
 
@@ -103,5 +111,11 @@ public class MessagesContainerFragment extends Fragment implements MessageSectio
     public void onClickFriendsSection() {
 
         replaceFragment(FragmentTags.UsersMessagesFragment);
+    }
+
+    @Override
+    public void onClickSystemMessagesSection() {
+
+        replaceFragment(FragmentTags.SystemMessagesFragment);
     }
 }

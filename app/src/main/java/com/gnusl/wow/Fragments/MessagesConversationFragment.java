@@ -69,7 +69,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
     private RelativeLayout toolbar_layout;
     private FontedEditText message_edit_text;
     private FontedTextView state_label;
-    private AppCompatImageView send_button,photo_button, bigImage;
+    private AppCompatImageView send_button, photo_button, bigImage;
     private int offset = 0;
     private int buffOffset = 0;
     private boolean isNotMoreMessages = false;
@@ -104,7 +104,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
         message_edit_text = (FontedEditText) inflatedView.findViewById(R.id.message_edit_text);
         send_button = (AppCompatImageView) inflatedView.findViewById(R.id.send_button);
         state_label = (FontedTextView) inflatedView.findViewById(R.id.state_label);
-       // photo_button = inflatedView.findViewById(R.id.photo_button);
+        // photo_button = inflatedView.findViewById(R.id.photo_button);
         bigImage = inflatedView.findViewById(R.id.bigImage);
 
         // init adapter
@@ -113,7 +113,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
         // send message
         send_button.setOnClickListener(v -> handleClickSendMessage());
 
-       // photo_button.setOnClickListener(v -> handleClickSendPhoto());
+        // photo_button.setOnClickListener(v -> handleClickSendPhoto());
 
         sendMessagesRequest();
 
@@ -230,7 +230,10 @@ public class MessagesConversationFragment extends Fragment implements Connection
     private void handleClickSendMessage() {
 
         if (!message_edit_text.getText().toString().isEmpty()) {
+
+            message_edit_text.setText("");
             isLockToRefresh = true;
+
             APIConnectionNetwork.SendMessageToUser(message_edit_text.getText().toString(), user_id, this);
         }
 
@@ -299,6 +302,14 @@ public class MessagesConversationFragment extends Fragment implements Connection
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
         // sync messages
+        if (jsonObject.has("status")) {
+            try {
+                if (jsonObject.getString("status").equalsIgnoreCase("success"))
+                    APIConnectionNetwork.GetMessagesByUser(user_id, this);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -538,14 +549,14 @@ public class MessagesConversationFragment extends Fragment implements Connection
     public void onStart() {
         super.onStart();
 
-       // EventBus.getDefault().register(this);
+        // EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-       // EventBus.getDefault().unregister(this);
+        // EventBus.getDefault().unregister(this);
     }
 
 }

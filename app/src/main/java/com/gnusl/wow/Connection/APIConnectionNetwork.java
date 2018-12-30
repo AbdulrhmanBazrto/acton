@@ -173,11 +173,11 @@ public class APIConnectionNetwork {
                     @Override
                     public void onError(ANError anError) {
 
-                        Log.d("CHANNELS ", anError.getMessage());
-                        Log.d("CHANNELS ", anError.getErrorDetail());
-
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
+
+                        Log.d("CHANNELS ", anError.getMessage());
+                        Log.d("CHANNELS ", anError.getErrorDetail());
                     }
                 });
 
@@ -1002,7 +1002,7 @@ public class APIConnectionNetwork {
 
     public static void GetMessagesByUser(int userId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Message_Url.getLink()+"?user_id="+String.valueOf(userId)+"&take=10&skip=0")
+        AndroidNetworking.get(APILinks.Message_Url.getLink() + "?user_id=" + String.valueOf(userId) + "&take=10&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1043,7 +1043,7 @@ public class APIConnectionNetwork {
 
     public static void GetUsersMessages(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Message_Url.getLink()+"/users")
+        AndroidNetworking.get(APILinks.Message_Url.getLink() + "/users")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1082,4 +1082,44 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void GetSystemMessages(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.System_Message_Url.getLink() + "?take=1&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("SYSTEM MESSAGES ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("messages")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("messages"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("SYSTEM MESSAGES ", anError.getMessage());
+                        Log.d("SYSTEM MESSAGES ", anError.getErrorDetail());
+                    }
+                });
+
+    }
 }
