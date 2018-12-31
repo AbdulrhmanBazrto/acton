@@ -1122,4 +1122,45 @@ public class APIConnectionNetwork {
                 });
 
     }
+
+    public static void GetExploreContent(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Explore_Channels_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("EXPLORE ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("data")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONObject("data"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("EXPLORE ", anError.getMessage());
+                        Log.d("EXPLORE ", anError.getErrorDetail());
+                    }
+                });
+
+    }
 }

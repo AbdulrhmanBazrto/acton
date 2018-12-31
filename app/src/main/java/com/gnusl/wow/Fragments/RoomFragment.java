@@ -77,6 +77,7 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
         viewPagerTab.setCustomTabView(this);
         viewPagerTab.setViewPager(viewPager);
 
+        viewPager.setOffscreenPageLimit(3);
     }
 
     @Override
