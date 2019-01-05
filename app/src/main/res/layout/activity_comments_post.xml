@@ -119,7 +119,7 @@
                     android:textColor="@color/register_text_color"
                     android:textColorHint="@color/profile_separator_color"
                     android:textSize="18sp"
-                    app:typefaceAsset="fonts/Assaf_Font.ttf" />
+                    app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
             </RelativeLayout>
 

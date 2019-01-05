@@ -1,6 +1,7 @@
 package com.gnusl.wow.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.gnusl.wow.Activities.GiftsActivity;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.R;
@@ -88,6 +90,10 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             PeopleRecyclerViewAdapter peopleRecyclerViewAdapter= new PeopleRecyclerViewAdapter(context,gift.getPeople());
             peopleRecyclerView.setAdapter(peopleRecyclerViewAdapter);
 
+            itemView.setOnClickListener(v->{
+
+                context.startActivity(new Intent(context,GiftsActivity.class));
+            });
         }
 
     }

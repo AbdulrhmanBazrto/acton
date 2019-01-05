@@ -63,4 +63,13 @@
     <string name="Settings">الإعدادات</string>
     <string name="backround">الخلفية</string>
     <string name="room_lock">قفل الغرفة</string>
+
+    <string name="room_gifts">هدايا الغرفة</string>
+    <string name="sent_gifts">الهدايا المرسلة</string>
+    <string name="recieved_gifts">الهدايا المستلمة</string>
+
+    <string name="month">الشهر</string>
+    <string name="week">الأسبوع</string>
+    <string name="day">اليوم</string>
+
 </resources>

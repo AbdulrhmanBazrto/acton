@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/profile_image"
         app:layout_constraintVertical_bias="0.1"
-        app:typefaceAsset="fonts/Assaf_Font.ttf" />
+        app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
 
     <com.gnusl.wow.Views.AutoFitFontedTextView
@@ -58,7 +58,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_name"
         app:layout_constraintVertical_bias="0.0"
-        app:typefaceAsset="fonts/Assaf_Font.ttf" />
+        app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
 
 </android.support.constraint.ConstraintLayout>

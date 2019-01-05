@@ -38,7 +38,7 @@
         app:layout_constraintStart_toEndOf="@id/profile_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:typefaceAsset="fonts/Assaf_Font.ttf" />
+        app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/msg_layout"
@@ -72,7 +72,7 @@
             app:layout_constraintBottom_toTopOf="@id/msg"
 
             app:layout_constraintTop_toTopOf="parent"
-            app:typefaceAsset="fonts/Assaf_Font.ttf" />
+            app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
         <com.gnusl.wow.Views.AutoFitFontedTextView
             android:id="@+id/msg"
@@ -89,7 +89,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/date"
             app:layout_constraintTop_toTopOf="parent"
-            app:typefaceAsset="fonts/Assaf_Font.ttf" />
+            app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
 
         <com.gnusl.wow.Views.AutoFitFontedTextView
@@ -107,7 +107,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:typefaceAsset="fonts/Assaf_Font.ttf" />
+            app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
 
     </android.support.constraint.ConstraintLayout>

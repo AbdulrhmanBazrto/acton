@@ -1163,4 +1163,48 @@ public class APIConnectionNetwork {
                 });
 
     }
+
+    public static void GetExploreGifts(ConnectionDelegate connectionDelegate) {
+
+        Log.d("LINK ", APILinks.Explore_Gifts_Url.getLink());
+
+        AndroidNetworking.get(APILinks.Explore_Gifts_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("EXPLORE GIFTS ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("gifts")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONObject("gifts"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("EXPLORE GIFTS ", anError.getMessage());
+                        Log.d("EXPLORE GIFTS ", anError.getErrorDetail());
+                    }
+                });
+
+    }
 }

@@ -163,7 +163,10 @@
         <activity
             android:name=".Activities.MessagesConversationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBarMain"/>
+            android:theme="@style/AppTheme.NoActionBarMain" />
+        <activity
+            android:name=".Activities.GiftsActivity"
+            android:theme="@style/AppTheme.NoActionBarSettings"/>
     </application>
 
 </manifest>

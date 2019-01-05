@@ -85,7 +85,7 @@
                 app:layout_constraintEnd_toStartOf="@id/send_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:typefaceAsset="fonts/Assaf_Font.ttf" />
+                app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
         </android.support.constraint.ConstraintLayout>
 

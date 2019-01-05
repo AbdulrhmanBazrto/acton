@@ -2,7 +2,8 @@ package com.gnusl.wow.Connection;
 
 public enum APILinks {
 
-    Base_API_Url("http://wow.gnusl.com/api/"),
+    //Base_API_Url("http://wow.gnusl.com/api/"),
+    Base_API_Url("http://fat7al.com/wow/api/"),
     Base_Media_Url("http://wow.gnusl.com/public/uploads/"),
     Base_Socket_Streaming_Url("http://gnusl.com:3000/streams/"),
 
@@ -18,6 +19,7 @@ public enum APILinks {
     Channels_Lock_Type_Url(Channels_Url.getLink()+"/lock_types"),
     Get_Channels_Type_Url(Channels_Url.getLink()+"/types"),
     Explore_Channels_Url(Channels_Url.getLink()+"/explore"),
+    Explore_Gifts_Url(Explore_Channels_Url.getLink()+"/gift"),
 
     // Posts
     Featured_Posts_Url(Base_API_Url.getLink()+"post"),
