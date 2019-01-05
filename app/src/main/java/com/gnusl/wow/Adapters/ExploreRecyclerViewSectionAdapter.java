@@ -1,7 +1,6 @@
 package com.gnusl.wow.Adapters;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -45,7 +44,7 @@ public class ExploreRecyclerViewSectionAdapter extends SectionedRecyclerViewAdap
 
         ExploreSection exploreSection = getExploreSections().get(section);
 
-        if(exploreSection.getGifts()!=null)
+        if(exploreSection.getTopGiftExplorers()!=null)
             return GIFT_SECTION;
 
         else if(exploreSection.getCountries()!=null && exploreSection.getActivities()!=null)

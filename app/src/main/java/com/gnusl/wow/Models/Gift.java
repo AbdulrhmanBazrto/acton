@@ -1,56 +1,68 @@
 package com.gnusl.wow.Models;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-/**
- * Created by Yehia on 9/29/2018.
- */
+import java.util.ArrayList;
 
 public class Gift {
 
-    private int backroundResource;
-    private int imageResource;
-    private String content;
-    private int[] people;
+    private int id;
+    private String path;
+    private int price;
 
-    public Gift(){}
+    public static Gift newInstance(JSONObject jsonObject) {
+        if (jsonObject == null) {
+            return null;
+        }
 
-    public Gift(int backroundResource, int imageResource, String content, int[] people) {
-        this.backroundResource = backroundResource;
-        this.imageResource = imageResource;
-        this.content = content;
-        this.people = people;
+        Gift gift = new Gift();
+
+        gift.setId(jsonObject.optInt("id"));
+        gift.setPath(jsonObject.optString("path"));
+        gift.setPrice(jsonObject.optInt("price"));
+
+        return gift;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public static ArrayList<Gift> parseJSONArray(JSONArray jsonArray) {
+        if (jsonArray == null) {
+            return null;
+        }
+
+        ArrayList<Gift> rooms=new ArrayList<>();
+        for(int i=0;i<jsonArray.length();i++) {
+            try {
+                rooms.add(Gift.newInstance(jsonArray.getJSONObject(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return rooms;
     }
 
-    public void setImageResource(int imageResource) {
-        this.imageResource = imageResource;
+    public int getId() {
+        return id;
     }
 
-    public String getContent() {
-        return content;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getPath() {
+        return path;
     }
 
-    public int[] getPeople() {
-        return people;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public void setPeople(int[] people) {
-        this.people = people;
+    public int getPrice() {
+        return price;
     }
 
-    public int getBackroundResource() {
-        return backroundResource;
-    }
-
-    public void setBackroundResource(int backroundResource) {
-        this.backroundResource = backroundResource;
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

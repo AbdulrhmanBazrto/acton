@@ -21,6 +21,9 @@ public enum APILinks {
     Explore_Channels_Url(Channels_Url.getLink()+"/explore"),
     Explore_Gifts_Url(Explore_Channels_Url.getLink()+"/gift"),
 
+    // Gifts
+    Gifts_Url(Base_API_Url.getLink()+"gift"),
+
     // Posts
     Featured_Posts_Url(Base_API_Url.getLink()+"post"),
     Upload_Image_Url(Base_API_Url.getLink()+"image/upload"),

@@ -12,13 +12,12 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Adapters.ExploreRecyclerViewSectionAdapter;
-import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.ActivitiesHashTag;
 import com.gnusl.wow.Models.Country;
 import com.gnusl.wow.Models.ExploreSection;
-import com.gnusl.wow.Models.Gift;
+import com.gnusl.wow.Models.TopGiftExplorer;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
 
@@ -98,13 +97,13 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
         // people
         int[] people = {R.drawable.img1, R.drawable.img2, R.drawable.img3};
 
-        // set gifts
-        ArrayList<Gift> gifts = new ArrayList<>();
-        gifts.add(new Gift(R.drawable.orange, R.drawable.rg, "Room Gifts Sent", people));
-        gifts.add(new Gift(R.drawable.green, R.drawable.gs, "Gifts Sent", people));
-        gifts.add(new Gift(R.drawable.blue, R.drawable.gr, "Gifts Received", people));
+        // set topGiftExplorers
+        ArrayList<TopGiftExplorer> topGiftExplorers = new ArrayList<>();
+        topGiftExplorers.add(new TopGiftExplorer(R.drawable.orange, R.drawable.rg, "Room Gifts Sent", people));
+        topGiftExplorers.add(new TopGiftExplorer(R.drawable.green, R.drawable.gs, "Gifts Sent", people));
+        topGiftExplorers.add(new TopGiftExplorer(R.drawable.blue, R.drawable.gr, "Gifts Received", people));
 
-        exploreSection.setGifts(gifts);
+        exploreSection.setTopGiftExplorers(topGiftExplorers);
 
         // set country
         ArrayList<Country> countries = new ArrayList<>();

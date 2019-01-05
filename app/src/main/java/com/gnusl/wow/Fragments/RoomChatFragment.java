@@ -25,7 +25,9 @@ import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.ChatMessage;
+import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.GiftsRoomDialog;
 import com.gnusl.wow.R;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -40,6 +42,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -54,6 +57,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
     private View inflatedView;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
     private ProgressDialog progressDialog;
+    private ArrayList<Gift> gifts;
 
     // pubnub
     private PubNub pubnub;
@@ -92,16 +96,19 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         // pubnub implementation
         PubnubImplementation();
 
+        // get gifts
+        APIConnectionNetwork.GetGifts(this);
+
         // get messages
-       // sendChannelsRequest();
+        // sendChannelsRequest();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof RoomChatActivity)
-            activity= (RoomChatActivity) context;
+        if (context instanceof RoomChatActivity)
+            activity = (RoomChatActivity) context;
     }
 
     private void initializeViews() {
@@ -122,14 +129,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
         inflatedView.findViewById(R.id.more_icon).setOnClickListener(v -> {
 
-            PopupMenu dropDownMenu = new PopupMenu(getContext(),inflatedView.findViewById(R.id.more_icon));
+            PopupMenu dropDownMenu = new PopupMenu(getContext(), inflatedView.findViewById(R.id.more_icon));
             dropDownMenu.getMenuInflater().inflate(R.menu.more_room_option, dropDownMenu.getMenu());
             dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
 
-                    switch(menuItem.getItemId()){
+                    switch (menuItem.getItemId()) {
 
                         case R.id.settings_action:
 
@@ -138,7 +145,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
                         case R.id.backround_action:
 
-                            ((RoomChatActivity)getActivity()).openGallery();
+                            ((RoomChatActivity) getActivity()).openGallery();
                             break;
                     }
 
@@ -148,12 +155,19 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
             dropDownMenu.show();
         });
 
+
+        inflatedView.findViewById(R.id.gift_image).setOnClickListener(v -> {
+
+            if (gifts != null)
+                GiftsRoomDialog.show(getContext(),gifts);
+        });
+
     }
 
-    private void goToRoomSettingsActivity(){
+    private void goToRoomSettingsActivity() {
 
-        Intent intent=new Intent(getActivity(),RoomSettingsActivity.class);
-        intent.putExtra(RoomSettingsActivity.CHANNEL_KEY,((RoomChatActivity)getActivity()).getRoom());
+        Intent intent = new Intent(getActivity(), RoomSettingsActivity.class);
+        intent.putExtra(RoomSettingsActivity.CHANNEL_KEY, ((RoomChatActivity) getActivity()).getRoom());
         startActivity(intent);
     }
 
@@ -306,7 +320,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
     }
 
-    public void ShareMessageOnPubnub(String message){
+    public void ShareMessageOnPubnub(String message) {
 
         // create message payload using Gson
         JsonObject messageJsonObject = new JsonObject();
@@ -338,7 +352,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         this.progressDialog = ProgressDialog.show(getContext(), "", "loading messages..");
 
         // send request
-        APIConnectionNetwork.GetAllRoomMessages(activity.getRoom().getId(),this);
+        APIConnectionNetwork.GetAllRoomMessages(activity.getRoom().getId(), this);
     }
 
     @Override
@@ -369,16 +383,24 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
+        // parse gifts
+        if (jsonObject.has("gifts")) {
+            try {
+                this.gifts = Gift.parseJSONArray(jsonObject.getJSONArray("gifts"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<ChatMessage> chatMessages=ChatMessage.parseJSONArray(jsonArray);
+        ArrayList<ChatMessage> chatMessages = ChatMessage.parseJSONArray(jsonArray);
 
-        ArrayList<ChatMessage> messages=new ArrayList<>();
-        for(int i=chatMessages.size()-1;i>=0;i--)
+        ArrayList<ChatMessage> messages = new ArrayList<>();
+        for (int i = chatMessages.size() - 1; i >= 0; i--)
             messages.add(chatMessages.get(i));
 
         // notify

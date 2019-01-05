@@ -101,7 +101,7 @@ dependencies {
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
-    //implementation(name: 'StickyScrollViewItems-release', ext: 'aar')
+    implementation 'com.github.rey5137:material:1.2.4'
 }
 
 apply plugin: 'com.google.gms.google-services'

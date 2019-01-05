@@ -5,12 +5,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder;
 import com.gnusl.wow.Adapters.ActivityRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.CountryRecyclerViewAdapter;
-import com.gnusl.wow.Adapters.GiftsRecyclerViewAdapter;
 import com.gnusl.wow.Models.ExploreSection;
 import com.gnusl.wow.R;
 

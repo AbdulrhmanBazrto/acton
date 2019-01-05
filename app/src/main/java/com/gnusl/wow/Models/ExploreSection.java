@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ExploreSection {
 
     private String headerTitle;
-    private ArrayList<Gift> gifts;
+    private ArrayList<TopGiftExplorer> topGiftExplorers;
     private ArrayList<Country> countries;
     private ArrayList<ActivitiesHashTag> activities;
     private ArrayList<Room> rooms;
@@ -24,12 +24,12 @@ public class ExploreSection {
         this.headerTitle = headerTitle;
     }
 
-    public ArrayList<Gift> getGifts() {
-        return gifts;
+    public ArrayList<TopGiftExplorer> getTopGiftExplorers() {
+        return topGiftExplorers;
     }
 
-    public void setGifts(ArrayList<Gift> gifts) {
-        this.gifts = gifts;
+    public void setTopGiftExplorers(ArrayList<TopGiftExplorer> topGiftExplorers) {
+        this.topGiftExplorers = topGiftExplorers;
     }
 
     public ArrayList<Country> getCountries() {

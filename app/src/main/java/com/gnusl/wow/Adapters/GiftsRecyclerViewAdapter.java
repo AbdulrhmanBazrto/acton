@@ -10,18 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.GiftsActivity;
-import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-/**
- * Created by Yehia on 9/29/2018.
- */
 
 public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -30,7 +24,7 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public GiftsRecyclerViewAdapter(Context context, ArrayList<Gift> gifts) {
         this.context = context;
-        this.gifts=gifts;
+        this.gifts = gifts;
     }
 
     @Override
@@ -57,43 +51,26 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public class GiftViewHolder extends RecyclerView.ViewHolder {
 
-        private AppCompatImageView backroundImageView;
         private AppCompatImageView giftImage;
-        private TextView giftContentTextView;
-        private RecyclerView peopleRecyclerView;
+        private TextView price;
 
         public GiftViewHolder(View itemView) {
             super(itemView);
 
-            backroundImageView=(AppCompatImageView)itemView.findViewById(R.id.backround_shape);
             giftImage=(AppCompatImageView)itemView.findViewById(R.id.gift_image);
-            giftContentTextView=(TextView)itemView.findViewById(R.id.gift_content);
-            peopleRecyclerView=(RecyclerView) itemView.findViewById(R.id.people_recycler_view);
+            price=(TextView)itemView.findViewById(R.id.price);
         }
 
         public void bind(final Gift gift, final int position) {
 
-            // backround image
-            backroundImageView.setImageResource(gift.getBackroundResource());
+            // price
+            price.setText(String.valueOf(gift.getPrice()));
 
-            // gift image
-            giftImage.setImageResource(gift.getImageResource());
-
-            // content
-            giftContentTextView.setText(gift.getContent());
-
-            // handle people adapter
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            peopleRecyclerView.setLayoutManager(linearLayoutManager);
-
-            PeopleRecyclerViewAdapter peopleRecyclerViewAdapter= new PeopleRecyclerViewAdapter(context,gift.getPeople());
-            peopleRecyclerView.setAdapter(peopleRecyclerViewAdapter);
-
-            itemView.setOnClickListener(v->{
-
-                context.startActivity(new Intent(context,GiftsActivity.class));
-            });
+            // image
+            if (gift.getPath() != null && !gift.getPath().isEmpty())
+                Glide.with(context)
+                        .load(gift.getPath())
+                        .into(giftImage);
         }
 
     }
@@ -107,7 +84,6 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public void setGifts(ArrayList<Gift> gifts) {
         this.gifts = gifts;
     }
-
 
     // endregion
 }

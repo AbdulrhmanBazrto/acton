@@ -6,12 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.R;
-
-import java.util.ArrayList;
 
 /**
  * Created by Yehia on 9/29/2018.

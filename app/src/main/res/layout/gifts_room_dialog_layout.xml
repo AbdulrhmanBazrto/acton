@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alpha="0.9"
+    android:background="@color/gifts_dialog_background_color">
+
+    <com.gnusl.wow.Views.FontedTextView
+        android:id="@+id/saveQuestionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="save_these_entries_as_a_draft"
+        android:gravity="center"
+        android:visibility="gone"
+        app:typefaceAsset="fonts/SFUIText-Bold.ttf"
+        android:textColor="@color/transparent"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/gifts_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:clipToPadding="false"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
