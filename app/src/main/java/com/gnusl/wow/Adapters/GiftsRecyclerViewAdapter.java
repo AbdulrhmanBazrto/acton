@@ -21,6 +21,7 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private Context context;
     private ArrayList<Gift> gifts;
+    private int selectedPosition=-1;
 
     public GiftsRecyclerViewAdapter(Context context, ArrayList<Gift> gifts) {
         this.context = context;
@@ -51,12 +52,14 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public class GiftViewHolder extends RecyclerView.ViewHolder {
 
+        private View root_view;
         private AppCompatImageView giftImage;
         private TextView price;
 
         public GiftViewHolder(View itemView) {
             super(itemView);
 
+            root_view=itemView.findViewById(R.id.root_view);
             giftImage=(AppCompatImageView)itemView.findViewById(R.id.gift_image);
             price=(TextView)itemView.findViewById(R.id.price);
         }
@@ -71,6 +74,18 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 Glide.with(context)
                         .load(gift.getPath())
                         .into(giftImage);
+
+            // selected item
+            if(position==selectedPosition)
+                root_view.setBackground(context.getResources().getDrawable(R.drawable.gift_background_selected_item));
+            else
+                root_view.setBackground(context.getResources().getDrawable(R.drawable.gift_background_unselected_item));
+
+            itemView.setOnClickListener(v->{
+
+                selectedPosition=position;
+                notifyDataSetChanged();
+            });
         }
 
     }

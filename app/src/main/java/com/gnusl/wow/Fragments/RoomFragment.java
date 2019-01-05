@@ -19,8 +19,13 @@ import android.widget.Toast;
 import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Activities.SearchActivity;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
+import com.gnusl.wow.Models.Gift;
+import com.gnusl.wow.Popups.GiftsRoomDialog;
 import com.gnusl.wow.R;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +59,73 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
 
         // open drawer
         if (getActivity() instanceof MainActivity)
-            inflatedView.findViewById(R.id.right_icon).setOnClickListener(v->((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START));
+            inflatedView.findViewById(R.id.right_icon).setOnClickListener(v->{
+
+                try {
+                    JSONArray jsonArray=new JSONArray(" [\n" +
+                            "        {\n" +
+                            "            \"id\": 1,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/1.png\",\n" +
+                            "            \"price\": 22\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 2,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/2.png\",\n" +
+                            "            \"price\": 23\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 3,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/3.png\",\n" +
+                            "            \"price\": 33\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 4,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/4.png\",\n" +
+                            "            \"price\": 44\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 5,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/5.png\",\n" +
+                            "            \"price\": 55\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 6,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/6.png\",\n" +
+                            "            \"price\": 66\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 7,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/7.png\",\n" +
+                            "            \"price\": 77\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 8,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/8.png\",\n" +
+                            "            \"price\": 88\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 9,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/9.png\",\n" +
+                            "            \"price\": 99\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 10,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/10.png\",\n" +
+                            "            \"price\": 100\n" +
+                            "        },\n" +
+                            "        {\n" +
+                            "            \"id\": 11,\n" +
+                            "            \"path\": \"http://fat7al.com/wow/public/uploads/gifts/11.png\",\n" +
+                            "            \"price\": 110\n" +
+                            "        }\n" +
+                            "    ]");
+
+                    GiftsRoomDialog.show(getContext(),Gift.parseJSONArray(jsonArray));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START);
+            });
 
         // open search
         if (getActivity() instanceof MainActivity)
