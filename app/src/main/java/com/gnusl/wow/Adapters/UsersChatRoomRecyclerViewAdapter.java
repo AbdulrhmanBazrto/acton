@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
@@ -60,9 +61,14 @@ public class UsersChatRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
         public void bind(final User user, final int position) {
 
-            userImage.setImageResource(user.getImageResource());
-
+            // name
             userName.setText(user.getName());
+
+            // user image
+            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+                Glide.with(context)
+                        .load(user.getImage_url())
+                        .into(userImage);
         }
 
     }

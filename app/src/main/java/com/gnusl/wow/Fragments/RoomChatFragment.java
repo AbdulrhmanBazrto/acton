@@ -24,6 +24,7 @@ import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
@@ -56,6 +57,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
     private RoomChatActivity activity;
     private View inflatedView;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
+    private UsersChatRoomRecyclerViewAdapter usersChatRoomRecyclerViewAdapter;
     private ProgressDialog progressDialog;
     private ArrayList<Gift> gifts;
 
@@ -95,6 +97,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
         // pubnub implementation
         PubnubImplementation();
+
+        // set attendance
+        APIConnectionNetwork.SetUserAttendance(UserAttendanceType.Entrance, activity.getRoom().getId(), this);
 
         // get gifts
         APIConnectionNetwork.GetGifts(this);
@@ -159,7 +164,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         inflatedView.findViewById(R.id.gift_image).setOnClickListener(v -> {
 
             if (gifts != null)
-                GiftsRoomDialog.show(getContext(),gifts);
+                GiftsRoomDialog.show(getContext(), gifts);
         });
 
     }
@@ -201,16 +206,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        ArrayList<User> users = new ArrayList<>();
-        users.add(new User(R.drawable.img1, "Dr. Ahmed"));
-        users.add(new User(R.drawable.img2, "AB qahtany"));
-        users.add(new User(R.drawable.img3, "AlAnood"));
-        users.add(new User(R.drawable.img1, "Dr. Ahmed"));
-        users.add(new User(R.drawable.img2, "AB qahtany"));
-        users.add(new User(R.drawable.img3, "AlAnood"));
-
-
-        UsersChatRoomRecyclerViewAdapter usersChatRoomRecyclerViewAdapter = new UsersChatRoomRecyclerViewAdapter(getContext(), users);
+        usersChatRoomRecyclerViewAdapter = new UsersChatRoomRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(usersChatRoomRecyclerViewAdapter);
     }
 
@@ -384,13 +380,30 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
     public void onConnectionSuccess(JSONObject jsonObject) {
 
         // parse gifts
-        if (jsonObject.has("gifts")) {
+        if (jsonObject.has("status")) {
+
+            // get users in room
+            APIConnectionNetwork.GetUserAttendance(activity.getRoom().getId(), this);
+
+        } else if (jsonObject.has("gifts")) {
             try {
                 this.gifts = Gift.parseJSONArray(jsonObject.getJSONArray("gifts"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+        } else if (jsonObject.has("users")) { // refresh users in room
+            try {
+                usersChatRoomRecyclerViewAdapter.setUsers(User.parseJSONArray(jsonObject.getJSONArray("users")));
+                usersChatRoomRecyclerViewAdapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
+        // dismiss
+        if (progressDialog != null)
+            progressDialog.dismiss();
     }
 
     @Override
@@ -410,6 +423,15 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         // dismiss
         if (progressDialog != null)
             progressDialog.dismiss();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // set attendance
+        APIConnectionNetwork.SetUserAttendance(UserAttendanceType.LEAVE, activity.getRoom().getId(), this);
+
     }
 }
 

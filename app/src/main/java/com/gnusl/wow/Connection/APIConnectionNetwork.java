@@ -9,6 +9,7 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Utils.APIUtils;
@@ -1238,6 +1239,74 @@ public class APIConnectionNetwork {
 
                         Log.d("GIFTS ", anError.getMessage());
                         Log.d("GIFTS ", anError.getErrorDetail());
+                    }
+                });
+
+    }
+
+    public static void SetUserAttendance(UserAttendanceType attendanceType, int channelId,ConnectionDelegate connectionDelegate) {
+
+        Log.d("ROOM ",String.valueOf(channelId));
+
+        AndroidNetworking.post(APILinks.Channels_Url.getLink()+"/"+channelId+"/attendance")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("type", attendanceType.name().toLowerCase())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Set Attendance ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Set Attendance ", anError.getMessage());
+                        Log.d("Set Attendance ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetUserAttendance(int channelId,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/"+channelId+"/attendance")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Get Attendance ", response.toString());
+
+                        // handle parse user data
+                        if(connectionDelegate!=null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Get Attendance ", anError.getMessage());
+                        Log.d("Get Attendance ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
                     }
                 });
 
