@@ -72,4 +72,8 @@
     <string name="week">الأسبوع</string>
     <string name="day">اليوم</string>
 
+    <array name="sex_array">
+        <item>Male</item>
+        <item>Female</item>
+    </array>
 </resources>

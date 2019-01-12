@@ -1312,4 +1312,270 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void UpdateUserImage(String imageName, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Base_User_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("image", imageName)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Image", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("user")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("user"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Image ", anError.getMessage());
+                        Log.d("Change Image ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void UpdateUserName(String name,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Base_User_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("name", name)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("user")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("user"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+
+    public static void UpdateUserBirthDate(String birthday,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Base_User_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("birthday", birthday)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change birthday", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("user")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("user"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change birthday ", anError.getMessage());
+                        Log.d("Change birthday ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void UpdateUserGender(String gender,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Base_User_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("gender", gender)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change gender", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("user")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("user"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change gender ", anError.getMessage());
+                        Log.d("Change gender ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetFollowers(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink()+"/followers?take=50&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Followers ", response.toString());
+
+                        // handle parse user data
+                        if(connectionDelegate!=null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void GetFollowing(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink()+"/followings?take=50&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Following ", response.toString());
+
+                        // handle parse user data
+                        if(connectionDelegate!=null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Following ", anError.getMessage());
+                        Log.d("Following ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void GetProfileGifts(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink()+"/gifts?take=50&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Profile Gifts ", response.toString());
+
+                        // handle parse user data
+                        if(connectionDelegate!=null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Profile Gifts  ", anError.getMessage());
+                        Log.d("Profile Gifts  ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
 }

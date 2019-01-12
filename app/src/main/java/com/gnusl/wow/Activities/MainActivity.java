@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.gnusl.wow.Adapters.MainFragmentPagerAdapter;
+import com.gnusl.wow.Adapters.ProfileActivity;
 import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.MessagesContainerFragment;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for (int i = 0; i < m.size(); i++) {
             MenuItem mi = m.getItem(i);
 
-            //for aapplying a font to subMenu ...
+            //for applying a font to subMenu ...
             SubMenu subMenu = mi.getSubMenu();
             if (subMenu != null && subMenu.size() > 0) {
                 for (int j = 0; j < subMenu.size(); j++) {
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             applyFontToMenuItem(mi);
         }
 
+        // init header navigation
+        initializeHeaderNavigation(navigationView.getHeaderView(0));
 
         // init pager with bottom tabs
         setUpViewPager();
@@ -226,6 +229,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void initializeHeaderNavigation(View navigationView){
+
+        navigationView.findViewById(R.id.imageView).setOnClickListener(v->startActivity(new Intent(this,ProfileActivity.class)));
+    }
 
     @Override
     public void onReplaceFragment(Fragment fragment, int position) {

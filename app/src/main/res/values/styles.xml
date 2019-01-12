@@ -97,4 +97,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="Theme_DatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/status_bar_room_chat_color</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkMain</item>
+        <item name="colorAccent">@color/status_bar_room_chat_color</item>
+    </style>
+
 </resources>
