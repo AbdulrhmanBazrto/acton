@@ -299,13 +299,13 @@ public class MultiShrinkScroller extends FrameLayout {
      * This method must be called inside the Activity's onCreate. Initialize everything.
      */
     public void initialize(MultiShrinkScrollerListener listener, boolean isOpenContactSquare) {
-        scrollView = (ScrollView) findViewById(R.id.content_scroller);
+        scrollView = findViewById(R.id.content_scroller);
         scrollViewChild = findViewById(R.id.content_container);
         toolbar = findViewById(R.id.toolbar_parent);
         photoViewContainer = findViewById(R.id.toolbar_parent);
         transparentView = findViewById(R.id.transparent_view);
-        largeTextView = (TextView) findViewById(R.id.large_title);
-        invisiblePlaceholderTextView = (TextView) findViewById(R.id.placeholder_textview);
+        largeTextView = findViewById(R.id.large_title);
+        invisiblePlaceholderTextView = findViewById(R.id.placeholder_textview);
         startColumn = findViewById(R.id.empty_start_column);
 
         // Touching the empty space should close the card
@@ -326,8 +326,8 @@ public class MultiShrinkScroller extends FrameLayout {
         this.listener = listener;
         this.isOpenImageSquare = isOpenContactSquare;
 
-        photoView = (ImageView) findViewById(R.id.photo);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        photoView = findViewById(R.id.photo);
+        fab = findViewById(R.id.fab);
 
         titleGradientView = findViewById(R.id.title_gradient);
         titleGradientView.setBackgroundDrawable(titleGradientDrawable);

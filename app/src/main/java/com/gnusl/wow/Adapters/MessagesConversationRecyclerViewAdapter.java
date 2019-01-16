@@ -100,12 +100,12 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
                 });
 
             else if (scrollView instanceof TouchlessScrollView)
-                ((TouchlessScrollView) scrollView).setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                     @Override
                     public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
                         // We take the last son in the scrollview
-                        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+                        View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
                         int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
 
                         // if diff is zero, then the bottom has been reached
@@ -194,7 +194,7 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
 
         public LoadingViewHolder(View itemView) {
             super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.load_more_progress);
+            progressBar = itemView.findViewById(R.id.load_more_progress);
             progressBar.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
 
         }
@@ -213,9 +213,9 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
         public MessegeViewHolder(View itemView) {
             super(itemView);
 
-            profile_image = (CircularImageView) itemView.findViewById(R.id.profile_image);
-            user_name = (AutoFitFontedTextView) itemView.findViewById(R.id.user_name);
-            msg = (AutoFitFontedTextView) itemView.findViewById(R.id.msg);
+            profile_image = itemView.findViewById(R.id.profile_image);
+            user_name = itemView.findViewById(R.id.user_name);
+            msg = itemView.findViewById(R.id.msg);
         }
 
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -258,8 +258,8 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
         public MessegeImageViewHolder(View itemView) {
             super(itemView);
 
-            profile_image = (CircularImageView) itemView.findViewById(R.id.profile_image);
-            user_name = (AutoFitFontedTextView) itemView.findViewById(R.id.user_name);
+            profile_image = itemView.findViewById(R.id.profile_image);
+            user_name = itemView.findViewById(R.id.user_name);
             msg = itemView.findViewById(R.id.msg);
         }
 

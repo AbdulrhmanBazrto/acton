@@ -12,14 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Activities.SearchActivity;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
+import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.ArrayList;
@@ -48,6 +52,8 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
 
         inflatedView = inflater.inflate(R.layout.fragment_room, container, false);
 
+        // user info
+        setUserInformation();
 
         // initialize top bar with viewpager
         initializeSmartTabs();
@@ -70,14 +76,27 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
 
         RoomFragmentPagerAdapter roomFragmentPagerAdapter = new RoomFragmentPagerAdapter(getContext(), getFragmentManager(), null);
 
-        ViewPager viewPager = (ViewPager) inflatedView.findViewById(R.id.roomviewpager);
+        ViewPager viewPager = inflatedView.findViewById(R.id.roomviewpager);
         viewPager.setAdapter(roomFragmentPagerAdapter);
 
-        SmartTabLayout viewPagerTab = (SmartTabLayout) inflatedView.findViewById(R.id.viewpagertab);
+        SmartTabLayout viewPagerTab = inflatedView.findViewById(R.id.viewpagertab);
         viewPagerTab.setCustomTabView(this);
         viewPagerTab.setViewPager(viewPager);
 
         viewPager.setOffscreenPageLimit(3);
+    }
+
+    private void setUserInformation() {
+
+        User user = SharedPreferencesUtils.getUser();
+        if (user != null) {
+
+            // user image
+            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+                Glide.with(this)
+                        .load(user.getImage_url())
+                        .into(((ImageView) inflatedView.findViewById(R.id.right_icon)));
+        }
     }
 
     @Override
@@ -87,7 +106,7 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
 
         View inflatedView = inflater.inflate(R.layout.custom_room_tab_bar_item_view, container, false);
 
-        TextView fontedTextView = (TextView) inflatedView.findViewById(R.id.title);
+        TextView fontedTextView = inflatedView.findViewById(R.id.title);
 
         switch (position) {
 

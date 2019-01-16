@@ -4,5 +4,5 @@ import com.gnusl.wow.Models.RoomLockType;
 
 public interface LockRoomPopUpDelegate {
 
-    public void onSetPasswordSuccess(RoomLockType roomLockType);
+    void onSetPasswordSuccess(RoomLockType roomLockType);
 }

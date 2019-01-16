@@ -15,6 +15,16 @@ public class ChatMessage {
     private String created_at;
     private String updated_at;
     private User user;
+    private String userName;
+    private String userImage;
+
+    public ChatMessage(){}
+
+    public ChatMessage(String message, String userName, String userImage) {
+        this.message = message;
+        this.userName = userName;
+        this.userImage = userImage;
+    }
 
     public static ChatMessage newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -113,5 +123,26 @@ public class ChatMessage {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public boolean isImageMessage(){
+
+        return  this.getMessage().contains(".png") || this.getMessage().contains(".jpg") || this.getMessage().contains(".jpeg");
     }
 }

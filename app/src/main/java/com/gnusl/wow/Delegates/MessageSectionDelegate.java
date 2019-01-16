@@ -2,7 +2,7 @@ package com.gnusl.wow.Delegates;
 
 public interface MessageSectionDelegate {
 
-    public void onClickFriendsSection();
+    void onClickFriendsSection();
 
-    public void onClickSystemMessagesSection();
+    void onClickSystemMessagesSection();
 }

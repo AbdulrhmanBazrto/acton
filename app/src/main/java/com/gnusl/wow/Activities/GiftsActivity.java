@@ -77,8 +77,8 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
 
     private void findViews() {
 
-        viewPager = (ViewPager) findViewById(R.id.pager_container);
-        viewPagerTab = (SmartTabLayout) findViewById(R.id.top_tab_bar);
+        viewPager = findViewById(R.id.pager_container);
+        viewPagerTab = findViewById(R.id.top_tab_bar);
 
         findViewById(R.id.back_button).setOnClickListener(v->onBackPressed());
     }
@@ -149,7 +149,7 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
 
         View inflatedView = inflater.inflate(R.layout.custom_top_tab_gifts_item_view, container, false);
 
-        FontedTextView fontedTextView = (FontedTextView) inflatedView.findViewById(R.id.title);
+        FontedTextView fontedTextView = inflatedView.findViewById(R.id.title);
 
         switch (position) {
 

@@ -51,10 +51,10 @@ public class RoomGiftsFragment extends Fragment implements SmartTabLayout.TabPro
 
         giftsFragmentPagerAdapter = new GiftsFragmentPagerAdapter(getContext(), getFragmentManager(), this, null);
 
-        ViewPager viewPager = (ViewPager) inflatedView.findViewById(R.id.room_gifts_scrolling_view_pager);
+        ViewPager viewPager = inflatedView.findViewById(R.id.room_gifts_scrolling_view_pager);
         viewPager.setAdapter(giftsFragmentPagerAdapter);
 
-        SmartTabLayout viewPagerTab = (SmartTabLayout) inflatedView.findViewById(R.id.view_pager_tab);
+        SmartTabLayout viewPagerTab = inflatedView.findViewById(R.id.view_pager_tab);
         viewPagerTab.setCustomTabView(this);
         viewPagerTab.setViewPager(viewPager);
 
@@ -68,7 +68,7 @@ public class RoomGiftsFragment extends Fragment implements SmartTabLayout.TabPro
 
         View inflatedView = inflater.inflate(R.layout.custom_room_tab_bar_item_view, container, false);
 
-        TextView fontedTextView = (TextView) inflatedView.findViewById(R.id.title);
+        TextView fontedTextView = inflatedView.findViewById(R.id.title);
 
         switch (position) {
 

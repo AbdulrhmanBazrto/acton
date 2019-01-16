@@ -54,7 +54,7 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
         inflatedView = inflater.inflate(R.layout.fragment_following, container, false);
 
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.following_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.following_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

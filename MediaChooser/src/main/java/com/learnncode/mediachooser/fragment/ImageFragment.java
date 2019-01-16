@@ -54,7 +54,7 @@ public class ImageFragment extends Fragment {
 
     // Container Activity must implement this interface
     public interface OnImageSelectedListener {
-        public void onImageSelected(int count);
+        void onImageSelected(int count);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ImageFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
 
-            mImageGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
+            mImageGridView = mView.findViewById(R.id.gridViewFromMediaChooser);
 
             getActivity().getWindow().setBackgroundDrawable(null);
 

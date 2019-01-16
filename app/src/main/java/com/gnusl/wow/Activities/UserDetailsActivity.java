@@ -346,4 +346,10 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
         // update user
         APIConnectionNetwork.UpdateUserBirthDate(dateString,this);
     }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(imageBroadcastReceiver);
+        super.onDestroy();
+    }
 }

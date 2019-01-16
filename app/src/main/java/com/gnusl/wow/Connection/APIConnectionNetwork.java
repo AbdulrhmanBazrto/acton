@@ -44,9 +44,15 @@ public class APIConnectionNetwork {
 
                         // handle parse user data
                         if (connectionDelegate != null) {
-                            if (!response.has("status"))
-                                connectionDelegate.onConnectionSuccess(response.toString());
-                            else
+                            if (response.has("success")) {
+
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONObject("success"));
+                                } catch (JSONException e) {
+                                    connectionDelegate.onConnectionFailure();
+                                    e.printStackTrace();
+                                }
+                            } else
                                 connectionDelegate.onConnectionFailure();
                         }
 
@@ -82,12 +88,21 @@ public class APIConnectionNetwork {
                         Log.d("USER ", response.toString());
 
                         // handle parse user data
+                        // handle parse user data
                         if (connectionDelegate != null) {
-                            if (!response.has("status"))
-                                connectionDelegate.onConnectionSuccess(response.toString());
-                            else
+                            if (response.has("success")) {
+
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONObject("success"));
+                                } catch (JSONException e) {
+                                    connectionDelegate.onConnectionFailure();
+                                    e.printStackTrace();
+                                }
+                            } else
                                 connectionDelegate.onConnectionFailure();
+
                         }
+
                     }
 
                     @Override
@@ -106,6 +121,7 @@ public class APIConnectionNetwork {
     public static void RegisterNewUser(final RegisterParams params, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.post(APILinks.Register_Url.getLink())
+                .addHeaders("Accept","application/json")
                 .addBodyParameter("name", params.getName())
                 .addBodyParameter("email", params.getEmail())
                 .addBodyParameter("password", params.getPassword())
@@ -125,12 +141,21 @@ public class APIConnectionNetwork {
                         Log.d("USER ", response.toString());
 
                         // handle parse user data
+                        // handle parse user data
                         if (connectionDelegate != null) {
-                            if (!response.has("status"))
-                                connectionDelegate.onConnectionSuccess(response.toString());
-                            else
+                            if (response.has("success")) {
+
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONObject("success"));
+                                } catch (JSONException e) {
+                                    connectionDelegate.onConnectionFailure();
+                                    e.printStackTrace();
+                                }
+                            } else
                                 connectionDelegate.onConnectionFailure();
+
                         }
+
                     }
 
                     @Override
@@ -138,6 +163,9 @@ public class APIConnectionNetwork {
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
+
+                        Log.d("USER ", anError.getErrorDetail());
+                        Log.d("USER ", anError.getResponse().message());
                     }
                 });
 
@@ -1244,11 +1272,11 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void SetUserAttendance(UserAttendanceType attendanceType, int channelId,ConnectionDelegate connectionDelegate) {
+    public static void SetUserAttendance(UserAttendanceType attendanceType, int channelId, ConnectionDelegate connectionDelegate) {
 
-        Log.d("ROOM ",String.valueOf(channelId));
+        Log.d("ROOM ", String.valueOf(channelId));
 
-        AndroidNetworking.post(APILinks.Channels_Url.getLink()+"/"+channelId+"/attendance")
+        AndroidNetworking.post(APILinks.Channels_Url.getLink() + "/" + channelId + "/attendance")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1280,9 +1308,9 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetUserAttendance(int channelId,ConnectionDelegate connectionDelegate) {
+    public static void GetUserAttendance(int channelId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/"+channelId+"/attendance")
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + channelId + "/attendance")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1295,7 +1323,7 @@ public class APIConnectionNetwork {
                         Log.d("Get Attendance ", response.toString());
 
                         // handle parse user data
-                        if(connectionDelegate!=null)
+                        if (connectionDelegate != null)
                             connectionDelegate.onConnectionSuccess(response);
                     }
 
@@ -1355,7 +1383,7 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void UpdateUserName(String name,ConnectionDelegate connectionDelegate) {
+    public static void UpdateUserName(String name, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Base_User_Url.getLink())
 
@@ -1398,8 +1426,7 @@ public class APIConnectionNetwork {
 
     }
 
-
-    public static void UpdateUserBirthDate(String birthday,ConnectionDelegate connectionDelegate) {
+    public static void UpdateUserBirthDate(String birthday, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Base_User_Url.getLink())
 
@@ -1442,7 +1469,7 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void UpdateUserGender(String gender,ConnectionDelegate connectionDelegate) {
+    public static void UpdateUserGender(String gender, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Base_User_Url.getLink())
 
@@ -1487,7 +1514,7 @@ public class APIConnectionNetwork {
 
     public static void GetFollowers(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Base_User_Url.getLink()+"/followers?take=50&skip=0")
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/followers?take=50&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1500,7 +1527,7 @@ public class APIConnectionNetwork {
                         Log.d("Followers ", response.toString());
 
                         // handle parse user data
-                        if(connectionDelegate!=null)
+                        if (connectionDelegate != null)
                             connectionDelegate.onConnectionSuccess(response);
                     }
 
@@ -1518,7 +1545,7 @@ public class APIConnectionNetwork {
 
     public static void GetFollowing(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Base_User_Url.getLink()+"/followings?take=50&skip=0")
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/followings?take=50&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1531,7 +1558,7 @@ public class APIConnectionNetwork {
                         Log.d("Following ", response.toString());
 
                         // handle parse user data
-                        if(connectionDelegate!=null)
+                        if (connectionDelegate != null)
                             connectionDelegate.onConnectionSuccess(response);
                     }
 
@@ -1549,7 +1576,7 @@ public class APIConnectionNetwork {
 
     public static void GetProfileGifts(ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Base_User_Url.getLink()+"/gifts?take=50&skip=0")
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/gifts?take=50&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1562,7 +1589,7 @@ public class APIConnectionNetwork {
                         Log.d("Profile Gifts ", response.toString());
 
                         // handle parse user data
-                        if(connectionDelegate!=null)
+                        if (connectionDelegate != null)
                             connectionDelegate.onConnectionSuccess(response);
                     }
 
@@ -1576,6 +1603,38 @@ public class APIConnectionNetwork {
                             connectionDelegate.onConnectionError(anError);
                     }
                 });
+    }
+
+    public static void GetScoreUsers(int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/top?take=10")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("User Scores ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("User Scores ", anError.getMessage());
+                        Log.d("User Scores ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
     }
 
 }

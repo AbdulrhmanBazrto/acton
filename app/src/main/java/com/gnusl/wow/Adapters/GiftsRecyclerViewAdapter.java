@@ -60,8 +60,8 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             super(itemView);
 
             root_view=itemView.findViewById(R.id.root_view);
-            giftImage=(AppCompatImageView)itemView.findViewById(R.id.gift_image);
-            price=(TextView)itemView.findViewById(R.id.price);
+            giftImage= itemView.findViewById(R.id.gift_image);
+            price= itemView.findViewById(R.id.price);
         }
 
         public void bind(final Gift gift, final int position) {

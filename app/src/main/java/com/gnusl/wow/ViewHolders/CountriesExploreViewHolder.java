@@ -24,8 +24,8 @@ public class CountriesExploreViewHolder extends SectionedViewHolder {
     public CountriesExploreViewHolder(View itemView) {
         super(itemView);
 
-        countryRecyclerView = (RecyclerView) itemView.findViewById(R.id.countries_recycler_view);
-        activityRecyclerView = (RecyclerView) itemView.findViewById(R.id.activities_recycler_view);
+        countryRecyclerView = itemView.findViewById(R.id.countries_recycler_view);
+        activityRecyclerView = itemView.findViewById(R.id.activities_recycler_view);
     }
 
     public void onBind(Context context, ExploreSection section) {

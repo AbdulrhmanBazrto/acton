@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chat_message_backround_shape"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/user_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="1dp"
+            android:gravity="center"
+            android:src="@drawable/img1" />
+
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="12dp"
+            android:lines="1"
+            android:text="الدوسري الأصيل"
+            android:textColor="@color/room_item_title_text_color"
+            android:textSize="13sp"
+            android:layout_toEndOf="@id/user_image"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/image_msg"
+            android:layout_width="150dp"
+            android:layout_height="225dp"
+            android:scaleType="fitXY"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="right|center_vertical"
+            android:layout_toEndOf="@id/user_image"
+            android:layout_below="@id/user_name" />
+
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

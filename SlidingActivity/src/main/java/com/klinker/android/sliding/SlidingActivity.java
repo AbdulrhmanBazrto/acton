@@ -106,12 +106,12 @@ public abstract class SlidingActivity extends PeekViewActivity {
 
         setContentView(R.layout.sliding_activity);
 
-        scroller = (MultiShrinkScroller) findViewById(R.id.multiscroller);
-        content = (FrameLayout) findViewById(R.id.content_container);
-        contentScroller = (TouchlessScrollView) findViewById(R.id.content_scroller);
-        headerContent = (FrameLayout) findViewById(R.id.header_content_container);
+        scroller = findViewById(R.id.multiscroller);
+        content = findViewById(R.id.content_container);
+        contentScroller = findViewById(R.id.content_scroller);
+        headerContent = findViewById(R.id.header_content_container);
 
-        photoView = (ImageView) findViewById(R.id.photo);
+        photoView = findViewById(R.id.photo);
         photoViewTempBackground = findViewById(R.id.photo_background);
         final View transparentView = findViewById(R.id.transparent_view);
         if (scroller != null) {
@@ -126,7 +126,7 @@ public abstract class SlidingActivity extends PeekViewActivity {
         // Allow a shadow to be shown under the toolbar.
         ViewUtil.addRectangularOutlineProvider(findViewById(R.id.toolbar_parent), getResources());
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -145,7 +145,7 @@ public abstract class SlidingActivity extends PeekViewActivity {
         configureScroller(scroller);
         scroller.initialize(multiShrinkScrollerListener, false);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         disableFab(); // default to having the fab be off
 
         SchedulingUtils.doOnPreDraw(scroller, true,

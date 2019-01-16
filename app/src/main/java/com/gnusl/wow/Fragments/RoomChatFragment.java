@@ -13,10 +13,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Activities.RoomSettingsActivity;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
@@ -30,6 +33,7 @@ import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.GiftsRoomDialog;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PNConfiguration;
@@ -58,6 +62,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
     private View inflatedView;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
     private UsersChatRoomRecyclerViewAdapter usersChatRoomRecyclerViewAdapter;
+    private UsersScoreRoomRecyclerViewAdapter usersScoreRoomRecyclerViewAdapter;
     private ProgressDialog progressDialog;
     private ArrayList<Gift> gifts;
 
@@ -95,17 +100,23 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         // chat adapter
         initializeChatAdapter();
 
+        // user info
+        setUserInformation();
+
         // pubnub implementation
         PubnubImplementation();
 
         // set attendance
         APIConnectionNetwork.SetUserAttendance(UserAttendanceType.Entrance, activity.getRoom().getId(), this);
 
-        // get gifts
-        APIConnectionNetwork.GetGifts(this);
+        // get scores
+        APIConnectionNetwork.GetScoreUsers(activity.getRoom().getId(), this);
 
         // get messages
-        // sendChannelsRequest();
+        getAllMessagesRequest();
+
+        // get gifts
+        APIConnectionNetwork.GetGifts(this);
     }
 
     @Override
@@ -150,7 +161,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
                         case R.id.backround_action:
 
-                            ((RoomChatActivity) getActivity()).openGallery();
+                            ((RoomChatActivity) getActivity()).openGallery(true);
                             break;
                     }
 
@@ -167,6 +178,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
                 GiftsRoomDialog.show(getContext(), gifts);
         });
 
+        inflatedView.findViewById(R.id.gallery_btn).setOnClickListener(v -> {
+
+            ((RoomChatActivity) getActivity()).openGallery(false);
+        });
     }
 
     private void goToRoomSettingsActivity() {
@@ -178,29 +193,19 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
     private void initializeUsersScore() {
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.score_user_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.score_user_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        ArrayList<User> users = new ArrayList<>();
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img1));
-        users.add(new User(R.drawable.img1));
-
-
-        UsersScoreRoomRecyclerViewAdapter usersScoreRoomRecyclerViewAdapter = new UsersScoreRoomRecyclerViewAdapter(getContext(), users);
+        usersScoreRoomRecyclerViewAdapter = new UsersScoreRoomRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(usersScoreRoomRecyclerViewAdapter);
     }
 
     private void initializeUsersInRoomAdapter() {
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.users_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.users_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -212,7 +217,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
     private void initializeChatAdapter() {
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.chat_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.chat_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -220,6 +225,25 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
         chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(chatRecyclerViewAdapter);
+    }
+
+    private void setUserInformation() {
+
+        User user = SharedPreferencesUtils.getUser();
+        if (user != null) {
+
+            // name
+            ((TextView) inflatedView.findViewById(R.id.user_name)).setText(user.getName());
+
+            // Id
+            ((TextView) inflatedView.findViewById(R.id.user_Id)).setText(String.valueOf("ID:" + user.getId()));
+
+            // user image
+            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+                Glide.with(getContext())
+                        .load(user.getImage_url())
+                        .into(((ImageView) inflatedView.findViewById(R.id.user_image)));
+        }
     }
 
     private void PubnubImplementation() {
@@ -288,13 +312,24 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
                 JsonElement receivedMessageObject = message.getMessage();
                 System.out.println("Received message content: " + receivedMessageObject.toString());
                 // extract desired parts of the payload, using Gson
+
+                // get message
                 String msg = message.getMessage().getAsJsonObject().get("msg").getAsString();
                 System.out.println("msg content: " + msg);
 
-                // show message
-                getActivity().runOnUiThread(() -> {
+                // get user name
+                String userName = message.getMessage().getAsJsonObject().get("user_name").getAsString();
 
-                    chatRecyclerViewAdapter.getChatMessages().add(new ChatMessage());
+                // get user image
+                String userImage = message.getMessage().getAsJsonObject().get("user_image").getAsString();
+
+                // create model
+                ChatMessage chatMessage = new ChatMessage(msg, userName, userImage);
+
+                // show message
+                activity.runOnUiThread(() -> {
+
+                    chatRecyclerViewAdapter.getChatMessages().add(chatMessage);
                     chatRecyclerViewAdapter.notifyDataSetChanged();
                 });
 
@@ -322,6 +357,17 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         JsonObject messageJsonObject = new JsonObject();
         messageJsonObject.addProperty("msg", message);
 
+        // add user info
+        User user = SharedPreferencesUtils.getUser();
+        if (user != null) {
+
+            // name
+            messageJsonObject.addProperty("user_name", user.getName());
+
+            // image
+            messageJsonObject.addProperty("user_image", user.getImage_url());
+        }
+
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
             @Override
             public void onResponse(PNPublishResult result, PNStatus status) {
@@ -342,7 +388,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         });
     }
 
-    private void sendChannelsRequest() {
+    private void getAllMessagesRequest() {
 
         // make progress dialog
         this.progressDialog = ProgressDialog.show(getContext(), "", "loading messages..");
@@ -396,6 +442,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
             try {
                 usersChatRoomRecyclerViewAdapter.setUsers(User.parseJSONArray(jsonObject.getJSONArray("users")));
                 usersChatRoomRecyclerViewAdapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (jsonObject.has("score_users")) { // refresh scores in room
+            try {
+                usersScoreRoomRecyclerViewAdapter.setUsers(User.parseJSONArray(jsonObject.getJSONArray("score_users")));
+                usersScoreRoomRecyclerViewAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

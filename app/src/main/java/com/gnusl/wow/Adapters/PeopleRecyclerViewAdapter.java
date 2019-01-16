@@ -52,7 +52,7 @@ public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public PersonViewHolder(View itemView) {
             super(itemView);
 
-            personImageView=(AppCompatImageView)itemView.findViewById(R.id.person_image);
+            personImageView= itemView.findViewById(R.id.person_image);
         }
 
         public void bind(final int imageResource) {

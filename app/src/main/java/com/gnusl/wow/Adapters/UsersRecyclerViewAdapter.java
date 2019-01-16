@@ -56,8 +56,8 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         public UserViewHolder(View itemView) {
             super(itemView);
 
-            userImage = (AppCompatImageView) itemView.findViewById(R.id.user_image);
-            userName = (TextView) itemView.findViewById(R.id.user_name);
+            userImage = itemView.findViewById(R.id.user_image);
+            userName = itemView.findViewById(R.id.user_name);
 
         }
 

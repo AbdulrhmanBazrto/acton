@@ -60,7 +60,7 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 
     // Container Activity must implement this interface
     public interface OnVideoSelectedListener {
-        public void onVideoSelected(int count);
+        void onVideoSelected(int count);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 
             getActivity().getWindow().setBackgroundDrawable(null);
 
-            mVideoGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
+            mVideoGridView = mView.findViewById(R.id.gridViewFromMediaChooser);
 
             if (getArguments() != null) {
                 initVideos(getArguments().getString("name"));
@@ -107,8 +107,6 @@ public class VideoFragment extends Fragment implements OnScrollListener {
 
         return mView;
     }
-
-    ;
 
 
     private void initVideos(String bucketName) {
@@ -191,7 +189,7 @@ public class VideoFragment extends Fragment implements OnScrollListener {
                 MediaModel galleryModel = adapter.getItem(position);
 
                 if (!galleryModel.status) {
-                    long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url.toString()), true);
+                    long size = MediaChooserConstants.ChekcMediaFileSize(new File(galleryModel.url), true);
                     if (size != 0) {
                         Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.file_size_exceed) + "  " + MediaChooserConstants.SELECTED_VIDEO_SIZE_IN_MB + " " + getActivity().getResources().getString(R.string.mb), Toast.LENGTH_SHORT).show();
                         return;
@@ -213,11 +211,11 @@ public class VideoFragment extends Fragment implements OnScrollListener {
                 adapter.notifyDataSetChanged();
 
                 if (galleryModel.status) {
-                    mSelectedItems.add(galleryModel.url.toString());
+                    mSelectedItems.add(galleryModel.url);
                     MediaChooserConstants.SELECTED_MEDIA_COUNT++;
 
                 } else {
-                    mSelectedItems.remove(galleryModel.url.toString().trim());
+                    mSelectedItems.remove(galleryModel.url.trim());
                     MediaChooserConstants.SELECTED_MEDIA_COUNT--;
                 }
 

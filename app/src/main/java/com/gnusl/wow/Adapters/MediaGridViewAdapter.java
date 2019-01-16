@@ -72,8 +72,8 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
             mWidth = mContext.getResources().getDisplayMetrics().widthPixels;
             convertView = viewInflater.inflate(R.layout.view_grid_item, parent, false);
             holder = new ViewHolder();
-            holder.imageView = (ImageView) convertView.findViewById(R.id.imageViewFromGridItemRowView);
-            holder.nameTextView = (TextView) convertView.findViewById(R.id.nameTextView);
+            holder.imageView = convertView.findViewById(R.id.imageViewFromGridItemRowView);
+            holder.nameTextView = convertView.findViewById(R.id.nameTextView);
 
             convertView.setTag(holder);
 

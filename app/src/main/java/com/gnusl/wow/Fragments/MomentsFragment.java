@@ -10,14 +10,18 @@ import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.CreatePostActivity;
 import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Adapters.MomentsFragmentPagerAdapter;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
+import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 /**
@@ -41,8 +45,11 @@ public class MomentsFragment extends Fragment implements SmartTabLayout.TabProvi
 
         inflatedView = inflater.inflate(R.layout.fragment_moments, container, false);
 
-        AppCompatImageView search_icon=(AppCompatImageView)inflatedView.findViewById(R.id.search_icon);
+        AppCompatImageView search_icon= inflatedView.findViewById(R.id.search_icon);
         search_icon.setImageResource(R.drawable.ic_action_camera);
+
+        // user info
+        setUserInformation();
 
         // initialize top bar with viewpager
         initializeSmartTabs();
@@ -62,13 +69,26 @@ public class MomentsFragment extends Fragment implements SmartTabLayout.TabProvi
 
         MomentsFragmentPagerAdapter momentsFragmentPagerAdapter=new MomentsFragmentPagerAdapter(getContext(),getFragmentManager(),null);
 
-        ViewPager viewPager = (ViewPager) inflatedView.findViewById(R.id.moments_view_pager);
+        ViewPager viewPager = inflatedView.findViewById(R.id.moments_view_pager);
         viewPager.setAdapter(momentsFragmentPagerAdapter);
 
-        SmartTabLayout viewPagerTab = (SmartTabLayout) inflatedView.findViewById(R.id.viewpagertab);
+        SmartTabLayout viewPagerTab = inflatedView.findViewById(R.id.viewpagertab);
         viewPagerTab.setCustomTabView(this);
         viewPagerTab.setViewPager(viewPager);
 
+    }
+
+    private void setUserInformation() {
+
+        User user = SharedPreferencesUtils.getUser();
+        if (user != null) {
+
+            // user image
+            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+                Glide.with(this)
+                        .load(user.getImage_url())
+                        .into(((ImageView) inflatedView.findViewById(R.id.right_icon)));
+        }
     }
 
     @Override
@@ -78,7 +98,7 @@ public class MomentsFragment extends Fragment implements SmartTabLayout.TabProvi
 
         View inflatedView = inflater.inflate(R.layout.custom_room_tab_bar_item_view, container, false);
 
-        TextView fontedTextView = (TextView) inflatedView.findViewById(R.id.title);
+        TextView fontedTextView = inflatedView.findViewById(R.id.title);
 
         switch (position) {
 

@@ -59,7 +59,7 @@ public class WeekGiftsFragment extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_week_gifts, container, false);
 
         // initialize adapter
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.ranking_users_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.ranking_users_recycler_view);
         content_container = inflatedView.findViewById(R.id.content_container);
         content_container.setVisibility(View.GONE);
 

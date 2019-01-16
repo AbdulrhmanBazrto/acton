@@ -8,6 +8,6 @@ import android.support.v4.app.Fragment;
 
 public interface PagerDelegate {
 
-    public void onReplaceFragment(Fragment fragment, int position);
+    void onReplaceFragment(Fragment fragment, int position);
 }
 

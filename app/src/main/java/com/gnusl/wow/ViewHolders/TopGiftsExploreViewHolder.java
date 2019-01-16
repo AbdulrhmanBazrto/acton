@@ -21,7 +21,7 @@ public class TopGiftsExploreViewHolder extends SectionedViewHolder {
     public TopGiftsExploreViewHolder(View itemView) {
         super(itemView);
 
-        recyclerView = (RecyclerView) itemView.findViewById(R.id.gifts_recycler_view);
+        recyclerView = itemView.findViewById(R.id.gifts_recycler_view);
     }
 
     public void onBind(Context context,ExploreSection section) {

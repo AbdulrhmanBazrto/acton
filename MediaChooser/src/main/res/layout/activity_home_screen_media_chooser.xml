@@ -34,7 +34,7 @@
                     android:contentDescription="@null"
                     android:paddingRight="20dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_navigation_left_from_media_chooser_header_bar" />
+                    app:srcCompat="@drawable/ic_navigation_left_from_media_chooser_header_bar" />
 
 
                 <TextView

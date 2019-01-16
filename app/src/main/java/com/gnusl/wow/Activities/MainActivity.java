@@ -20,15 +20,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Adapters.MainFragmentPagerAdapter;
 import com.gnusl.wow.Adapters.ProfileActivity;
 import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.MessagesContainerFragment;
 import com.gnusl.wow.Fragments.MessagesFragment;
+import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Styles.CustomTypefaceSpan;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Views.FontedTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // init views variables
         findViews();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -160,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -176,9 +181,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void findViews() {
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        viewPager = (ViewPager) findViewById(R.id.pager_container);
-        viewPagerTab = (SmartTabLayout) findViewById(R.id.bottom_bar);
+        drawer = findViewById(R.id.drawer_layout);
+        viewPager = findViewById(R.id.pager_container);
+        viewPagerTab = findViewById(R.id.bottom_bar);
 
     }
 
@@ -231,7 +236,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initializeHeaderNavigation(View navigationView){
 
+        // go to profile
         navigationView.findViewById(R.id.imageView).setOnClickListener(v->startActivity(new Intent(this,ProfileActivity.class)));
+
+        // set user info
+        setUserInformation(navigationView);
+    }
+
+    private void setUserInformation(View headerView) {
+
+        User user = SharedPreferencesUtils.getUser();
+        if (user != null) {
+
+            // name
+            ((TextView) headerView.findViewById(R.id.name_text)).setText(user.getName());
+
+            // Id
+            ((TextView) headerView.findViewById(R.id.id_text)).setText(String.valueOf("ID:" + user.getName()));
+
+            // user image
+            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+                Glide.with(this)
+                        .load(user.getImage_url())
+                        .into(((ImageView) headerView.findViewById(R.id.imageView)));
+        }
     }
 
     @Override
@@ -247,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         View inflatedView = inflater.inflate(R.layout.custom_bottom_tab_item_view, container, false);
 
-        AppCompatImageView imageView = (AppCompatImageView) inflatedView.findViewById(R.id.icon);
-        FontedTextView fontedTextView = (FontedTextView) inflatedView.findViewById(R.id.title);
+        AppCompatImageView imageView = inflatedView.findViewById(R.id.icon);
+        FontedTextView fontedTextView = inflatedView.findViewById(R.id.title);
 
         switch (position) {
 

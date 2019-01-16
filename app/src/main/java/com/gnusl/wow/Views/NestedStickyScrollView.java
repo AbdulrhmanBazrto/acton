@@ -55,9 +55,9 @@ public class NestedStickyScrollView extends NestedScrollView {
      * Interface for start sticking and stop sticking current view listener.
      */
     public interface OnStickyScrollViewListener {
-        public void startStickingView(View v);
+        void startStickingView(View v);
 
-        public void stopStickingCurrentView(View v);
+        void stopStickingCurrentView(View v);
     }
 
     private ArrayList<View> stickyViews;

@@ -71,7 +71,7 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
 
     private void initializeRoomTypeAdapter() {
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.room_type_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.room_type_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

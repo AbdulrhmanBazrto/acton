@@ -58,8 +58,8 @@ public class RoomLockTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public RoomTypeLockViewHolder  (View itemView) {
             super(itemView);
 
-            month_text=(TextView) itemView.findViewById(R.id.month_text);
-            price_text=(TextView) itemView.findViewById(R.id.price_text);
+            month_text= itemView.findViewById(R.id.month_text);
+            price_text= itemView.findViewById(R.id.price_text);
 
         }
 

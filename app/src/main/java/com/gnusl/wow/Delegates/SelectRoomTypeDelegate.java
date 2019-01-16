@@ -4,5 +4,5 @@ import com.gnusl.wow.Models.RoomType;
 
 public interface SelectRoomTypeDelegate {
 
-    public void onSelectedRoomType(RoomType roomType);
+    void onSelectedRoomType(RoomType roomType);
 }

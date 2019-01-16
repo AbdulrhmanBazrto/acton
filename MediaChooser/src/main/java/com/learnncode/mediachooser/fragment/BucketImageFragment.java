@@ -76,7 +76,7 @@ public class BucketImageFragment extends Fragment {
 
         if (mView == null) {
             mView = inflater.inflate(R.layout.view_grid_layout_media_chooser, container, false);
-            mGridView = (GridView) mView.findViewById(R.id.gridViewFromMediaChooser);
+            mGridView = mView.findViewById(R.id.gridViewFromMediaChooser);
             init();
         } else {
             if (mView.getParent() != null) {

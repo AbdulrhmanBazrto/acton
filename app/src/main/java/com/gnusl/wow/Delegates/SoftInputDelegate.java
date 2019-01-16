@@ -2,7 +2,7 @@ package com.gnusl.wow.Delegates;
 
 public interface SoftInputDelegate {
 
-    public void onRequestToHideKeyboard();
+    void onRequestToHideKeyboard();
 
-    public void onRequestToShowKeyboard();
+    void onRequestToShowKeyboard();
 }

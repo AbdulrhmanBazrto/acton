@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -21,8 +22,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
-                if(sharedPreferences.getBoolean("login",false)){
+                if(SharedPreferencesUtils.getUser()!=null){ // logged in
                     startActivity(new Intent(SplashActivity.this,MainActivity.class));
                     finish();
                     return;

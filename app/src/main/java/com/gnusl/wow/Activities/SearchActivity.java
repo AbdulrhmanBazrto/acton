@@ -84,10 +84,10 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
 
         SearchFragmentPagerAdapter searchFragmentPagerAdapter = new SearchFragmentPagerAdapter(this, getSupportFragmentManager(), this);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.search_view_pager);
+        ViewPager viewPager = findViewById(R.id.search_view_pager);
         viewPager.setAdapter(searchFragmentPagerAdapter);
 
-        SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.search_smart_tab);
+        SmartTabLayout viewPagerTab = findViewById(R.id.search_smart_tab);
         viewPagerTab.setCustomTabView(this);
         viewPagerTab.setViewPager(viewPager);
 
@@ -116,7 +116,7 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
 
         View inflatedView = inflater.inflate(R.layout.custom_room_tab_bar_item_view, container, false);
 
-        TextView fontedTextView = (TextView) inflatedView.findViewById(R.id.title);
+        TextView fontedTextView = inflatedView.findViewById(R.id.title);
 
         switch (position) {
 

@@ -44,7 +44,7 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
 
         inflatedView = inflater.inflate(R.layout.fragment_users_messages, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.users_messages_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.users_messages_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

@@ -4,5 +4,5 @@ import com.gnusl.wow.Models.RoomLockType;
 
 public interface SelectLockTypeDelegate {
 
-    public void onSelectRoomLockType(RoomLockType roomLockType);
+    void onSelectRoomLockType(RoomLockType roomLockType);
 }

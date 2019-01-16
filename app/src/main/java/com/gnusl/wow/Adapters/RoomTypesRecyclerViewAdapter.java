@@ -59,8 +59,8 @@ public class RoomTypesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         public RoomTypeViewHolder (View itemView) {
             super(itemView);
 
-            roomImage=(AppCompatImageView) itemView.findViewById(R.id.room_image);
-            roomName=(TextView) itemView.findViewById(R.id.room_name);
+            roomImage= itemView.findViewById(R.id.room_image);
+            roomName= itemView.findViewById(R.id.room_name);
 
         }
 

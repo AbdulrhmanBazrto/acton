@@ -50,10 +50,10 @@ public class ReceivedGiftsFragment extends Fragment implements SmartTabLayout.Ta
 
         giftsFragmentPagerAdapter = new GiftsFragmentPagerAdapter(getContext(), getFragmentManager(), this,null);
 
-        ViewPager viewPager = (ViewPager) inflatedView.findViewById(R.id.recieved_gifts_scrolling_view_pager);
+        ViewPager viewPager = inflatedView.findViewById(R.id.recieved_gifts_scrolling_view_pager);
         viewPager.setAdapter(giftsFragmentPagerAdapter);
 
-        SmartTabLayout viewPagerTab = (SmartTabLayout) inflatedView.findViewById(R.id.view_pager_tab);
+        SmartTabLayout viewPagerTab = inflatedView.findViewById(R.id.view_pager_tab);
         viewPagerTab.setCustomTabView(this);
         viewPagerTab.setViewPager(viewPager);
 
@@ -67,7 +67,7 @@ public class ReceivedGiftsFragment extends Fragment implements SmartTabLayout.Ta
 
         View inflatedView = inflater.inflate(R.layout.custom_room_tab_bar_item_view, container, false);
 
-        TextView fontedTextView = (TextView) inflatedView.findViewById(R.id.title);
+        TextView fontedTextView = inflatedView.findViewById(R.id.title);
 
         switch (position) {
 

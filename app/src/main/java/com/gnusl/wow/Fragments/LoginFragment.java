@@ -66,8 +66,8 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
 
     private void findViews(View rootView) {
 
-        edEmailOrPhone = (EditText) rootView.findViewById(R.id.ed_email_or_phone);
-        edPassword = (EditText) rootView.findViewById(R.id.ed_password);
+        edEmailOrPhone = rootView.findViewById(R.id.ed_email_or_phone);
+        edPassword = rootView.findViewById(R.id.ed_password);
         lineEmailOrPhone = rootView.findViewById(R.id.email_underline);
         linePassword = rootView.findViewById(R.id.password_underline);
         loginBtn = rootView.findViewById(R.id.login_btn);

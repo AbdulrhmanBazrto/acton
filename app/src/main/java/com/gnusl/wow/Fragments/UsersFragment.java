@@ -35,7 +35,7 @@ public class UsersFragment extends Fragment implements SearchByUsersDelegate {
 
         inflatedView = inflater.inflate(R.layout.fragment_users, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.users_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.users_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

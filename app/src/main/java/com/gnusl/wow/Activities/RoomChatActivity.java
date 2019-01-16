@@ -39,6 +39,7 @@ import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Connection.APILinks;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SoftInputDelegate;
 import com.gnusl.wow.Fragments.RoomChatFragment;
@@ -114,13 +115,13 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     private static final String[] RequiredPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
     protected PermissionChecker permissionChecker = new PermissionChecker();
-    BroadcastReceiver videoBroadcastReceiver;
     BroadcastReceiver imageBroadcastReceiver;
     private RoomChatFragment roomChatFragment;
 
     private View softInputKeyboardLayout;
     private EditText messageEditText;
     private ProgressDialog progressDialog;
+    private boolean isUploadingForBackground = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +259,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         if (client != null) {
             client.onDestroy();
         }
+        unregisterReceiver(imageBroadcastReceiver);
         super.onDestroy();
     }
 
@@ -361,7 +363,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                 Toast.makeText(RoomChatActivity.this, "Image SIZE :" + intent.getStringArrayListExtra("list").size(), Toast.LENGTH_SHORT).show();
 
                 // change room backround
-                changeRoomBackground(intent.getStringArrayListExtra("list"));
+                handleMediaReceiver(intent.getStringArrayListExtra("list"));
 
             }
         };
@@ -376,7 +378,9 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     }
 
-    public void openGallery() {
+    public void openGallery(boolean isUploadingForBackground) {
+
+        this.isUploadingForBackground = isUploadingForBackground;
 
         if (checkReadGalleryPermissions(this)) {
 
@@ -392,7 +396,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     }
 
-    private void changeRoomBackground(List<String> filePathList) {
+    private void handleMediaReceiver(List<String> filePathList) {
 
         // create file image
         File mediaFile = new File(filePathList.get(0));
@@ -404,12 +408,18 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             options.inPurgeable = true;
             options.inSampleSize = 2;
             Bitmap myBitmap = BitmapFactory.decodeFile(mediaFile.getAbsolutePath(), options);
-            ((AppCompatImageView) findViewById(R.id.backround_image)).setImageBitmap(myBitmap);
+
+            if (isUploadingForBackground)
+                ((AppCompatImageView) findViewById(R.id.backround_image)).setImageBitmap(myBitmap);
         }
 
         // TODO : upload image
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "change your background..");
+        if (isUploadingForBackground)
+            this.progressDialog = ProgressDialog.show(this, "", "change your background..");
+
+        else
+            this.progressDialog = ProgressDialog.show(this, "", "upload your photo..");
 
         // upload image
         APIConnectionNetwork.UploadImage(mediaFile, this);
@@ -433,6 +443,15 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             messageEditText.setText("");
         }
 
+    }
+
+    public void SendImageMessageRequest(String image) {
+
+        // send image message
+        APIConnectionNetwork.SendMessageByChannel(image, getRoom().getId(), this);
+
+        // share on pubnup
+        roomChatFragment.ShareMessageOnPubnub(image);
     }
 
     public Room getRoom() {
@@ -546,7 +565,13 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
             // upload post
             try {
-                APIConnectionNetwork.ChangeRoomBackground(jsonObject.getString("image"), getRoom().getId(), this);
+
+                if (isUploadingForBackground) // change room background
+                    APIConnectionNetwork.ChangeRoomBackground(jsonObject.getString("image"), getRoom().getId(), this);
+
+                else   // send image as message
+                    SendImageMessageRequest(APILinks.Base_Media_Url.getLink()+jsonObject.getString("image"));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -563,4 +588,5 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     public void onConnectionSuccess(JSONArray jsonArray) {
 
     }
+
 }

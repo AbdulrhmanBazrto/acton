@@ -82,12 +82,12 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
 
     private void findViews(){
 
-        comments_recycler_view=(RecyclerView) findViewById(R.id.recycler_view_comments);
-        progressBar=(ProgressBar)findViewById(R.id.progressBar);
+        comments_recycler_view= findViewById(R.id.recycler_view_comments);
+        progressBar= findViewById(R.id.progressBar);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
 
-        send_button=(AppCompatImageView)findViewById(R.id.send_button);
-        message_edit_text=(FontedEditText)findViewById(R.id.message_edit_text);
+        send_button= findViewById(R.id.send_button);
+        message_edit_text= findViewById(R.id.message_edit_text);
         message_edit_text.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);

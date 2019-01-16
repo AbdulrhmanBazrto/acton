@@ -4,7 +4,7 @@ public enum APILinks {
 
     //Base_API_Url("http://wow.gnusl.com/api/"),
     Base_API_Url("http://fat7al.com/wow/api/"),
-    Base_Media_Url("http://wow.gnusl.com/public/uploads/"),
+    Base_Media_Url("http://fat7al.com/wow/public/uploads/"),
     Base_Socket_Streaming_Url("http://gnusl.com:3000/streams/"),
 
     // User

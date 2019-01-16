@@ -24,7 +24,7 @@ public class RoomsExploreViewHolder extends SectionedViewHolder {
     public RoomsExploreViewHolder(View itemView) {
         super(itemView);
 
-        roomsRecyclerView = (RecyclerView) itemView.findViewById(R.id.rooms_recycler_view);
+        roomsRecyclerView = itemView.findViewById(R.id.rooms_recycler_view);
     }
 
     public void onBind(Context context, ExploreSection section) {

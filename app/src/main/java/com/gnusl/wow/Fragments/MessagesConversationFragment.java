@@ -100,10 +100,10 @@ public class MessagesConversationFragment extends Fragment implements Connection
 
         inflatedView = inflater.inflate(R.layout.fragment_messages_conversation_layout, container, false);
 
-        recyclerView = (RecyclerView) inflatedView.findViewById(R.id.recycler_view_messeges_conversation);
-        message_edit_text = (FontedEditText) inflatedView.findViewById(R.id.message_edit_text);
-        send_button = (AppCompatImageView) inflatedView.findViewById(R.id.send_button);
-        state_label = (FontedTextView) inflatedView.findViewById(R.id.state_label);
+        recyclerView = inflatedView.findViewById(R.id.recycler_view_messeges_conversation);
+        message_edit_text = inflatedView.findViewById(R.id.message_edit_text);
+        send_button = inflatedView.findViewById(R.id.send_button);
+        state_label = inflatedView.findViewById(R.id.state_label);
         // photo_button = inflatedView.findViewById(R.id.photo_button);
         bigImage = inflatedView.findViewById(R.id.bigImage);
 

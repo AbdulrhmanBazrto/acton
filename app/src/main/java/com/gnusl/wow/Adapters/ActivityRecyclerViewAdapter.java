@@ -55,7 +55,7 @@ public class ActivityRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         public ActivityViewHolder(View itemView) {
             super(itemView);
 
-            activityTextView=(TextView)itemView.findViewById(R.id.activity_text);
+            activityTextView= itemView.findViewById(R.id.activity_text);
         }
 
         public void bind(final ActivitiesHashTag activity) {

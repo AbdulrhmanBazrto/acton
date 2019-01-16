@@ -32,6 +32,8 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.SocialType;
 import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.APIUtils;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Views.FontedButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -72,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
     private CallbackManager callbackManager;
 
     // Google
-    private final int GOOGLE_LOGIN_REQUEST=900;
+    private final int GOOGLE_LOGIN_REQUEST = 900;
 
     // twitter
     private TwitterAuthClient mTwitterAuthClient;
@@ -83,37 +85,37 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
         setContentView(R.layout.activity_login);
 
         // go to main activity
-        findViewById(R.id.wow_login_icon).setOnClickListener(v->{
+        findViewById(R.id.wow_login_icon).setOnClickListener(v -> {
 
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-            finish();
+            /*startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();*/
 
         });
 
-        findViewById(R.id.facebook_button).setOnClickListener(v->{
+        findViewById(R.id.facebook_button).setOnClickListener(v -> {
 
             startLoginWithFacebook();
         });
 
-        findViewById(R.id.google_button).setOnClickListener(v->{
+        findViewById(R.id.google_button).setOnClickListener(v -> {
 
             startLoginWithGoogle();
         });
 
 
-        findViewById(R.id.twitter_button).setOnClickListener(v->{
+        findViewById(R.id.twitter_button).setOnClickListener(v -> {
 
             startLoginWithTwitter();
         });
 
-        findViewById(R.id.instagram_button).setOnClickListener(v->{
+        findViewById(R.id.instagram_button).setOnClickListener(v -> {
 
             signInWithInstagram();
         });
 
-        findViewById(R.id.accout_button).setOnClickListener(v->{
+        findViewById(R.id.accout_button).setOnClickListener(v -> {
 
-            startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
 
         // initialize facebook
@@ -130,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
     }
 
     // Facebook Methods
-    private void initializeFacebookSDK(){
+    private void initializeFacebookSDK() {
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -139,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                     @Override
                     public void onSuccess(LoginResult loginResult) {
 
-                        Log.d("FACEBOOK ","onSuccess");
+                        Log.d("FACEBOOK ", "onSuccess");
 
                         // App code
                         GraphRequest request = GraphRequest.newMeRequest(
@@ -151,9 +153,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
                                         // Application code
                                         try {
-                                            JSONObject pictureJson=new JSONObject(object.getString("picture"));
-                                            JSONObject dataJson=new JSONObject(pictureJson.getString("data"));
-                                            String url=dataJson.getString("url");
+                                            JSONObject pictureJson = new JSONObject(object.getString("picture"));
+                                            JSONObject dataJson = new JSONObject(pictureJson.getString("data"));
+                                            String url = dataJson.getString("url");
 
                                             String name = object.getString("name");
                                             String id = object.getString("id");
@@ -163,7 +165,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                                                 progressDialog.dismiss();
 
                                             // prepare user credential
-                                            RegisterParams params=new RegisterParams();
+                                            RegisterParams params = new RegisterParams();
                                             params.setName(name);
                                             params.setEmail(email);
                                             params.setImage(url);
@@ -171,14 +173,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                                             params.setSocial_type(SocialType.Facebook.name().toLowerCase());
                                             params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
 
-                                            Log.d("FACEBOOK name",name);
-                                            Log.d("FACEBOOK email",email);
-                                            Log.d("FACEBOOK url",url);
-                                            Log.d("FACEBOOK id",id);
-                                            Log.d("FACEBOOK firebase",FirebaseInstanceId.getInstance().getToken());
+                                            Log.d("FACEBOOK name", name);
+                                            Log.d("FACEBOOK email", email);
+                                            Log.d("FACEBOOK url", url);
+                                            Log.d("FACEBOOK id", id);
+                                            Log.d("FACEBOOK firebase", FirebaseInstanceId.getInstance().getToken());
 
                                             // send register
-                                            APIConnectionNetwork.LoginBySocial(params,LoginActivity.this);
+                                            APIConnectionNetwork.LoginBySocial(params, LoginActivity.this);
 
                                             // progress
                                             progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
@@ -217,10 +219,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                 });
     }
 
-    private void startLoginWithFacebook(){
+    private void startLoginWithFacebook() {
 
         // login with facebook
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile","email"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
 
         // progress
         this.progressDialog = ProgressDialog.show(this, "", "Login with facebook account..");
@@ -229,7 +231,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
     // Google Methods
     @SuppressLint("RestrictedApi")
-    private void startLoginWithGoogle(){
+    private void startLoginWithGoogle() {
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestProfile()
@@ -240,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent,GOOGLE_LOGIN_REQUEST);
+        startActivityForResult(signInIntent, GOOGLE_LOGIN_REQUEST);
 
     }
 
@@ -248,16 +250,16 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
         if (result.isSuccess()) {
             try {
                 GoogleSignInAccount account = result.getSignInAccount();
-                if (account!=null) {
+                if (account != null) {
 
                     Uri photoUrl = account.getPhotoUrl();
                     // send request
                     // prepare user credintial
-                    RegisterParams params=new RegisterParams();
+                    RegisterParams params = new RegisterParams();
                     params.setName(account.getDisplayName());
                     params.setEmail(account.getEmail());
 
-                    if (photoUrl !=null)
+                    if (photoUrl != null)
                         params.setImage(photoUrl.toString());
 
                     params.setSocial_id(String.valueOf(account.getId()));
@@ -265,11 +267,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                     params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
 
                     // send register
-                    APIConnectionNetwork.LoginBySocial(params,LoginActivity.this);
+                    APIConnectionNetwork.LoginBySocial(params, LoginActivity.this);
 
                     // progress
                     progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
-
 
 
                 }
@@ -278,24 +279,24 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
             }
         } else {
-            Log.w("GOOGLE ", CommonStatusCodes.getStatusCodeString(result.getStatus().getStatusCode())+"");
-            Toast.makeText(getApplicationContext(),"error",Toast.LENGTH_SHORT).show();
+            Log.w("GOOGLE ", CommonStatusCodes.getStatusCodeString(result.getStatus().getStatusCode()) + "");
+            Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
 
         }
     }
 
 
     //Twitter Methods
-    private void startLoginWithTwitter(){
+    private void startLoginWithTwitter() {
 
         mTwitterAuthClient = new TwitterAuthClient();
         mTwitterAuthClient.authorize(this, new com.twitter.sdk.android.core.Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> twitterSessionResult) {
-                Log.d("TWITTER ","SUCCESS");
+                Log.d("TWITTER ", "SUCCESS");
                 TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
                 TwitterAuthToken twitterAuthToken = session.getAuthToken();
-                Log.d("TWITTER ","SUCCESS1");
+                Log.d("TWITTER ", "SUCCESS1");
                 String token = twitterAuthToken.token;
                 String secret = twitterAuthToken.secret;
                 loginTwitter(session);
@@ -304,7 +305,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
             @Override
             public void failure(TwitterException e) {
                 e.printStackTrace();
-                Log.d("TWITTER ",e.toString());
+                Log.d("TWITTER ", e.toString());
             }
         });
 
@@ -321,16 +322,16 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
             public void success(Result<com.twitter.sdk.android.core.models.User> result) {
                 User user = result.data;
 
-                Log.d("TWITTER ","SUCCESS2");
+                Log.d("TWITTER ", "SUCCESS2");
 
                 // handle image size
                 String comingImageUrl = user.profileImageUrl;
-                String image_url= comingImageUrl.replaceAll("_normal","");
+                String image_url = comingImageUrl.replaceAll("_normal", "");
 
                 // send to api
 
                 // prepare user credintal
-                RegisterParams params=new RegisterParams();
+                RegisterParams params = new RegisterParams();
                 params.setName(user.name);
                 params.setEmail(user.email);
                 params.setImage(image_url);
@@ -339,7 +340,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                 params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
 
                 // send register
-                APIConnectionNetwork.LoginBySocial(params,LoginActivity.this);
+                APIConnectionNetwork.LoginBySocial(params, LoginActivity.this);
 
                 // progress
                 progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
@@ -350,7 +351,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
             @Override
             public void failure(TwitterException exception) {
 
-                Log.d("TWITTER ",exception.toString());
+                Log.d("TWITTER ", exception.toString());
             }
         });
     }
@@ -371,12 +372,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
     private void checkForInstagramData() {
         final Uri data = this.getIntent().getData();
-        if(data != null && data.getScheme().equals("sociallogin") && data.getFragment() != null) {
+        if (data != null && data.getScheme().equals("sociallogin") && data.getFragment() != null) {
             final String accessToken = data.getFragment().replaceFirst("access_token=", "");
             if (accessToken != null) {
                 handleInstagramSignInResult(new Callable<Void>() {
                     @Override
-                    public Void call() throws Exception {
+                    public Void call() {
                         // Do nothing, just throw the access token away.
                         return null;
                     }
@@ -388,7 +389,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
     }
 
     private void handleInstagramSignInResult(Callable<Void> logout) {
-        if(logout == null) {
+        if (logout == null) {
             /* Login error */
             Toast.makeText(getApplicationContext(), "Login Instagram Error", Toast.LENGTH_SHORT).show();
         } else {
@@ -420,24 +421,43 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
     @Override
     public void onConnectionSuccess(String response) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
-
-       // APIUtils.parseNewUserType(response);
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putBoolean("login", true);
-        editor.apply();
-
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-
-        finishAffinity();
 
     }
 
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
+
+        // parse token
+        if (jsonObject.has("token")) {
+
+            try {
+                SharedPreferencesUtils.saveToken(jsonObject.getString("token"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        // parse user
+        if (jsonObject.has("user")) {
+
+            try {
+                SharedPreferencesUtils.saveUser(com.gnusl.wow.Models.User.newInstance(jsonObject.getJSONObject("user")));
+
+                // go to main
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+
+                finishAffinity();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
 
     }
 
@@ -449,14 +469,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode==140){
-            if (resultCode==-1){
-                mTwitterAuthClient.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == 140) {
+            if (resultCode == -1) {
+                mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
             }
-        }else if (requestCode== GOOGLE_LOGIN_REQUEST){
+        } else if (requestCode == GOOGLE_LOGIN_REQUEST) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleGoogleResult(result);
-        }else
+        } else
             callbackManager.onActivityResult(requestCode, resultCode, data);
 
         super.onActivityResult(requestCode, resultCode, data);

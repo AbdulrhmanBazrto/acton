@@ -58,7 +58,7 @@ public class CountryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         public CountryViewHolder(View itemView) {
             super(itemView);
 
-            nameTextView=(TextView)itemView.findViewById(R.id.name_text);
+            nameTextView= itemView.findViewById(R.id.name_text);
         }
 
         public void bind(final Country country, final int position) {

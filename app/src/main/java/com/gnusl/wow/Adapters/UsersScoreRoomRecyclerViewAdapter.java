@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
@@ -46,18 +48,22 @@ public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
-        private AppCompatImageView userImage;
+        private ImageView userImage;
 
         public UserViewHolder(View itemView) {
             super(itemView);
 
-            userImage=(AppCompatImageView) itemView.findViewById(R.id.user_image);
+            userImage= itemView.findViewById(R.id.user_image);
 
         }
 
         public void bind(final User user, final int position) {
 
-            userImage.setImageResource(user.getImageResource());
+            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+                Glide.with(context)
+                        .load(user.getImage_url())
+                        .into(userImage);
+
         }
 
     }

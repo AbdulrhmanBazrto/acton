@@ -7,13 +7,13 @@ import org.json.JSONObject;
 
 public interface ConnectionDelegate {
 
-    public void onConnectionFailure();
+    void onConnectionFailure();
 
-    public void onConnectionError(ANError anError);
+    void onConnectionError(ANError anError);
 
-    public void onConnectionSuccess(String response);
+    void onConnectionSuccess(String response);
 
-    public void onConnectionSuccess(JSONObject jsonObject);
+    void onConnectionSuccess(JSONObject jsonObject);
 
-    public void onConnectionSuccess(JSONArray jsonArray);
+    void onConnectionSuccess(JSONArray jsonArray);
 }

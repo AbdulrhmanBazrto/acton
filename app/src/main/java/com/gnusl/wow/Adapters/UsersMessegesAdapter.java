@@ -111,7 +111,7 @@ public class UsersMessegesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public LoadingViewHolder(View itemView) {
             super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.load_more_progress);
+            progressBar = itemView.findViewById(R.id.load_more_progress);
         }
 
         public void bind() {
@@ -131,11 +131,11 @@ public class UsersMessegesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             super(itemView);
 
-            parent_layout = (ConstraintLayout) itemView.findViewById(R.id.parent_layout);
-            name = (FontedTextView) itemView.findViewById(R.id.name);
-            messege = (AutoFitFontedTextView) itemView.findViewById(R.id.notification_text);
-            date = (FontedTextView) itemView.findViewById(R.id.date);
-            profile_image = (CircularImageView) itemView.findViewById(R.id.profile_image);
+            parent_layout = itemView.findViewById(R.id.parent_layout);
+            name = itemView.findViewById(R.id.name);
+            messege = itemView.findViewById(R.id.notification_text);
+            date = itemView.findViewById(R.id.date);
+            profile_image = itemView.findViewById(R.id.profile_image);
         }
 
         public void bind(UserMessage userMessage, final int position) {

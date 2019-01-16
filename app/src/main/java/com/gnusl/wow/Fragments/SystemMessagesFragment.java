@@ -53,7 +53,7 @@ public class SystemMessagesFragment extends Fragment implements ConnectionDelega
         inflatedView = inflater.inflate(R.layout.fragment_system_messages, container, false);
 
         // initialize adapter
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.system_messages_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.system_messages_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

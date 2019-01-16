@@ -82,7 +82,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString(R.string.create_post));
         setSupportActionBar(toolbar);
 
@@ -145,10 +145,10 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
     private void finViews() {
 
-        profile_image = (CircularImageView) findViewById(R.id.profile_image);
-        name = (AutoFitFontedTextView) findViewById(R.id.name);
-        text = (FontedEditText) findViewById(R.id.text);
-        gridView = (GridView) findViewById(R.id.gridView);
+        profile_image = findViewById(R.id.profile_image);
+        name = findViewById(R.id.name);
+        text = findViewById(R.id.text);
+        gridView = findViewById(R.id.gridView);
 
         profile_image.setOnClickListener(v -> {
 
@@ -357,6 +357,8 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
     @Override
     protected void onDestroy() {
+
+        unregisterReceiver(imageBroadcastReceiver);
         super.onDestroy();
 
         // send

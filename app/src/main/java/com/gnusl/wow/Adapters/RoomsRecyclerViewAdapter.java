@@ -76,11 +76,11 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         public RoomViewHolder(View itemView) {
             super(itemView);
 
-            title = (TextView) itemView.findViewById(R.id.title);
-            content = (TextView) itemView.findViewById(R.id.content);
-            user_number = (TextView) itemView.findViewById(R.id.user_number);
-            room_image = (AppCompatImageView) itemView.findViewById(R.id.room_image);
-            flag_image = (AppCompatImageView) itemView.findViewById(R.id.flag_image);
+            title = itemView.findViewById(R.id.title);
+            content = itemView.findViewById(R.id.content);
+            user_number = itemView.findViewById(R.id.user_number);
+            room_image = itemView.findViewById(R.id.room_image);
+            flag_image = itemView.findViewById(R.id.flag_image);
 
         }
 

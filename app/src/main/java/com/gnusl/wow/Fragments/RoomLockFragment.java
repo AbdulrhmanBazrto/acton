@@ -71,7 +71,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
 
     private void initializeLockTypeAdapter() {
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.room_lock_recycler);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.room_lock_recycler);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

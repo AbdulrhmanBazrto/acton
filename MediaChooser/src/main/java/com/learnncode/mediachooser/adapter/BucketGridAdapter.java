@@ -100,8 +100,8 @@ public class BucketGridAdapter extends ArrayAdapter<BucketEntry> {
             convertView = mViewInflater.inflate(R.layout.view_grid_bucket_item_media_chooser, parent, false);
 
             holder = new ViewHolder();
-            holder.imageView = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserBucketRowView);
-            holder.nameTextView = (TextView) convertView.findViewById(R.id.nameTextViewFromMediaChooserBucketRowView);
+            holder.imageView = convertView.findViewById(R.id.imageViewFromMediaChooserBucketRowView);
+            holder.nameTextView = convertView.findViewById(R.id.nameTextViewFromMediaChooserBucketRowView);
 
             FrameLayout.LayoutParams imageParams = (FrameLayout.LayoutParams) holder.imageView.getLayoutParams();
             imageParams.width = mWidth / 2;

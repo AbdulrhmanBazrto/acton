@@ -89,11 +89,11 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         public CommentViewHolder(View itemView) {
             super(itemView);
 
-            profile_image = (CircularImageView) itemView.findViewById(R.id.profile_image);
-            user_name = (AutoFitFontedTextView) itemView.findViewById(R.id.user_name);
-            msg = (AutoFitFontedTextView) itemView.findViewById(R.id.msg);
-            date = (AutoFitFontedTextView) itemView.findViewById(R.id.date);
-            tags_recycler_view = (RecyclerView) itemView.findViewById(R.id.tags_recycler);
+            profile_image = itemView.findViewById(R.id.profile_image);
+            user_name = itemView.findViewById(R.id.user_name);
+            msg = itemView.findViewById(R.id.msg);
+            date = itemView.findViewById(R.id.date);
+            tags_recycler_view = itemView.findViewById(R.id.tags_recycler);
         }
 
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

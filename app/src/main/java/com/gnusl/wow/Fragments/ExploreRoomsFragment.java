@@ -53,7 +53,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
         inflatedView = inflater.inflate(R.layout.fragment_explore_rooms, container, false);
 
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.explore_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.explore_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

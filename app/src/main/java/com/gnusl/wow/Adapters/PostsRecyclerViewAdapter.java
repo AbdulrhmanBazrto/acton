@@ -84,15 +84,15 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         public FeaturePostViewHolder(View itemView) {
             super(itemView);
 
-            post_icon = (AppCompatImageView) itemView.findViewById(R.id.post_icon);
-            post_image = (AppCompatImageView) itemView.findViewById(R.id.post_image);
-            message_icon = (AppCompatImageView) itemView.findViewById(R.id.message_icon);
-            more_icon = (AppCompatImageView) itemView.findViewById(R.id.more_icon);
-            text_content = (TextView) itemView.findViewById(R.id.text_content);
-            post_title = (TextView) itemView.findViewById(R.id.post_title);
-            message_number = (TextView) itemView.findViewById(R.id.message_number);
-            like_number = (TextView) itemView.findViewById(R.id.like_number);
-            like = (SparkButton) itemView.findViewById(R.id.like_icon);
+            post_icon = itemView.findViewById(R.id.post_icon);
+            post_image = itemView.findViewById(R.id.post_image);
+            message_icon = itemView.findViewById(R.id.message_icon);
+            more_icon = itemView.findViewById(R.id.more_icon);
+            text_content = itemView.findViewById(R.id.text_content);
+            post_title = itemView.findViewById(R.id.post_title);
+            message_number = itemView.findViewById(R.id.message_number);
+            like_number = itemView.findViewById(R.id.like_number);
+            like = itemView.findViewById(R.id.like_icon);
         }
 
         public void bind(final FeaturePost post, final int position) {

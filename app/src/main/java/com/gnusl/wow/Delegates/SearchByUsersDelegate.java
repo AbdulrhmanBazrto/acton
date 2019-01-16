@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public interface SearchByUsersDelegate {
 
-    public void onSearchResultDone(ArrayList<User> users);
+    void onSearchResultDone(ArrayList<User> users);
 }

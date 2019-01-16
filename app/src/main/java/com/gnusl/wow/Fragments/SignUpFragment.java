@@ -32,9 +32,11 @@ import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Utils.CountryUtils;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -82,14 +84,14 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
     }
 
     private void findViews(View rootView) {
-        edFullName = (EditText) rootView.findViewById(R.id.ed_full_name);
-        edEmail = (EditText) rootView.findViewById(R.id.ed_email);
-        edMobile = (EditText) rootView.findViewById(R.id.ed_mobile);
-        edPassword = (EditText) rootView.findViewById(R.id.ed_birthday);
-        tvErrorName = (TextView) rootView.findViewById(R.id.full_name_error);
-        tvErrorEmail = (TextView) rootView.findViewById(R.id.email_error);
-        tvErrorMobile = (TextView) rootView.findViewById(R.id.mobile_error);
-        tvErrorPassword = (TextView) rootView.findViewById(R.id.birthday_error);
+        edFullName = rootView.findViewById(R.id.ed_full_name);
+        edEmail = rootView.findViewById(R.id.ed_email);
+        edMobile = rootView.findViewById(R.id.ed_mobile);
+        edPassword = rootView.findViewById(R.id.ed_birthday);
+        tvErrorName = rootView.findViewById(R.id.full_name_error);
+        tvErrorEmail = rootView.findViewById(R.id.email_error);
+        tvErrorMobile = rootView.findViewById(R.id.mobile_error);
+        tvErrorPassword = rootView.findViewById(R.id.birthday_error);
         lineName = rootView.findViewById(R.id.full_name_underline);
         lineEmail = rootView.findViewById(R.id.email_underline);
         lineMobile = rootView.findViewById(R.id.mobile_underline);
@@ -285,24 +287,42 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
     @Override
     public void onConnectionSuccess(String response) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
-
-        // APIUtils.parseNewUserType(response);
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-        editor.putBoolean("login", true);
-        editor.apply();
-
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-
-        getActivity().finishAffinity();
-
     }
 
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
+
+        // parse token
+        if (jsonObject.has("token")) {
+
+            try {
+                SharedPreferencesUtils.saveToken(jsonObject.getString("token"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        // parse user
+        if (jsonObject.has("user")) {
+
+            try {
+                SharedPreferencesUtils.saveUser(com.gnusl.wow.Models.User.newInstance(jsonObject.getJSONObject("user")));
+
+                // go to main
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+
+                getActivity().finishAffinity();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
 
     }
 

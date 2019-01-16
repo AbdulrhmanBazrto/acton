@@ -86,8 +86,8 @@ public class GridViewAdapter extends ArrayAdapter<MediaModel> {
             convertView = mViewInflater.inflate(R.layout.view_grid_item_media_chooser, parent, false);
 
             holder = new ViewHolder();
-            holder.imageView = (ImageView) convertView.findViewById(R.id.imageViewFromMediaChooserGridItemRowView);
-            holder.checkedView = (FrameLayout) convertView.findViewById(R.id.checkedViewFromMediaChooserGridItemRowView);
+            holder.imageView = convertView.findViewById(R.id.imageViewFromMediaChooserGridItemRowView);
+            holder.checkedView = convertView.findViewById(R.id.checkedViewFromMediaChooserGridItemRowView);
 
             LayoutParams imageParams = (LayoutParams) holder.imageView.getLayoutParams();
             imageParams.width = mWidth / 2;

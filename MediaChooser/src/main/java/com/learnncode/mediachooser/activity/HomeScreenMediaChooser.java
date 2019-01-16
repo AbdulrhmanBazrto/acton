@@ -92,8 +92,8 @@ public class HomeScreenMediaChooser extends AppCompatActivity implements ImageFr
         getWindow().setBackgroundDrawable(null);
 
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs_MediaChooser);
-        viewPager = (ViewPager) findViewById(R.id.viewpager_MediaChooser);
+        tabLayout = findViewById(R.id.tabs_MediaChooser);
+        viewPager = findViewById(R.id.viewpager_MediaChooser);
 
         setUpToolBar();
 
@@ -202,11 +202,11 @@ public class HomeScreenMediaChooser extends AppCompatActivity implements ImageFr
 
 
     private void setUpToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mTitle = (TextView) toolbar.findViewById(R.id.title_textView_toolbar_MediaChooser);
-        mCameraVideo = (ImageView) toolbar.findViewById(R.id.camera_imageView_toolbar_MediaChooser);
-        mBack = (ImageView) toolbar.findViewById(R.id.backArrow_imageView_toolbar_MediaChooser);
-        mDone = (TextView) toolbar.findViewById(R.id.done_textView_toolbar_MediaChooser);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        mTitle = toolbar.findViewById(R.id.title_textView_toolbar_MediaChooser);
+        mCameraVideo = toolbar.findViewById(R.id.camera_imageView_toolbar_MediaChooser);
+        mBack = toolbar.findViewById(R.id.backArrow_imageView_toolbar_MediaChooser);
+        mDone = toolbar.findViewById(R.id.done_textView_toolbar_MediaChooser);
         setSupportActionBar(toolbar);
 
         mBack.setOnClickListener(clickListener);

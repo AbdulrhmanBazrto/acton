@@ -54,7 +54,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
         inflatedView = inflater.inflate(R.layout.fragment_featured, container, false);
 
 
-        RecyclerView recyclerView = (RecyclerView) inflatedView.findViewById(R.id.featured_recycler_view);
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.featured_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

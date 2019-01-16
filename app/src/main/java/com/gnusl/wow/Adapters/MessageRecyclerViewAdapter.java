@@ -56,8 +56,8 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         public MessageViewHolder(View itemView) {
             super(itemView);
 
-            imageIcon = (AppCompatImageView) itemView.findViewById(R.id.image_icon);
-            content = (TextView) itemView.findViewById(R.id.content_text);
+            imageIcon = itemView.findViewById(R.id.image_icon);
+            content = itemView.findViewById(R.id.content_text);
 
         }
 

@@ -271,7 +271,7 @@ public abstract class MediaAsync<Params, Progress, Result> {
 		  */
 		 RUNNING,
 		 /**
-		  * Indicates that {@link ImageChooserAsync#onPostExecute} has finished.
+		  * Indicates that has finished.
 		  */
 		 FINISHED,
 	 }
@@ -291,7 +291,7 @@ public abstract class MediaAsync<Params, Progress, Result> {
 	  */
 	 public MediaAsync() {
 		 mWorker = new WorkerRunnable<Params, Result>() {
-			 public Result call() throws Exception {
+			 public Result call() {
 				 mTaskInvoked.set(true);
 				 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 				 //noinspection unchecked

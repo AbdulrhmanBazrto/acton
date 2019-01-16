@@ -62,10 +62,10 @@ public class TopGiftsExplorerRecyclerViewAdapter extends RecyclerView.Adapter<Re
         public GiftViewHolder(View itemView) {
             super(itemView);
 
-            backroundImageView=(AppCompatImageView)itemView.findViewById(R.id.backround_shape);
-            giftImage=(AppCompatImageView)itemView.findViewById(R.id.gift_image);
-            giftContentTextView=(TextView)itemView.findViewById(R.id.gift_content);
-            peopleRecyclerView=(RecyclerView) itemView.findViewById(R.id.people_recycler_view);
+            backroundImageView= itemView.findViewById(R.id.backround_shape);
+            giftImage= itemView.findViewById(R.id.gift_image);
+            giftContentTextView= itemView.findViewById(R.id.gift_content);
+            peopleRecyclerView= itemView.findViewById(R.id.people_recycler_view);
         }
 
         public void bind(final TopGiftExplorer topGiftExplorer, final int position) {
