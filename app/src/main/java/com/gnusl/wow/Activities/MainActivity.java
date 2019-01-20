@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Adapters.MainFragmentPagerAdapter;
-import com.gnusl.wow.Adapters.ProfileActivity;
 import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.MessagesContainerFragment;
@@ -237,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initializeHeaderNavigation(View navigationView){
 
         // go to profile
-        navigationView.findViewById(R.id.imageView).setOnClickListener(v->startActivity(new Intent(this,ProfileActivity.class)));
+        navigationView.findViewById(R.id.imageView).setOnClickListener(v->startActivity(new Intent(this,PrivateUserInfoActivity.class)));
 
         // set user info
         setUserInformation(navigationView);

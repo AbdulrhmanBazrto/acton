@@ -61,7 +61,7 @@
             android:name=".Activities.SplashActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBarSplash">
+            android:theme="@style/AppTheme.NoActionBarSplash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -168,10 +168,15 @@
             android:name=".Activities.GiftsActivity"
             android:theme="@style/AppTheme.NoActionBarSettings" />
         <activity android:name=".Activities.UserDetailsActivity" />
-        <activity android:name=".Adapters.ProfileActivity" />
+        <activity android:name=".Activities.PrivateUserInfoActivity" />
         <activity android:name=".Activities.FollowersActivity" />
         <activity android:name=".Activities.FollowingActivity" />
-        <activity android:name=".Activities.ProfileGiftsActivity"></activity>
+        <activity android:name=".Activities.ProfileGiftsActivity" />
+        <activity
+            android:name=".Activities.ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBarSettings">
+        </activity>
+        <activity android:name=".Activities.RoomsActivity"></activity>
     </application>
 
 </manifest>

@@ -28,9 +28,11 @@ import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Utils.CountryUtils;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -163,25 +165,42 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
     @Override
     public void onConnectionSuccess(String response) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
-
-        // APIUtils.parseNewUserType(response);
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-        editor.putBoolean("login", true);
-        editor.apply();
-
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-
-        getActivity().finishAffinity();
-
     }
 
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
+        // parse token
+        if (jsonObject.has("token")) {
+
+            try {
+                SharedPreferencesUtils.saveToken(jsonObject.getString("token"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        // parse user
+        if (jsonObject.has("user")) {
+
+            try {
+                SharedPreferencesUtils.saveUser(com.gnusl.wow.Models.User.newInstance(jsonObject.getJSONObject("user")));
+
+                // go to main
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+
+                getActivity().finishAffinity();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
     }
 
     @Override

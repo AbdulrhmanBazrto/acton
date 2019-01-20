@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 public class APIConnectionNetwork {
@@ -44,10 +45,10 @@ public class APIConnectionNetwork {
 
                         // handle parse user data
                         if (connectionDelegate != null) {
-                            if (response.has("success")) {
+                            if (response.has("data")) {
 
                                 try {
-                                    connectionDelegate.onConnectionSuccess(response.getJSONObject("success"));
+                                    connectionDelegate.onConnectionSuccess(response.getJSONObject("data"));
                                 } catch (JSONException e) {
                                     connectionDelegate.onConnectionFailure();
                                     e.printStackTrace();
@@ -121,7 +122,7 @@ public class APIConnectionNetwork {
     public static void RegisterNewUser(final RegisterParams params, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.post(APILinks.Register_Url.getLink())
-                .addHeaders("Accept","application/json")
+                .addHeaders("Accept", "application/json")
                 .addBodyParameter("name", params.getName())
                 .addBodyParameter("email", params.getEmail())
                 .addBodyParameter("password", params.getPassword())
@@ -130,7 +131,6 @@ public class APIConnectionNetwork {
                 .addBodyParameter("fcm_token", params.getFcm_token())
                 .addBodyParameter("lon", params.getLon())
                 .addBodyParameter("lat", params.getLat())
-                .addBodyParameter("image", params.getImage() == null ? "" : params.getImage())
 
                 .setPriority(Priority.MEDIUM)
                 .build()
@@ -164,8 +164,22 @@ public class APIConnectionNetwork {
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
 
-                        Log.d("USER ", anError.getErrorDetail());
-                        Log.d("USER ", anError.getResponse().message());
+                        if (anError.getErrorBody() != null)
+                            Log.d("USER ", anError.getErrorBody());
+
+                        if (anError.getErrorDetail() != null)
+                            Log.d("USER ", anError.getErrorDetail());
+
+                        if (anError.getResponse() != null)
+                            Log.d("USER ", anError.getResponse().message());
+
+                        if (anError.getResponse() != null) {
+                            try {
+                                Log.d("USER ", anError.getResponse().body().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 });
 
@@ -1636,5 +1650,70 @@ public class APIConnectionNetwork {
                 });
 
     }
+
+    public static void GetUserDetails(int userId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("User Details ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("User Details ", anError.getMessage());
+                        Log.d("User Details ", anError.getErrorDetail());
+                    }
+                });
+
+    }
+
+    public static void GetUserRooms(int userId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/channels?take=10&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("GetUserRooms ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("GetUserRooms ", anError.getMessage());
+                        Log.d("GetUserRooms ", anError.getErrorDetail());
+
+                    }
+                });
+    }
+
 
 }

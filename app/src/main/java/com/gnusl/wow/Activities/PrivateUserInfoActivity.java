@@ -1,4 +1,4 @@
-package com.gnusl.wow.Adapters;
+package com.gnusl.wow.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,20 +7,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.gnusl.wow.Activities.FollowersActivity;
-import com.gnusl.wow.Activities.FollowingActivity;
-import com.gnusl.wow.Activities.ProfileGiftsActivity;
-import com.gnusl.wow.Activities.UserDetailsActivity;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
-public class ProfileActivity extends AppCompatActivity {
+public class PrivateUserInfoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_private_user_info);
 
         // back
         findViewById(R.id.back_button).setOnClickListener(v -> onBackPressed());

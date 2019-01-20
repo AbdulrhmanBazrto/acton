@@ -1,83 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.motion.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".Activities.UserDetailsActivity">
+    app:layoutDescription="@xml/collapsing_toolbar"
+    tools:showPaths="true">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/top_bar"
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/toolbar_image_nav"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/side_nav_bar"
-        app:layout_constraintBottom_toTopOf="@id/center_guideline"
+        android:layout_height="250dp"
+        android:background="@color/active_color"
+        android:scaleType="fitXY"
+        android:src="@drawable/side_nav_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:padding="4dp"
-            android:rotation="180"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_action_back" />
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:padding="4dp"
+        android:rotation="180"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_action_back" />
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/details_button"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:padding="4dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_action_user" />
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/user_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:gravity="center"
+        android:src="@drawable/img1"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar_image_nav"
+        app:layout_constraintEnd_toEndOf="@id/toolbar_image_nav"
+        app:layout_constraintStart_toStartOf="@id/toolbar_image_nav"
+        app:layout_constraintTop_toTopOf="@id/toolbar_image_nav"
+        app:layout_constraintVertical_bias="0.3" />
 
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:lines="1"
+        android:text="DR.Ahmed Dosary"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/toolbar_image_nav"
+        app:layout_constraintStart_toStartOf="@id/toolbar_image_nav"
+        app:layout_constraintTop_toBottomOf="@id/user_image" />
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/user_image"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:gravity="center"
-            android:src="@drawable/img1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3" />
+    <TextView
+        android:id="@+id/user_Id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:lines="1"
+        android:text="ID:88545826"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/toolbar_image_nav"
+        app:layout_constraintStart_toStartOf="@id/toolbar_image_nav"
+        app:layout_constraintTop_toBottomOf="@id/user_name" />
 
-        <TextView
-            android:id="@+id/user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:lines="1"
-            android:text="DR.Ahmed Dosary"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_image" />
-
-        <TextView
-            android:id="@+id/user_Id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:lines="1"
-            android:text="ID:88545826"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_name" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/percent_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_Id">
 
         <android.support.constraint.Guideline
             android:id="@+id/start_guideline"
@@ -104,7 +101,7 @@
             android:progress="40"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
             app:layout_constraintStart_toEndOf="@id/start_guideline"
-            app:layout_constraintTop_toBottomOf="@id/user_Id" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/level_1"
@@ -145,128 +142,76 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progressBar" />
 
-
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.constraint.Guideline
-        android:id="@+id/center_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
-
-    <android.support.constraint.ConstraintLayout
+    <FrameLayout
+        android:id="@+id/frame_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_bar">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_image_nav">
 
-        <android.support.constraint.Guideline
-            android:id="@+id/first_line_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.2" />
-
-        <LinearLayout
-            android:id="@+id/followers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/first_line_guideline"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/container_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.15"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_image_nav">
 
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center"
-                android:padding="4dp"
-                app:srcCompat="@drawable/user" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="3dp"
-                android:lines="1"
-                android:text="المتابعين"
-                android:textColor="@color/charcoal_grey"
-                android:textSize="16sp"
+            <com.ogaclejapan.smarttablayout.SmartTabLayout
+                android:id="@+id/top_tab_bar"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progressBar" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:stl_clickable="true"
+                app:stl_defaultTabBackground="?attr/selectableItemBackground"
+                app:stl_defaultTabTextAllCaps="true"
+                app:stl_defaultTabTextColor="#FC000000"
+                app:stl_defaultTabTextHorizontalPadding="16dp"
+                app:stl_defaultTabTextMinWidth="0dp"
+                app:stl_defaultTabTextSize="12sp"
+                app:stl_distributeEvenly="false"
+                app:stl_dividerColor="#4D000000"
+                app:stl_dividerThickness="0dp"
+                app:stl_drawDecorationAfterTab="true"
+                app:stl_indicatorAlwaysInCenter="false"
+                app:stl_indicatorColor="#40C4FF"
+                app:stl_indicatorCornerRadius="0dp"
+                app:stl_indicatorGravity="bottom"
+                app:stl_indicatorInFront="false"
+                app:stl_indicatorInterpolation="smart"
+                app:stl_indicatorThickness="2dp"
+                app:stl_indicatorWidth="auto"
+                app:stl_indicatorWithoutPadding="true"
+                app:stl_overlineColor="#4D000000"
+                app:stl_overlineThickness="0dp"
+                app:stl_titleOffset="24dp"
+                app:stl_underlineColor="#4D000000"
+                app:stl_underlineThickness="0dp" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/following"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/first_line_guideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center"
-                android:padding="4dp"
-                app:srcCompat="@drawable/user" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="3dp"
-                android:lines="1"
-                android:text="المتابعة"
-                android:textColor="@color/charcoal_grey"
-                android:textSize="16sp"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progressBar" />
+                app:layout_constraintTop_toBottomOf="@id/top_tab_bar">
 
-        </LinearLayout>
+            </android.support.v4.view.ViewPager>
 
-        <LinearLayout
-            android:id="@+id/gifts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/first_line_guideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.85"
-            app:layout_constraintStart_toStartOf="parent">
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center"
-                android:padding="4dp"
-                app:srcCompat="@drawable/gift" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="3dp"
-                android:lines="1"
-                android:text="الهدايا"
-                android:textColor="@color/charcoal_grey"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progressBar" />
-
-        </LinearLayout>
-
-    </android.support.constraint.ConstraintLayout>
-
-</android.support.constraint.ConstraintLayout>
+</android.support.constraint.motion.MotionLayout>

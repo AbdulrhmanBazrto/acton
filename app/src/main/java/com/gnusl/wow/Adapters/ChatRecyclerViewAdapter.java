@@ -1,6 +1,7 @@
 package com.gnusl.wow.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Activities.ProfileActivity;
 import com.gnusl.wow.Connection.APILinks;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.User;
@@ -102,6 +104,16 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         .load(chatMessage.getUser().getImage_url())
                         .into(userImage);
 
+            // go to profile
+            userImage.setOnClickListener(v->{
+
+                if(chatMessage.getUser()!=null){
+                    Intent intent=new Intent(context,ProfileActivity.class);
+                    intent.putExtra(ProfileActivity.USER_ID,chatMessage.getUser().getId());
+                    context.startActivity(intent);
+                }
+            });
+
         }
 
     }
@@ -143,6 +155,15 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         .load(chatMessage.getUser().getImage_url())
                         .into(userImage);
 
+            // go to profile
+            userImage.setOnClickListener(v->{
+
+                if(chatMessage.getUser()!=null){
+                    Intent intent=new Intent(context,ProfileActivity.class);
+                    intent.putExtra(ProfileActivity.USER_ID,chatMessage.getUser().getId());
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }

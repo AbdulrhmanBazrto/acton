@@ -76,4 +76,8 @@
         <item>Male</item>
         <item>Female</item>
     </array>
+
+    <string name="the_path">المسار</string>
+    <string name="the_personal_info">المعلومات الشخصية</string>
+
 </resources>
