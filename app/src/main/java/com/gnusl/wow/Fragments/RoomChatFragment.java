@@ -2,11 +2,13 @@ package com.gnusl.wow.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +54,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Random;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -182,6 +186,12 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
             ((RoomChatActivity) getActivity()).openGallery(false);
         });
+
+        inflatedView.findViewById(R.id.music_image).setOnClickListener(v -> {
+
+            showUsersAttendancePopUp();
+        });
+
     }
 
     private void goToRoomSettingsActivity() {
@@ -245,6 +255,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
                         .into(((ImageView) inflatedView.findViewById(R.id.user_image)));
         }
     }
+
+    private boolean shouldGenerateCrazyWords = false;
 
     private void PubnubImplementation() {
 
@@ -333,6 +345,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
                     chatRecyclerViewAdapter.notifyDataSetChanged();
                 });
 
+                // check if should generate crazy words
+                if (message.getMessage().getAsJsonObject().has("crazy_word_for_user_id")) {
+
+                    // check if for this user
+                    if (message.getMessage().getAsJsonObject().get("crazy_word_for_user_id").getAsInt() == SharedPreferencesUtils.getUser().getId())
+                        shouldGenerateCrazyWords = true;
+                }
             /*
                 log the following items with your favorite logger
                     - message.getMessage()
@@ -351,11 +370,19 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
     }
 
+    int generateCrazyWordsIndex = 0;
+
     public void ShareMessageOnPubnub(String message) {
 
         // create message payload using Gson
         JsonObject messageJsonObject = new JsonObject();
-        messageJsonObject.addProperty("msg", message);
+
+        // check generate crazy words
+        if (shouldGenerateCrazyWords) {
+            generateCrazyWordsIndex++;
+            messageJsonObject.addProperty("msg", generateRandomWords());
+        } else
+            messageJsonObject.addProperty("msg", message);
 
         // add user info
         User user = SharedPreferencesUtils.getUser();
@@ -367,6 +394,17 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
             // image
             messageJsonObject.addProperty("user_image", user.getImage_url());
         }
+
+        // crazy words
+        if (shouldSendCrazyWordsToUser && randomWordUser != null) {
+
+            messageJsonObject.addProperty("crazy_word_for_user_id", randomWordUser.getId());
+
+            randomWordUser = null;
+            shouldSendCrazyWordsToUser = false;
+        }
+
+        // case generate crazy
 
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
             @Override
@@ -386,6 +424,22 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
                 }
             }
         });
+
+        if (generateCrazyWordsIndex > 3) {
+            shouldGenerateCrazyWords = false;
+            generateCrazyWordsIndex = 0;
+        }
+    }
+
+    public static String generateRandomWords() {
+
+        Random random = new Random();
+        char[] word = new char[random.nextInt(6) + 4];
+        for (int j = 0; j < word.length; j++) {
+            word[j] = (char) ('a' + random.nextInt(12));
+        }
+
+        return word.toString();
     }
 
     private void getAllMessagesRequest() {
@@ -396,6 +450,65 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         // send request
         APIConnectionNetwork.GetAllRoomMessages(activity.getRoom().getId(), this);
     }
+
+    private boolean shouldSendCrazyWordsToUser = false;
+    private User randomWordUser = null;
+
+    private void showUsersAttendancePopUp() {
+
+        if (!usersChatRoomRecyclerViewAdapter.getUsers().isEmpty()) {
+
+            Toast.makeText(getContext(), "there isn't any user in room", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Build an AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.TintTheme);
+
+        HashMap<String, Integer> hashMap = new HashMap<>();
+
+        for (User user : usersChatRoomRecyclerViewAdapter.getUsers())
+            hashMap.put(user.getName(), user.getId());
+
+        // String array for alert dialog multi choice items
+        String[] teacher_strings = new String[usersChatRoomRecyclerViewAdapter.getUsers().size()];
+        for (int i = 0; i < usersChatRoomRecyclerViewAdapter.getUsers().size(); i++)
+            teacher_strings[i] = usersChatRoomRecyclerViewAdapter.getUsers().get(i).getName();
+
+        // Set multiple choice items for alert dialog
+
+        builder.setMultiChoiceItems(teacher_strings, null, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                randomWordUser = usersChatRoomRecyclerViewAdapter.getUsers().get(which);
+                if (randomWordUser != null)
+                    shouldSendCrazyWordsToUser = true;
+
+            }
+        });
+
+        // Specify the dialog is not cancelable
+        builder.setCancelable(true);
+
+        // Set a title for alert dialog
+        builder.setTitle("Users");
+
+        // Set the positive/yes button click listener
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do something when click positive button
+
+            }
+        });
+
+
+        AlertDialog dialog = builder.create();
+        // Display the alert dialog on interface
+        dialog.show();
+    }
+
 
     @Override
     public void onConnectionFailure() {

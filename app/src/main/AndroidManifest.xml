@@ -72,7 +72,6 @@
             android:name=".Activities.LoginActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarSplash">
 
             <!-- Added For Instagram ! -->
@@ -98,7 +97,6 @@
             android:name=".Activities.RoomChatActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarChatRoom"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -152,7 +150,6 @@
             android:theme="@style/CreatePostTheme" />
         <activity
             android:name="com.learnncode.mediachooser.activity.HomeScreenMediaChooser"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarMain" />
         <activity
             android:name=".Activities.CreateRoomActivity"
@@ -162,7 +159,6 @@
             android:theme="@style/AppTheme.NoActionBarSettings" />
         <activity
             android:name=".Activities.MessagesConversationActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarMain" />
         <activity
             android:name=".Activities.GiftsActivity"

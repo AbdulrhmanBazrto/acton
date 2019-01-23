@@ -64,6 +64,26 @@ public class APIConnectionNetwork {
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        if (anError.getErrorBody() != null)
+                            Log.d("USER ", anError.getErrorBody());
+
+                        if (anError.getErrorDetail() != null)
+                            Log.d("USER ", anError.getErrorDetail());
+
+                        if (anError.getResponse() != null)
+                            Log.d("USER ", anError.getResponse().message());
+
+                        if (anError.getResponse() != null) {
+                            try {
+                                Log.d("USER ", anError.getResponse().body().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 });
 
