@@ -53,18 +53,18 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
         return inflatedView;
     }
 
-    private void findViews(){
+    private void findViews() {
 
-        roomNameTv=inflatedView.findViewById(R.id.room_name_tv);
+        roomNameTv = inflatedView.findViewById(R.id.room_name_tv);
 
         roomNameTv.setText(activity.getRoom().getName());
 
-        inflatedView.findViewById(R.id.room_name_layout).setOnClickListener(v->{
+        inflatedView.findViewById(R.id.room_name_layout).setOnClickListener(v -> {
 
             // show popup
             new MaterialDialog.Builder(getContext())
                     .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("أدخل اسم الغرفة","", new MaterialDialog.InputCallback() {
+                    .input("أدخل اسم الغرفة", activity.getRoom().getName(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
 
@@ -75,15 +75,15 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
                             roomNameTv.setText(input.toString());
 
                             // send request
-                            APIConnectionNetwork.ChangeRoomName(input.toString(),activity.getRoom().getId(),RoomSettingsFragment.this);
+                            APIConnectionNetwork.ChangeRoomName(input.toString(), activity.getRoom().getId(), RoomSettingsFragment.this);
                         }
                     }).show();
         });
 
 
-        inflatedView.findViewById(R.id.room_lock_layout).setOnClickListener(v->{
+        inflatedView.findViewById(R.id.room_lock_layout).setOnClickListener(v -> {
 
-           activity.makeFragment(FragmentTags.RoomLockFragment);
+            activity.makeFragment(FragmentTags.RoomLockFragment);
         });
     }
 
@@ -91,8 +91,8 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof RoomSettingsActivity)
-            activity= (RoomSettingsActivity) context;
+        if (context instanceof RoomSettingsActivity)
+            activity = (RoomSettingsActivity) context;
 
     }
 

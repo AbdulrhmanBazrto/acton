@@ -113,7 +113,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     private String mSocketAddress;
     private String callerId;
 
-    private static final String[] RequiredPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
+    private static final String[] RequiredPermissions = new String[]{Manifest.permission.RECORD_AUDIO};
     protected PermissionChecker permissionChecker = new PermissionChecker();
     BroadcastReceiver imageBroadcastReceiver;
     private RoomChatFragment roomChatFragment;

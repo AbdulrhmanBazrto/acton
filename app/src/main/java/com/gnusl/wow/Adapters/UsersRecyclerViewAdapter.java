@@ -2,6 +2,7 @@ package com.gnusl.wow.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Activities.ProfileActivity;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
@@ -73,6 +75,16 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 Glide.with(context)
                         .load(user.getImage_url())
                         .into(userImage);
+
+            // go to profile
+            itemView.setOnClickListener(v->{
+
+                if(user!=null){
+                    Intent intent=new Intent(context,ProfileActivity.class);
+                    intent.putExtra(ProfileActivity.USER_ID,user.getId());
+                    context.startActivity(intent);
+                }
+            });
 
         }
 
