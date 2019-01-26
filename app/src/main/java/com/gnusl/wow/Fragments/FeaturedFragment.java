@@ -17,9 +17,11 @@ import com.gnusl.wow.Activities.CreatePostActivity;
 import com.gnusl.wow.Adapters.PostsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,9 +36,11 @@ import static android.widget.Toast.LENGTH_SHORT;
  * Created by Yehia on 9/30/2018.
  */
 
-public class FeaturedFragment extends Fragment implements ConnectionDelegate, PostActionsDelegate {
+public class FeaturedFragment extends Fragment implements ConnectionDelegate, PostActionsDelegate, OnLoadMoreListener {
 
+    private static final int PAGE_SIZE_ITEMS = 5;
     private View inflatedView;
+    private boolean isRefreshing;
     private PostsRecyclerViewAdapter postsRecyclerViewAdapter;
     private ProgressDialog progressDialog;
 
@@ -60,7 +64,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(getContext(), new ArrayList<>(), this,false);
+        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(getContext(), recyclerView, new ArrayList<>(), this, this, false);
         recyclerView.setAdapter(postsRecyclerViewAdapter);
 
         return inflatedView;
@@ -69,11 +73,16 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
 
     private void sendPostsRequest() {
 
+        if (postsRecyclerViewAdapter == null)
+            return;
+
+        isRefreshing = true;
+
         // make progress dialog
         this.progressDialog = ProgressDialog.show(getContext(), "", "loading posts..");
 
         // send request
-        APIConnectionNetwork.GetAllFeaturedPosts(this);
+        APIConnectionNetwork.GetAllFeaturedPosts(SharedPreferencesUtils.getUser().getId(), PAGE_SIZE_ITEMS, postsRecyclerViewAdapter.getFeaturePosts().size(), this);
     }
 
     @Override
@@ -95,6 +104,12 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
         if (progressDialog != null)
             progressDialog.dismiss();
 
+        // disable loading
+        if (postsRecyclerViewAdapter != null) {
+            postsRecyclerViewAdapter.setLoading(false);
+            postsRecyclerViewAdapter.notifyDataSetChanged();
+        }
+
     }
 
     @Override
@@ -104,6 +119,12 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
 
         if (progressDialog != null)
             progressDialog.dismiss();
+
+        // disable loading
+        if (postsRecyclerViewAdapter != null) {
+            postsRecyclerViewAdapter.setLoading(false);
+            postsRecyclerViewAdapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -127,12 +148,28 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
     @Override
     public void onConnectionSuccess(JSONArray jsonArray) {
 
-        // parsing
-        ArrayList<FeaturePost> featurePosts = FeaturePost.parseJSONArray(jsonArray);
+        if (postsRecyclerViewAdapter != null) {
+            // parsing
+            ArrayList<FeaturePost> featurePosts = FeaturePost.parseJSONArray(jsonArray);
 
-        // notify
-        postsRecyclerViewAdapter.setFeaturePosts(featurePosts);
-        postsRecyclerViewAdapter.notifyDataSetChanged();
+            // disable loading
+            postsRecyclerViewAdapter.setLoading(false);
+
+            // notify
+            if (postsRecyclerViewAdapter.getFeaturePosts().isEmpty()) {
+
+                postsRecyclerViewAdapter.setFeaturePosts(featurePosts);
+                postsRecyclerViewAdapter.notifyDataSetChanged();
+
+            } else {
+                int position = postsRecyclerViewAdapter.getFeaturePosts().size();
+                postsRecyclerViewAdapter.getFeaturePosts().addAll(featurePosts);
+                postsRecyclerViewAdapter.notifyDataSetChanged();
+            }
+
+            isRefreshing = false;
+
+        }
 
         // dismiss
         if (progressDialog != null)
@@ -161,8 +198,8 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
     @Override
     public void onEditPost(FeaturePost post) {
 
-        Intent intent=new Intent(getActivity(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY,post);
+        Intent intent = new Intent(getActivity(), CreatePostActivity.class);
+        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY, post);
         startActivity(intent);
     }
 
@@ -190,6 +227,14 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
                     dialog.dismiss();
                 });
         alertDialog.show();
+    }
+
+    @Override
+    public void onLoadMore() {
+
+        if (!isRefreshing)
+            // send request
+            sendPostsRequest();
     }
 }
 

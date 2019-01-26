@@ -246,9 +246,9 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetAllFeaturedPosts(ConnectionDelegate connectionDelegate) {
+    public static void GetAllFeaturedPosts(int userId, int take, int skip, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Featured_Posts_Url.getLink() + "?user_id=-1&take=50&skip=0")
+        AndroidNetworking.get(APILinks.Featured_Posts_Url.getLink() + "?user_id=" + -1 + "&take=" + take + "&skip=" + skip)
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -287,9 +287,9 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetAllFollowingPosts(ConnectionDelegate connectionDelegate) {
+    public static void GetAllFollowingPosts(int take, int skip, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Posts_By_Following.getLink() + "?take=50&skip=0")
+        AndroidNetworking.get(APILinks.Posts_By_Following.getLink() + "?take="+take+"&skip="+skip)
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())

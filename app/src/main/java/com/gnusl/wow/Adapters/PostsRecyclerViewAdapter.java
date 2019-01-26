@@ -7,18 +7,21 @@ import android.media.MediaPlayer;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.CommentsPostActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Connection.APILinks;
+import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.FeaturePost;
@@ -38,12 +41,37 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private ArrayList<FeaturePost> featurePosts;
     private PostActionsDelegate postActionsDelegate;
     private boolean isFollowing;
+    private boolean isLoading = false;
+    private OnLoadMoreListener loadMoreListener;
 
-    public PostsRecyclerViewAdapter(Context context, ArrayList<FeaturePost> featurePosts, PostActionsDelegate postActionsDelegate, boolean isFollowing) {
+    private static int POST_HOLDER = 0;
+    private static int LOAD_MORE_HOLDER = 1;
+
+    public PostsRecyclerViewAdapter(Context context, RecyclerView recyclerView,ArrayList<FeaturePost> featurePosts, OnLoadMoreListener delegate,PostActionsDelegate postActionsDelegate, boolean isFollowing) {
         this.context = context;
         this.featurePosts = featurePosts;
+        this.loadMoreListener = delegate;
         this.postActionsDelegate=postActionsDelegate;
         this.isFollowing=isFollowing;
+
+        // setup recycler listener
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (!recyclerView.canScrollVertically(-1)) {
+                    Log.d("TOP ", true + "");
+                } else if (!isLoading && !recyclerView.canScrollVertically(1)) {
+                    Log.d("BOTTOM ", true + "");
+
+                    onScrollToBottomToLoadMore();
+                }
+
+            }
+        });
+
     }
 
     @Override
@@ -51,21 +79,51 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
+        if (viewType == POST_HOLDER) {
+            view = inflater.inflate(R.layout.feature_post_view_holder, parent, false);
+            return new FeaturePostViewHolder(view);
 
-        view = inflater.inflate(R.layout.feature_post_view_holder, parent, false);
-        return new FeaturePostViewHolder(view);
+        } else {
+            view = inflater.inflate(R.layout.load_more_view_holder, parent, false);
+            return new LoadingViewHolder(view);
+        }
+
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((FeaturePostViewHolder) holder).bind(getFeaturePosts().get(position), position);
+        if (holder instanceof FeaturePostViewHolder) {
+
+            ((FeaturePostViewHolder) holder).bind(getFeaturePosts().get(position), position);
+
+        } else
+            ((LoadingViewHolder) holder).bind();
 
     }
 
     @Override
     public int getItemCount() {
-        return featurePosts.size();
+        return isLoading ? featurePosts.size() + 1 : featurePosts.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if (isLoading && position == featurePosts.size())
+            return LOAD_MORE_HOLDER;
+        else {
+            return POST_HOLDER;
+        }
+
+    }
+
+    private void onScrollToBottomToLoadMore() {
+
+        setLoading(true);
+
+        if (loadMoreListener != null)
+            loadMoreListener.onLoadMore();
     }
 
     public class FeaturePostViewHolder extends RecyclerView.ViewHolder {
@@ -203,6 +261,18 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     }
 
+    static class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.load_more_progress);
+        }
+
+        public void bind() {
+        }
+    }
+
     // region setters and getters
 
     public ArrayList<FeaturePost> getFeaturePosts() {
@@ -213,6 +283,13 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         this.featurePosts = featurePosts;
     }
 
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+    }
 
     // endregion
 }
