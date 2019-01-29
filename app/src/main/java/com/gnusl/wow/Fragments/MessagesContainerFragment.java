@@ -116,6 +116,7 @@ public class MessagesContainerFragment extends Fragment implements MessageSectio
     private void goToSearchActivity() {
 
         Intent intent = new Intent(getActivity(), SearchActivity.class);
+        intent.putExtra(SearchActivity.SEARCH_FOR_USERS,"");
         getActivity().startActivity(intent);
     }
 

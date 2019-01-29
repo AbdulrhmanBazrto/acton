@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +31,10 @@ import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.ChatMessage;
+import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.GiftsRoomDialog;
@@ -60,15 +64,19 @@ import java.util.Random;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class RoomChatFragment extends Fragment implements ConnectionDelegate {
+public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener {
+
+    private static final int PAGE_SIZE_ITEMS = 5;
 
     private RoomChatActivity activity;
     private View inflatedView;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
+    private RecyclerView chatRecyclerView;
     private UsersChatRoomRecyclerViewAdapter usersChatRoomRecyclerViewAdapter;
     private UsersScoreRoomRecyclerViewAdapter usersScoreRoomRecyclerViewAdapter;
     private ProgressDialog progressDialog;
     private ArrayList<Gift> gifts;
+    private boolean isRefreshing;
 
     // pubnub
     private PubNub pubnub;
@@ -227,14 +235,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
     private void initializeChatAdapter() {
 
-        RecyclerView recyclerView = inflatedView.findViewById(R.id.chat_recycler_view);
+        chatRecyclerView= inflatedView.findViewById(R.id.chat_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        chatRecyclerView.setLayoutManager(linearLayoutManager);
 
-        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(getContext(), new ArrayList<>());
-        recyclerView.setAdapter(chatRecyclerViewAdapter);
+        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(getContext(), chatRecyclerView, new ArrayList<>(), this);
+        chatRecyclerView.setAdapter(chatRecyclerViewAdapter);
     }
 
     private void setUserInformation() {
@@ -444,11 +452,17 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
 
     private void getAllMessagesRequest() {
 
+        if (chatRecyclerViewAdapter == null)
+            return;
+
+        isRefreshing = true;
+
         // make progress dialog
         this.progressDialog = ProgressDialog.show(getContext(), "", "loading messages..");
 
         // send request
-        APIConnectionNetwork.GetAllRoomMessages(activity.getRoom().getId(), this);
+        APIConnectionNetwork.GetAllRoomMessages(activity.getRoom().getId(), PAGE_SIZE_ITEMS, chatRecyclerViewAdapter.getChatMessages().size(), this);
+
     }
 
     private boolean shouldSendCrazyWordsToUser = false;
@@ -575,16 +589,58 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
     @Override
     public void onConnectionSuccess(JSONArray jsonArray) {
 
-        // parsing
-        ArrayList<ChatMessage> chatMessages = ChatMessage.parseJSONArray(jsonArray);
 
-        ArrayList<ChatMessage> messages = new ArrayList<>();
-        for (int i = chatMessages.size() - 1; i >= 0; i--)
-            messages.add(chatMessages.get(i));
+        if (chatRecyclerViewAdapter != null) {
+            // parsing
+            ArrayList<ChatMessage> chatMessages = ChatMessage.parseJSONArray(jsonArray);
 
-        // notify
-        chatRecyclerViewAdapter.setChatMessages(messages);
-        chatRecyclerViewAdapter.notifyDataSetChanged();
+            ArrayList<ChatMessage> messages = new ArrayList<>();
+            for (int i = chatMessages.size() - 1; i >= 0; i--)
+                messages.add(chatMessages.get(i));
+
+            // notify
+            if (!chatRecyclerViewAdapter.getChatMessages().isEmpty()) {
+                messages.addAll(chatRecyclerViewAdapter.getChatMessages());
+                chatRecyclerViewAdapter.setChatMessages(messages);
+                chatRecyclerViewAdapter.notifyDataSetChanged();
+
+            }else { // first time
+
+                chatRecyclerViewAdapter.setChatMessages(messages);
+                chatRecyclerViewAdapter.notifyDataSetChanged();
+
+                // first scroll
+                chatRecyclerView.scrollToPosition(messages.size()-1);
+
+                // setup recycler listener
+                new Handler().postDelayed(()->{
+
+                    chatRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            if (!chatRecyclerViewAdapter.isLoading()&& !recyclerView.canScrollVertically(-1)) {
+                                Log.d("TOP ", true + "");
+
+                                chatRecyclerViewAdapter.setLoading(true);
+                                onLoadMore();
+
+                            } else if (!chatRecyclerViewAdapter.isLoading()&& !recyclerView.canScrollVertically(1)) {
+                                Log.d("BOTTOM ", true + "");
+                            }
+
+                        }
+                    });
+
+                },5000);
+            }
+
+            // disable loading
+            chatRecyclerViewAdapter.setLoading(false);
+            isRefreshing = false;
+        }
 
         // dismiss
         if (progressDialog != null)
@@ -598,6 +654,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate {
         // set attendance
         APIConnectionNetwork.SetUserAttendance(UserAttendanceType.LEAVE, activity.getRoom().getId(), this);
 
+    }
+
+    @Override
+    public void onLoadMore() {
+
+        if (!isRefreshing)
+            // send request
+            getAllMessagesRequest();
     }
 }
 

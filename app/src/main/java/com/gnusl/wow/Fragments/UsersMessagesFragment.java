@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
@@ -28,7 +29,9 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class UsersMessagesFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener {
 
     private View inflatedView;
+    private TextView messagetextView;
     private ProgressDialog progressDialog;
+    private RecyclerView recyclerView;
     private UsersMessegesAdapter usersMessegesAdapter;
 
     public UsersMessagesFragment() {
@@ -44,14 +47,15 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
 
         inflatedView = inflater.inflate(R.layout.fragment_users_messages, container, false);
 
-        RecyclerView recyclerView = inflatedView.findViewById(R.id.users_messages_recycler_view);
+        recyclerView = inflatedView.findViewById(R.id.users_messages_recycler_view);
+        messagetextView = inflatedView.findViewById(R.id.message_text_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-        usersMessegesAdapter=new UsersMessegesAdapter(getContext(),new ArrayList<>(),recyclerView,this);
+        usersMessegesAdapter = new UsersMessegesAdapter(getContext(), new ArrayList<>(), recyclerView, this);
         recyclerView.setAdapter(usersMessegesAdapter);
 
         sendUsersMessagesRequest();
@@ -110,11 +114,20 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<UserMessage> userMessages=UserMessage.parseJSONArray(jsonArray);
+        ArrayList<UserMessage> userMessages = UserMessage.parseJSONArray(jsonArray);
 
         // notify
-        usersMessegesAdapter.setUserMessages(userMessages);
-        usersMessegesAdapter.notifyDataSetChanged();
+        if (!userMessages.isEmpty()) {
+
+            recyclerView.setVisibility(View.VISIBLE);
+            messagetextView.setVisibility(View.GONE);
+
+            usersMessegesAdapter.setUserMessages(userMessages);
+            usersMessegesAdapter.notifyDataSetChanged();
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            messagetextView.setVisibility(View.VISIBLE);
+        }
 
         // dismiss
         if (progressDialog != null)

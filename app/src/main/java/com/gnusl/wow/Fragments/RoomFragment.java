@@ -66,7 +66,9 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
         if (getActivity() instanceof MainActivity)
             inflatedView.findViewById(R.id.search_icon).setOnClickListener(v->{
 
-                startActivity(new Intent(getActivity(),SearchActivity.class));
+                Intent intent=new Intent(getActivity(),SearchActivity.class);
+                intent.putExtra(SearchActivity.SEARCH_FOR_ROOMS,"");
+                startActivity(intent);
             });
 
         return inflatedView;

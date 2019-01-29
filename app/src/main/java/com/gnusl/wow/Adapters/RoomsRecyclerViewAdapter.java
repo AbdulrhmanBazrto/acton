@@ -106,6 +106,9 @@ public class RoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 if (room.getName() != null && !room.getName().isEmpty())
                     title.setText(room.getName());
 
+                // user number
+                user_number.setText(String.valueOf(room.getNumUsers()));
+
                 // content
                 if (room.getDescription() != null && !room.getDescription().isEmpty())
                     content.setText(room.getDescription());

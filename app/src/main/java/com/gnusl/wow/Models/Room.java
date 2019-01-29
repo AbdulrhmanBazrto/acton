@@ -21,6 +21,7 @@ public class Room implements Parcelable {
     private boolean hasPassword;
     private String password;
     private int userId;
+    private int numUsers;
     private boolean isFree;
     private double subscriptionPrice;
     private String backgroundPath;
@@ -41,6 +42,7 @@ public class Room implements Parcelable {
         hasPassword = in.readByte() != 0;
         password = in.readString();
         userId = in.readInt();
+        numUsers = in.readInt();
         isFree = in.readByte() != 0;
         subscriptionPrice = in.readDouble();
         backgroundPath = in.readString();
@@ -78,6 +80,7 @@ public class Room implements Parcelable {
         room.setHasPassword(jsonObject.optBoolean("has_password"));
         room.setPassword(jsonObject.optString("password"));
         room.setUserId(jsonObject.optInt("user_id"));
+        room.setNumUsers(jsonObject.optInt("num_users"));
         room.setFree(jsonObject.optBoolean("is_free"));
         room.setSubscriptionPrice(jsonObject.optDouble("subscription_price"));
         room.setBackgroundPath(jsonObject.optString("background_path"));
@@ -245,6 +248,14 @@ public class Room implements Parcelable {
         this.countryCodeUrl = countryCodeUrl;
     }
 
+    public int getNumUsers() {
+        return numUsers;
+    }
+
+    public void setNumUsers(int numUsers) {
+        this.numUsers = numUsers;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -258,6 +269,7 @@ public class Room implements Parcelable {
         parcel.writeByte((byte) (hasPassword ? 1 : 0));
         parcel.writeString(password);
         parcel.writeInt(userId);
+        parcel.writeInt(numUsers);
         parcel.writeByte((byte) (isFree ? 1 : 0));
         parcel.writeDouble(subscriptionPrice);
         parcel.writeString(backgroundPath);

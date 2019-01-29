@@ -3,7 +3,9 @@ package com.gnusl.wow.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -18,6 +20,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.gnusl.wow.Activities.CommentsPostActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Connection.APILinks;
@@ -47,12 +53,12 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private static int POST_HOLDER = 0;
     private static int LOAD_MORE_HOLDER = 1;
 
-    public PostsRecyclerViewAdapter(Context context, RecyclerView recyclerView,ArrayList<FeaturePost> featurePosts, OnLoadMoreListener delegate,PostActionsDelegate postActionsDelegate, boolean isFollowing) {
+    public PostsRecyclerViewAdapter(Context context, RecyclerView recyclerView, ArrayList<FeaturePost> featurePosts, OnLoadMoreListener delegate, PostActionsDelegate postActionsDelegate, boolean isFollowing) {
         this.context = context;
         this.featurePosts = featurePosts;
         this.loadMoreListener = delegate;
-        this.postActionsDelegate=postActionsDelegate;
-        this.isFollowing=isFollowing;
+        this.postActionsDelegate = postActionsDelegate;
+        this.isFollowing = isFollowing;
 
         // setup recycler listener
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -162,17 +168,30 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             // post image
             if (post.getImage() != null && !post.getImage().isEmpty())
                 Glide.with(context)
-                        .load(APILinks.Base_Media_Url.getLink()+post.getImage())
+                        .load(APILinks.Base_Media_Url.getLink() + post.getImage())
                         .into(post_image);
 
             // user name
-            if (post.getUser() != null && post.getUser().getName()!=null && !post.getUser().getName().isEmpty())
+            if (post.getUser() != null && post.getUser().getName() != null && !post.getUser().getName().isEmpty())
                 post_title.setText(post.getUser().getName());
 
             // user image
-            if (post.getUser() != null && post.getUser().getImage_url()!=null && !post.getUser().getImage_url().isEmpty())
+            if (post.getUser() != null && post.getUser().getImage_url() != null && !post.getUser().getImage_url().isEmpty())
                 Glide.with(context)
                         .load(post.getUser().getImage_url())
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                                post_icon.setImageResource(R.drawable.ic_launcher_wow);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                return false;
+                            }
+                        })
                         .into(post_icon);
 
             // like status
@@ -185,21 +204,21 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             message_number.setText(String.valueOf(post.getNumComments()));
 
             // go to comments activity
-            message_icon.setOnClickListener(v->goToCommentActivity(post.getId()));
+            message_icon.setOnClickListener(v -> goToCommentActivity(post.getId()));
 
-            more_icon.setOnClickListener(v->{
+            more_icon.setOnClickListener(v -> {
 
-                if(isFollowing)
+                if (isFollowing)
                     return;
 
-                PopupMenu dropDownMenu = new PopupMenu(context,more_icon);
+                PopupMenu dropDownMenu = new PopupMenu(context, more_icon);
                 dropDownMenu.getMenuInflater().inflate(R.menu.comment_menu_option, dropDownMenu.getMenu());
                 dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
 
-                        switch(menuItem.getItemId()){
+                        switch (menuItem.getItemId()) {
 
                             case R.id.edit_comment:
 
@@ -220,9 +239,9 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
         }
 
-        private void handleLikeStatus(FeaturePost post){
+        private void handleLikeStatus(FeaturePost post) {
 
-            //like.setChecked(false);
+            like.setChecked(post.isLiked());
 
             // like animation
             final MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.blop);
@@ -232,7 +251,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 public void onEvent(ImageView button, boolean buttonState) {
 
                     // send request
-                    APIConnectionNetwork.UpdateLike(post.getId(),null);
+                    APIConnectionNetwork.UpdateLike(post.getId(), null);
 
                     // play sound
                     mediaPlayer.start();

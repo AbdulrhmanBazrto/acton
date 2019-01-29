@@ -24,6 +24,7 @@ public class FeaturePost implements Parcelable {
     private String updatedAt;
     private int numLikes;
     private int numComments;
+    private boolean isLiked;
     private User user;
 
     public FeaturePost(){}
@@ -37,6 +38,7 @@ public class FeaturePost implements Parcelable {
         updatedAt = in.readString();
         numLikes = in.readInt();
         numComments = in.readInt();
+        isLiked = in.readByte() != 0;
     }
 
     public static final Creator<FeaturePost> CREATOR = new Creator<FeaturePost>() {
@@ -65,6 +67,7 @@ public class FeaturePost implements Parcelable {
         post.setCreatedAt(jsonObject.optString("created_at"));
         post.setUpdatedAt(jsonObject.optString("updated_at"));
         post.setNumLikes(jsonObject.optInt("num_likes"));
+        post.setLiked(jsonObject.optBoolean("is_liked"));
         post.setNumComments(jsonObject.optInt("num_comments"));
 
         // user
@@ -167,6 +170,14 @@ public class FeaturePost implements Parcelable {
         this.user = user;
     }
 
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -182,5 +193,6 @@ public class FeaturePost implements Parcelable {
         dest.writeString(updatedAt);
         dest.writeInt(numLikes);
         dest.writeInt(numComments);
+        dest.writeByte((byte) (isLiked ? 1 : 0));
     }
 }

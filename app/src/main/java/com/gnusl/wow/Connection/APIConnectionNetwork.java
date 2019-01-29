@@ -31,10 +31,10 @@ public class APIConnectionNetwork {
         Log.d("LOGIN ", fcm_token != null ? fcm_token : "");
 
         AndroidNetworking.post(APILinks.Login_Url.getLink())
-
+                .addHeaders("Content-type", "application/javascript")
                 .addBodyParameter(email.isEmpty() ? "mobile" : "email", email.isEmpty() ? phone : email)
                 .addBodyParameter("password", password)
-                .addBodyParameter("fcm_token", fcm_token)
+                //.addBodyParameter("fcm_token", fcm_token)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -61,9 +61,6 @@ public class APIConnectionNetwork {
 
                     @Override
                     public void onError(ANError anError) {
-
-                        if (connectionDelegate != null)
-                            connectionDelegate.onConnectionError(anError);
 
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
@@ -205,9 +202,9 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetAllChannels(ConnectionDelegate connectionDelegate) {
+    public static void GetAllChannels(String messageFilter, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "?user_id=-1&city_id=-1&order=asc&skip=0&take=10")
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "?user_id=" + String.valueOf(messageFilter != null ? messageFilter : -1) + "&city_id=-1&order=asc&skip=0&take=10")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -289,7 +286,7 @@ public class APIConnectionNetwork {
 
     public static void GetAllFollowingPosts(int take, int skip, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Posts_By_Following.getLink() + "?take="+take+"&skip="+skip)
+        AndroidNetworking.get(APILinks.Posts_By_Following.getLink() + "?take=" + take + "&skip=" + skip)
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -902,9 +899,9 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetAllRoomMessages(int channelId, ConnectionDelegate connectionDelegate) {
+    public static void GetAllRoomMessages(int channelId,int take, int skip, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/message?skip=0&take=10")
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/message?take=" + take + "&skip=" + skip)
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())

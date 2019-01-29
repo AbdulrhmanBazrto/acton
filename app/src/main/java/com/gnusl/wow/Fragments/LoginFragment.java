@@ -136,12 +136,11 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
 
     private void sendLoginRequest(){
 
-        // send request
-        APIConnectionNetwork.Login(edEmailOrPhone.getText().toString(), "", edPassword.getText().toString(),FirebaseInstanceId.getInstance().getToken(), this);
-
         // make progress dialog
         this.progressDialog = ProgressDialog.show(getContext(), "", "Please Wait for register..");
 
+        // send request
+        APIConnectionNetwork.Login(edEmailOrPhone.getText().toString(), "", edPassword.getText().toString(),FirebaseInstanceId.getInstance().getToken(), this);
     }
 
     @Override

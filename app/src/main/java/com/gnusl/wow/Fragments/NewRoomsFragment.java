@@ -71,7 +71,7 @@ public class NewRoomsFragment extends Fragment implements ConnectionDelegate {
         this.progressDialog = ProgressDialog.show(getContext(), "", "loading channels..");
 
         // send request
-        APIConnectionNetwork.GetAllChannels(this);
+        APIConnectionNetwork.GetAllChannels(null,this);
     }
 
     @Override

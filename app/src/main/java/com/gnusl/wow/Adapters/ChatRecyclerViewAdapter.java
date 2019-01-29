@@ -4,32 +4,41 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.ProfileActivity;
 import com.gnusl.wow.Connection.APILinks;
+import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
 import java.util.ArrayList;
+import java.util.logging.Handler;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final static int TEXT_MESSAGE_HOLDER = 0;
     private final static int IMAGE_MESSAGE_HOLDER = 1;
+    private static int LOAD_MORE_HOLDER = 2;
 
     private Context context;
+    private boolean isLoading = false;
+    private OnLoadMoreListener loadMoreListener;
     private ArrayList<ChatMessage> chatMessages;
 
-    public ChatRecyclerViewAdapter(Context context, ArrayList<ChatMessage> chatMessages) {
+    public ChatRecyclerViewAdapter(Context context, RecyclerView recyclerView, ArrayList<ChatMessage> chatMessages,OnLoadMoreListener delegate) {
         this.context = context;
         this.chatMessages = chatMessages;
+        this.loadMoreListener = delegate;
+
     }
 
     @Override
@@ -41,9 +50,12 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (viewType == TEXT_MESSAGE_HOLDER) {
             view = inflater.inflate(R.layout.chat_message_view_holder, parent, false);
             return new MessageViewHolder(view);
-        } else {
+        } else if (viewType == IMAGE_MESSAGE_HOLDER) {
             view = inflater.inflate(R.layout.chat_image_message_view_holder, parent, false);
             return new ImageMessageViewHolder(view);
+        } else {
+            view = inflater.inflate(R.layout.load_more_view_holder, parent, false);
+            return new LoadingViewHolder(view);
         }
     }
 
@@ -59,7 +71,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public int getItemViewType(int position) {
 
-        if (getChatMessages().get(position).isImageMessage())
+        if (isLoading && position == chatMessages.size())
+            return LOAD_MORE_HOLDER;
+        else if (getChatMessages().get(position).isImageMessage())
             return IMAGE_MESSAGE_HOLDER;
         else
             return TEXT_MESSAGE_HOLDER;
@@ -67,7 +81,15 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return chatMessages.size();
+        return isLoading ? chatMessages.size() + 1 : chatMessages.size();
+    }
+
+    private void onScrollToBottomToLoadMore() {
+
+        setLoading(true);
+
+        if (loadMoreListener != null)
+            loadMoreListener.onLoadMore();
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -105,11 +127,11 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         .into(userImage);
 
             // go to profile
-            userImage.setOnClickListener(v->{
+            userImage.setOnClickListener(v -> {
 
-                if(chatMessage.getUser()!=null){
-                    Intent intent=new Intent(context,ProfileActivity.class);
-                    intent.putExtra(ProfileActivity.USER_ID,chatMessage.getUser().getId());
+                if (chatMessage.getUser() != null) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra(ProfileActivity.USER_ID, chatMessage.getUser().getId());
                     context.startActivity(intent);
                 }
             });
@@ -156,17 +178,30 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         .into(userImage);
 
             // go to profile
-            userImage.setOnClickListener(v->{
+            userImage.setOnClickListener(v -> {
 
-                if(chatMessage.getUser()!=null){
-                    Intent intent=new Intent(context,ProfileActivity.class);
-                    intent.putExtra(ProfileActivity.USER_ID,chatMessage.getUser().getId());
+                if (chatMessage.getUser() != null) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra(ProfileActivity.USER_ID, chatMessage.getUser().getId());
                     context.startActivity(intent);
                 }
             });
         }
 
     }
+
+    static class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.load_more_progress);
+        }
+
+        public void bind() {
+        }
+    }
+
 
     // region setters and getters
 
@@ -178,6 +213,13 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         this.chatMessages = chatMessages;
     }
 
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+    }
 
     // endregion
 }
