@@ -3,11 +3,10 @@ package com.gnusl.wow.Fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,48 +14,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
-import com.gnusl.wow.Activities.LoginActivity;
 import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Activities.RegisterActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
-import com.gnusl.wow.Models.CountryCode;
 import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
-import com.gnusl.wow.Utils.CountryUtils;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.rilixtech.CountryCodePicker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static android.widget.Toast.LENGTH_LONG;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener, ConnectionDelegate {
 
     //region Variables
-    EditText edFullName, edEmail, edMobile, edPassword;
+    EditText edFullName, edEmail, edPassword;
+    AppCompatEditText edMobile;
+    CountryCodePicker countryCodePicker;
     View lineName, lineEmail, lineMobile, linePassword;
-    TextView tvErrorName, tvErrorEmail, tvErrorMobile, tvErrorPassword, SignUpBtn,mTvCodePicker;
+    TextView tvErrorName, tvErrorEmail, tvErrorMobile, tvErrorPassword, SignUpBtn;
     Button btn;
     RegisterActivity registerActivity;
     View containerView;
     long birthdate = -1;
     String code;
-    ArrayList<CountryCode> countries;
-    String[] countriesNamesWithCodes;
     private ProgressDialog progressDialog;
     //endregion
 
@@ -77,9 +70,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
 
         findViews(inflatedView);
 
-        // fill countries
-        new Thread(this::fillCountries).start();
-
         return inflatedView;
     }
 
@@ -87,6 +77,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
         edFullName = rootView.findViewById(R.id.ed_full_name);
         edEmail = rootView.findViewById(R.id.ed_email);
         edMobile = rootView.findViewById(R.id.ed_mobile);
+        countryCodePicker = rootView.findViewById(R.id.country_code_picker);
         edPassword = rootView.findViewById(R.id.ed_birthday);
         tvErrorName = rootView.findViewById(R.id.full_name_error);
         tvErrorEmail = rootView.findViewById(R.id.email_error);
@@ -98,30 +89,12 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
         linePassword = rootView.findViewById(R.id.birthday_underline);
         containerView = rootView.findViewById(R.id.container);
         SignUpBtn = rootView.findViewById(R.id.sign_up_btn);
-        mTvCodePicker = rootView.findViewById(R.id.tv_code_picker);
+
+        countryCodePicker.registerPhoneNumberTextView(edMobile);
 
         changeTextListeners();
 
         SignUpBtn.setOnClickListener(v->handleRegisterValidation());
-    }
-
-    private void fillCountries() {
-        countries = CountryUtils.getAllCountries();
-        if (!countries.isEmpty()) {
-            code = "+" + countries.get(0).getDialCode();
-            if (getActivity() != null)
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTvCodePicker.setText(code);
-                    }
-                });
-            countriesNamesWithCodes = new String[countries.size()];
-            for (int i = 0; i < countries.size(); i++) {
-                countriesNamesWithCodes[i] = countries.get(i).getDialCode() + "+ " + countries.get(i).getName();
-            }
-        } else
-            code = "";
     }
 
     private void changeTextListeners() {
@@ -240,7 +213,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
         params.setName(edFullName.getText().toString());
         params.setEmail(edEmail.getText().toString());
         params.setPassword(edPassword.getText().toString());
-        params.setPhone(edMobile.getText().toString());
+        params.setPhone(countryCodePicker.getSelectedCountryCode()+edMobile.getText().toString());
         params.setFcm_token(FirebaseInstanceId.getInstance().getToken());
        // params.setLat(String.valueOf(locationUtils.getLatitude()));
        // params.setLon(String.valueOf(locationUtils.getLongitude()));

@@ -108,20 +108,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_underline" />
 
-        <TextView
-            android:id="@+id/tv_code_picker"
+        <com.rilixtech.CountryCodePicker
+            android:id="@+id/country_code_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/active_color"
-            android:drawableEnd="@drawable/phone_code_triangle"
-            android:drawablePadding="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:textColor="@color/black"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/ed_mobile"
             app:layout_constraintEnd_toStartOf="@id/ed_mobile"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
 
 
         <View
@@ -131,18 +124,18 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:background="@color/charcoal_grey_20"
-            app:layout_constraintEnd_toEndOf="@id/tv_code_picker"
-            app:layout_constraintStart_toStartOf="@id/tv_code_picker"
-            app:layout_constraintTop_toBottomOf="@id/tv_code_picker" />
+            app:layout_constraintEnd_toEndOf="@id/country_code_picker"
+            app:layout_constraintStart_toStartOf="@id/country_code_picker"
+            app:layout_constraintTop_toBottomOf="@id/country_code_picker" />
 
-        <com.gnusl.wow.Views.FontedEditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/ed_mobile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="@null"
             android:hint="@string/mobile"
             android:inputType="phone"
+            android:layout_marginTop="4dp"
+            android:background="@null"
             android:paddingStart="4dp"
             android:paddingTop="6dp"
             android:paddingEnd="4dp"
@@ -153,9 +146,8 @@
             android:singleLine="true"
             android:lines="1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_code_picker"
-            app:layout_constraintTop_toBottomOf="@+id/email_error"
-            app:typefaceAsset="fonts/SFUIText-Regular" />
+            app:layout_constraintStart_toEndOf="@id/country_code_picker"
+            app:layout_constraintTop_toBottomOf="@+id/email_error"/>
 
         <View
             android:id="@+id/mobile_underline"

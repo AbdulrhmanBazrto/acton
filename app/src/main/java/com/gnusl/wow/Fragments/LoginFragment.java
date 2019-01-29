@@ -1,11 +1,8 @@
 package com.gnusl.wow.Fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -19,23 +16,15 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Activities.MainActivity;
-import com.gnusl.wow.Activities.RegisterActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
-import com.gnusl.wow.Enums.FragmentTags;
-import com.gnusl.wow.Models.CountryCode;
-import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.R;
-import com.gnusl.wow.Utils.APIUtils;
-import com.gnusl.wow.Utils.CountryUtils;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import static android.widget.Toast.LENGTH_LONG;
 
