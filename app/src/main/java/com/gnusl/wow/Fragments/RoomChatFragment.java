@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -31,10 +33,10 @@ import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Delegates.GiftDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.ChatMessage;
-import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.GiftsRoomDialog;
@@ -64,7 +66,7 @@ import java.util.Random;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener {
+public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate {
 
     private static final int PAGE_SIZE_ITEMS = 5;
 
@@ -187,7 +189,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         inflatedView.findViewById(R.id.gift_image).setOnClickListener(v -> {
 
             if (gifts != null)
-                GiftsRoomDialog.show(getContext(), gifts);
+                GiftsRoomDialog.show(getContext(), gifts, this);
         });
 
         inflatedView.findViewById(R.id.gallery_btn).setOnClickListener(v -> {
@@ -198,8 +200,88 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         inflatedView.findViewById(R.id.music_image).setOnClickListener(v -> {
 
             showUsersAttendancePopUp();
+
         });
 
+        inflatedView.findViewById(R.id.save_image).setOnClickListener(v -> {
+
+            activity.setShouldLogout(true);
+            activity.onBackPressed();
+
+        });
+
+        inflatedView.findViewById(R.id.logout_image).setOnClickListener(v -> {
+
+            activity.setShouldLogout(true);
+            activity.onBackPressed();
+
+        });
+
+        inflatedView.findViewById(R.id.logout_frame).setOnClickListener(v -> {
+
+            activity.setShouldLogout(false);
+            inflatedView.findViewById(R.id.logout_frame).setVisibility(View.GONE);
+
+        });
+
+        inflatedView.findViewById(R.id.exit_icon).setOnClickListener(v -> {
+
+            showLogOutFrame();
+
+        });
+
+        inflatedView.findViewById(R.id.mony_image).setOnClickListener(v -> {
+
+
+        });
+    }
+
+    private void animateGiftInfo(ChatMessage chatMessage) {
+
+        // fill info
+        ((TextView)inflatedView.findViewById(R.id.user_gift_name)).setText(chatMessage.getUserName() != null ? chatMessage.getUserName() : "");
+
+        // user image
+        if (chatMessage.getUserImage() != null && !chatMessage.getUserImage().isEmpty())
+            Glide.with(getContext())
+                    .load(chatMessage.getUserImage())
+                    .into(((ImageView)inflatedView.findViewById(R.id.user_gift_image)));
+
+        // gift image message
+        if (chatMessage.getGiftImagePath() != null && !chatMessage.getGiftImagePath().isEmpty())
+            Glide.with(getContext())
+                    .load(chatMessage.getGiftImagePath())
+                    .into(((ImageView)inflatedView.findViewById(R.id.gift_image_from_user)));
+
+
+        inflatedView.findViewById(R.id.gift_layout_animation).setVisibility(View.VISIBLE);
+        inflatedView.findViewById(R.id.gift_layout_animation).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.left_to_middle_gift_animation));
+
+        inflatedView.findViewById(R.id.gift_layout_animation).getAnimation().setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                new Handler().postDelayed(() -> {
+
+                    inflatedView.findViewById(R.id.gift_layout_animation).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.middle_to_right_gift_animation));
+                }, 1600);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void showLogOutFrame() {
+
+        inflatedView.findViewById(R.id.logout_frame).setVisibility(View.VISIBLE);
     }
 
     private void goToRoomSettingsActivity() {
@@ -235,7 +317,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     private void initializeChatAdapter() {
 
-        chatRecyclerView= inflatedView.findViewById(R.id.chat_recycler_view);
+        chatRecyclerView = inflatedView.findViewById(R.id.chat_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -333,9 +415,6 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 System.out.println("Received message content: " + receivedMessageObject.toString());
                 // extract desired parts of the payload, using Gson
 
-                // get message
-                String msg = message.getMessage().getAsJsonObject().get("msg").getAsString();
-                System.out.println("msg content: " + msg);
 
                 // get user name
                 String userName = message.getMessage().getAsJsonObject().get("user_name").getAsString();
@@ -344,13 +423,33 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 String userImage = message.getMessage().getAsJsonObject().get("user_image").getAsString();
 
                 // create model
-                ChatMessage chatMessage = new ChatMessage(msg, userName, userImage);
+                ChatMessage chatMessage;
+
+                // check message
+                if (message.getMessage().getAsJsonObject().has("msg")) {
+                    String msg = message.getMessage().getAsJsonObject().get("msg").getAsString();
+                    System.out.println("msg content: " + msg);
+
+                    chatMessage = new ChatMessage(msg, userName, userImage);
+
+                } else {
+
+                    String gift_path = message.getMessage().getAsJsonObject().get("gift_image").getAsString();
+                    chatMessage = new ChatMessage();
+                    chatMessage.setGiftImagePath(gift_path);
+                    chatMessage.setUserName(userName);
+                    chatMessage.setUserImage(userImage);
+                }
 
                 // show message
                 activity.runOnUiThread(() -> {
 
                     chatRecyclerViewAdapter.getChatMessages().add(chatMessage);
                     chatRecyclerViewAdapter.notifyDataSetChanged();
+
+                    // gift animation
+                    if(chatMessage.getGiftImagePath()!=null)
+                        animateGiftInfo(chatMessage);
                 });
 
                 // check if should generate crazy words
@@ -438,6 +537,34 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             generateCrazyWordsIndex = 0;
         }
     }
+
+    public void ShareGiftOnPubnub(Gift gift) {
+
+        // create message payload using Gson
+        JsonObject messageJsonObject = new JsonObject();
+
+        // add gift image
+        messageJsonObject.addProperty("gift_image", gift.getPath());
+
+        // add user info
+        User user = SharedPreferencesUtils.getUser();
+        if (user != null) {
+
+            // name
+            messageJsonObject.addProperty("user_name", user.getName());
+
+            // image
+            messageJsonObject.addProperty("user_image", user.getImage_url());
+        }
+
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                // Check whether request successfully completed or not.
+            }
+        });
+    }
+
 
     public static String generateRandomWords() {
 
@@ -604,16 +731,16 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 chatRecyclerViewAdapter.setChatMessages(messages);
                 chatRecyclerViewAdapter.notifyDataSetChanged();
 
-            }else { // first time
+            } else { // first time
 
                 chatRecyclerViewAdapter.setChatMessages(messages);
                 chatRecyclerViewAdapter.notifyDataSetChanged();
 
                 // first scroll
-                chatRecyclerView.scrollToPosition(messages.size()-1);
+                chatRecyclerView.scrollToPosition(messages.size() - 1);
 
                 // setup recycler listener
-                new Handler().postDelayed(()->{
+                new Handler().postDelayed(() -> {
 
                     chatRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -621,20 +748,20 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
 
-                            if (!chatRecyclerViewAdapter.isLoading()&& !recyclerView.canScrollVertically(-1)) {
+                            if (!chatRecyclerViewAdapter.isLoading() && !recyclerView.canScrollVertically(-1)) {
                                 Log.d("TOP ", true + "");
 
                                 chatRecyclerViewAdapter.setLoading(true);
                                 onLoadMore();
 
-                            } else if (!chatRecyclerViewAdapter.isLoading()&& !recyclerView.canScrollVertically(1)) {
+                            } else if (!chatRecyclerViewAdapter.isLoading() && !recyclerView.canScrollVertically(1)) {
                                 Log.d("BOTTOM ", true + "");
                             }
 
                         }
                     });
 
-                },5000);
+                }, 5000);
             }
 
             // disable loading
@@ -662,6 +789,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         if (!isRefreshing)
             // send request
             getAllMessagesRequest();
+    }
+
+    @Override
+    public void onClickToSendGift(Gift gift) {
+
+        // send on pubnup
+        ShareGiftOnPubnub(gift);
     }
 }
 

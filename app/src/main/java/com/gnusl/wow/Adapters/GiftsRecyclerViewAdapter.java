@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.GiftsActivity;
+import com.gnusl.wow.Delegates.GiftDelegate;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.R;
+import com.rey.material.app.BottomSheetDialog;
 
 import java.util.ArrayList;
 
@@ -21,11 +23,15 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private Context context;
     private ArrayList<Gift> gifts;
+    private GiftDelegate giftDelegate;
+    BottomSheetDialog optionsDialog;
     private int selectedPosition=-1;
 
-    public GiftsRecyclerViewAdapter(Context context, ArrayList<Gift> gifts) {
+    public GiftsRecyclerViewAdapter(Context context, ArrayList<Gift> gifts, BottomSheetDialog optionsDialog, GiftDelegate giftDelegate) {
         this.context = context;
         this.gifts = gifts;
+        this.giftDelegate=giftDelegate;
+        this.optionsDialog=optionsDialog;
     }
 
     @Override
@@ -85,6 +91,14 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
                 selectedPosition=position;
                 notifyDataSetChanged();
+
+                // dismiss dialog
+                if(optionsDialog!=null)
+                    optionsDialog.dismiss();
+
+                // send
+                if(giftDelegate!=null)
+                    giftDelegate.onClickToSendGift(gift);
             });
         }
 

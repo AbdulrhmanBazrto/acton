@@ -167,6 +167,12 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         .load(chatMessage.getMessage())
                         .into(imageMessage);
 
+            // gift image message
+            if (chatMessage.getGiftImagePath() != null && !chatMessage.getGiftImagePath().isEmpty())
+                Glide.with(context)
+                        .load(chatMessage.getGiftImagePath())
+                        .into(imageMessage);
+
             // user image
             if (chatMessage.getUserImage() != null && !chatMessage.getUserImage().isEmpty())
                 Glide.with(context)

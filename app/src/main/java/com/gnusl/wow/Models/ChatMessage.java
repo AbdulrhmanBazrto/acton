@@ -17,6 +17,7 @@ public class ChatMessage {
     private User user;
     private String userName;
     private String userImage;
+    private String giftImagePath;
 
     public ChatMessage(){}
 
@@ -143,6 +144,14 @@ public class ChatMessage {
 
     public boolean isImageMessage(){
 
-        return  this.getMessage().contains(".png") || this.getMessage().contains(".jpg") || this.getMessage().contains(".jpeg");
+        return  giftImagePath!=null || this.getMessage().contains(".png") || this.getMessage().contains(".jpg") || this.getMessage().contains(".jpeg");
+    }
+
+    public String getGiftImagePath() {
+        return giftImagePath;
+    }
+
+    public void setGiftImagePath(String giftImagePath) {
+        this.giftImagePath = giftImagePath;
     }
 }

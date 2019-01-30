@@ -122,6 +122,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     private EditText messageEditText;
     private ProgressDialog progressDialog;
     private boolean isUploadingForBackground = false;
+    private boolean isShouldLogout = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,6 +235,15 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         audioManager.setSpeakerphoneOn(!isWiredHeadsetOn);
 
         client = new WebRtcClient(this, mSocketAddress, params, VideoRendererGui.getEGLContext(), getRoom().getId());
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(isShouldLogout)
+            super.onBackPressed();
+        else
+            roomChatFragment.showLogOutFrame();
     }
 
     @Override
@@ -589,4 +599,11 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     }
 
+    public boolean isShouldLogout() {
+        return isShouldLogout;
+    }
+
+    public void setShouldLogout(boolean shouldLogout) {
+        isShouldLogout = shouldLogout;
+    }
 }

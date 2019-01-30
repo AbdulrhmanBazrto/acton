@@ -51,7 +51,7 @@ public class ProfileGiftsActivity extends AppCompatActivity implements Connectio
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        giftsRecyclerViewAdapter = new GiftsRecyclerViewAdapter(this, new ArrayList<>());
+        giftsRecyclerViewAdapter = new GiftsRecyclerViewAdapter(this, new ArrayList<>(),null,null);
         recyclerView.setAdapter(giftsRecyclerViewAdapter);
     }
 
