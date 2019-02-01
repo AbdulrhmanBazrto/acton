@@ -171,6 +171,10 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
                 postsRecyclerViewAdapter.notifyDataSetChanged();
             }
 
+            // check limit
+            if(featurePosts.isEmpty())
+                postsRecyclerViewAdapter.setRechToLimit(true);
+
             isRefreshing = false;
 
         }
@@ -236,7 +240,7 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
     @Override
     public void onLoadMore() {
 
-        if (!isRefreshing)
+        if (!isRefreshing && !postsRecyclerViewAdapter.isRechToLimit())
             // send request
             sendPostsRequest();
     }

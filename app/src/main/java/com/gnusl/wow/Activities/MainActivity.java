@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             setFragmentView(1);
 
-        } else if (id == R.id.message) {
+        } else if (id == R.id.messageSection) {
 
             setFragmentView(2);
 

@@ -182,7 +182,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
             lineName.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.red));
             edFullName.setError("username is required");
 
-        }else if (edEmail.getText().toString().isEmpty()) {
+        }/*else if (edEmail.getText().toString().isEmpty()) {
 
             lineEmail.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.red));
             edEmail.setError("email is required");
@@ -192,7 +192,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
             lineEmail.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.red));
             edEmail.setError("email isn't correct");
 
-        }else if (edMobile.getText().toString().isEmpty()) {
+        }*/else if (edMobile.getText().toString().isEmpty()) {
 
             lineMobile.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.red));
             edMobile.setError("mobile is required");
@@ -211,7 +211,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
         // init params
         RegisterParams params=new RegisterParams();
         params.setName(edFullName.getText().toString());
-        params.setEmail(edEmail.getText().toString());
+        params.setEmail(""/*edEmail.getText().toString()*/);
         params.setPassword(edPassword.getText().toString());
         params.setPhone(countryCodePicker.getSelectedCountryCode()+edMobile.getText().toString());
         params.setFcm_token(FirebaseInstanceId.getInstance().getToken());

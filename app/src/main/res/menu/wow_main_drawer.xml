@@ -22,19 +22,19 @@
         android:id="@+id/group2"
         android:checkableBehavior="single">
 
-        <item
+        <!--<item
             android:id="@+id/aristocracy"
             android:icon="@drawable/ic_action_icon5"
-            android:title="Aristocracy" />
+            android:title="Aristocracy" />!-->
         <item
             android:id="@+id/recharge"
             android:icon="@drawable/ic_action_icon6"
             android:title="Recharge" />
 
-        <item
+        <!--<item
             android:id="@+id/store"
             android:icon="@drawable/ic_action_icon7"
-            android:title="Store" />
+            android:title="Store" />!-->
 
         <item
             android:id="@+id/nav_gallery"

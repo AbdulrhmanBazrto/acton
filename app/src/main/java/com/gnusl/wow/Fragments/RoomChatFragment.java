@@ -79,6 +79,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     private ProgressDialog progressDialog;
     private ArrayList<Gift> gifts;
     private boolean isRefreshing;
+    private boolean isRechToLimit=false;
 
     // pubnub
     private PubNub pubnub;
@@ -205,8 +206,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         inflatedView.findViewById(R.id.save_image).setOnClickListener(v -> {
 
-            activity.setShouldLogout(true);
-            activity.onBackPressed();
+            activity.setShouldLogout(false);
+            inflatedView.findViewById(R.id.logout_frame).setVisibility(View.GONE);
 
         });
 
@@ -447,6 +448,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     chatRecyclerViewAdapter.getChatMessages().add(chatMessage);
                     chatRecyclerViewAdapter.notifyDataSetChanged();
 
+                    // smooth scroll
+                    chatRecyclerView.smoothScrollToPosition(chatRecyclerViewAdapter.getChatMessages().size()-1);
+
                     // gift animation
                     if(chatMessage.getGiftImagePath()!=null)
                         animateGiftInfo(chatMessage);
@@ -597,7 +601,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     private void showUsersAttendancePopUp() {
 
-        if (!usersChatRoomRecyclerViewAdapter.getUsers().isEmpty()) {
+        if (usersChatRoomRecyclerViewAdapter.getUsers().isEmpty()) {
 
             Toast.makeText(getContext(), "there isn't any user in room", Toast.LENGTH_SHORT).show();
             return;
@@ -748,7 +752,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
 
-                            if (!chatRecyclerViewAdapter.isLoading() && !recyclerView.canScrollVertically(-1)) {
+                            if (!chatRecyclerViewAdapter.isLoading() && !isRechToLimit && !recyclerView.canScrollVertically(-1)) {
                                 Log.d("TOP ", true + "");
 
                                 chatRecyclerViewAdapter.setLoading(true);
@@ -763,6 +767,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
                 }, 5000);
             }
+
+            // check limit
+            if(chatMessages.isEmpty())
+                isRechToLimit=true;
 
             // disable loading
             chatRecyclerViewAdapter.setLoading(false);
@@ -796,6 +804,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         // send on pubnup
         ShareGiftOnPubnub(gift);
+    }
+
+    public boolean isRechToLimit() {
+        return isRechToLimit;
+    }
+
+    public void setRechToLimit(boolean rechToLimit) {
+        isRechToLimit = rechToLimit;
     }
 }
 

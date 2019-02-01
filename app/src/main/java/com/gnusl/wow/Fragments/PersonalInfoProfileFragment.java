@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gnusl.wow.Models.RefreshGiftsDelegate;
 import com.gnusl.wow.R;
@@ -14,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 public class PersonalInfoProfileFragment extends Fragment {
 
     private View inflatedView;
+    private TextView countryCodeTv;
 
     public PersonalInfoProfileFragment() {
     }
@@ -28,6 +30,7 @@ public class PersonalInfoProfileFragment extends Fragment {
 
         inflatedView = inflater.inflate(R.layout.fragment_personal_profile_info, container, false);
 
+        countryCodeTv=inflatedView.findViewById(R.id.city);
 
         return inflatedView;
     }
@@ -39,5 +42,13 @@ public class PersonalInfoProfileFragment extends Fragment {
 
 
         }
+    }
+
+    public TextView getCountryCodeTv() {
+        return countryCodeTv;
+    }
+
+    public void setCountryCodeTv(TextView countryCodeTv) {
+        this.countryCodeTv = countryCodeTv;
     }
 }

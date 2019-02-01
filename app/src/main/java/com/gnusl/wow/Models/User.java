@@ -19,6 +19,7 @@ public class User implements Parcelable {
     private String image_url;
     private String birthday;
     private String gender;
+    private String countryCode;
 
     public User(){}
 
@@ -29,6 +30,7 @@ public class User implements Parcelable {
         image_url = in.readString();
         birthday = in.readString();
         gender = in.readString();
+        countryCode = in.readString();
         imageResource = in.readInt();
     }
 
@@ -57,6 +59,15 @@ public class User implements Parcelable {
         user.setImage_url(jsonObject.optString("image_url"));
         user.setBirthday(jsonObject.optString("birthday"));
         user.setGender(jsonObject.optString("gender"));
+
+        // country code
+        if(jsonObject.has("country_code")){
+            try {
+                user.setCountryCode(jsonObject.getJSONObject("country_code").optString("name"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         return user;
     }
@@ -145,6 +156,14 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -158,6 +177,7 @@ public class User implements Parcelable {
         dest.writeString(image_url);
         dest.writeString(birthday);
         dest.writeString(gender);
+        dest.writeString(countryCode);
         dest.writeInt(imageResource);
     }
 }

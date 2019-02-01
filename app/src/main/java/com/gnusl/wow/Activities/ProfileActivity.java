@@ -24,6 +24,7 @@ import com.gnusl.wow.Adapters.ProfileFragmentPagerAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.PagerDelegate;
+import com.gnusl.wow.Fragments.PersonalInfoProfileFragment;
 import com.gnusl.wow.Models.GiftRoomRank;
 import com.gnusl.wow.Models.GiftUserRank;
 import com.gnusl.wow.Models.RefreshGiftsDelegate;
@@ -137,6 +138,8 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
     @Override
     public void onReplaceFragment(Fragment fragment, int position) {
 
+        this.mCurrentFragment=fragment;
+
         setFragmentView(position);
     }
 
@@ -182,6 +185,12 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
 
         // id
         ((TextView) findViewById(R.id.user_Id)).setText(String.valueOf("ID: " + user.getId()));
+
+        // personal info
+        if(mCurrentFragment!=null && mCurrentFragment instanceof PersonalInfoProfileFragment){
+
+            ((PersonalInfoProfileFragment) mCurrentFragment).getCountryCodeTv().setText(user.getCountryCode());
+        }
     }
 
 

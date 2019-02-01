@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:background="@null"
-            android:hint="@string/email_or_phone"
+            android:hint="@string/mobile"
             android:paddingStart="4dp"
             android:paddingTop="6dp"
             android:paddingEnd="4dp"

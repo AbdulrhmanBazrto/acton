@@ -47,7 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"
-            android:text="معلومات طبية عامة عن جسم الإنسان"
             android:textColor="@color/room_item_content_text_color"
             android:textSize="13sp"
             android:layout_marginStart="16dp"

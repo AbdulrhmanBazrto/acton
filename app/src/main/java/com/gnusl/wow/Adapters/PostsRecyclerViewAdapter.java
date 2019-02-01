@@ -48,6 +48,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private PostActionsDelegate postActionsDelegate;
     private boolean isFollowing;
     private boolean isLoading = false;
+    private boolean isRechToLimit=false;
     private OnLoadMoreListener loadMoreListener;
 
     private static int POST_HOLDER = 0;
@@ -69,7 +70,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
                 if (!recyclerView.canScrollVertically(-1)) {
                     Log.d("TOP ", true + "");
-                } else if (!isLoading && !recyclerView.canScrollVertically(1)) {
+                } else if (!isLoading &&!isRechToLimit&& !recyclerView.canScrollVertically(1)) {
                     Log.d("BOTTOM ", true + "");
 
                     onScrollToBottomToLoadMore();
@@ -169,6 +170,19 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             if (post.getImage() != null && !post.getImage().isEmpty())
                 Glide.with(context)
                         .load(APILinks.Base_Media_Url.getLink() + post.getImage())
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                                post_image.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                return false;
+                            }
+                        })
                         .into(post_image);
 
             // user name
@@ -189,6 +203,8 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+                                post_image.setImageDrawable(resource);
                                 return false;
                             }
                         })
@@ -198,7 +214,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             handleLikeStatus(post);
 
             // likes numbers
-            like_number.setText(String.valueOf(post.getNumLikes()));
+            //like_number.setText(String.valueOf(post.getNumLikes()));
 
             // comments numbers
             message_number.setText(String.valueOf(post.getNumComments()));
@@ -308,6 +324,14 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public void setLoading(boolean loading) {
         isLoading = loading;
+    }
+
+    public boolean isRechToLimit() {
+        return isRechToLimit;
+    }
+
+    public void setRechToLimit(boolean rechToLimit) {
+        isRechToLimit = rechToLimit;
     }
 
     // endregion

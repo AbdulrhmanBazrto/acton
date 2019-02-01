@@ -7,10 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.gnusl.wow.Delegates.PagerDelegate;
-import com.gnusl.wow.Delegates.SearchByUsersDelegate;
-import com.gnusl.wow.Fragments.AllRoomsFragment;
-import com.gnusl.wow.Fragments.ExploreRoomsFragment;
-import com.gnusl.wow.Fragments.NewRoomsFragment;
 import com.gnusl.wow.Fragments.SearchRoomFragment;
 import com.gnusl.wow.Fragments.UsersFragment;
 
@@ -19,8 +15,10 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
     private Context context;
     private Fragment mCurrentFragment;
     private PagerDelegate pagerDelegate;
+    private SearchRoomFragment searchRoomFragment;
+    private UsersFragment usersFragment;
 
-    public SearchFragmentPagerAdapter(Context context, FragmentManager fm, PagerDelegate pagerDelegate) {
+    public SearchFragmentPagerAdapter(Context context, FragmentManager fm,PagerDelegate pagerDelegate) {
         super(fm);
         this.context= context;
         this.pagerDelegate=pagerDelegate;
@@ -30,9 +28,9 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return SearchRoomFragment.newInstance();
+            return searchRoomFragment;
         } else
-            return UsersFragment.newInstance();
+            return usersFragment;
 
     }
 
@@ -62,6 +60,21 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
         return "Home";
     }
 
+    public SearchRoomFragment getSearchRoomFragment() {
+        return searchRoomFragment;
+    }
+
+    public void setSearchRoomFragment(SearchRoomFragment searchRoomFragment) {
+        this.searchRoomFragment = searchRoomFragment;
+    }
+
+    public UsersFragment getUsersFragment() {
+        return usersFragment;
+    }
+
+    public void setUsersFragment(UsersFragment usersFragment) {
+        this.usersFragment = usersFragment;
+    }
 }
 
 

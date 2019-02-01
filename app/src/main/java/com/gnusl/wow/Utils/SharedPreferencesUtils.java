@@ -46,5 +46,9 @@ public class SharedPreferencesUtils {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext());
         return sharedPreferences.getString(Token, "");
     }
+
+    public static void clear() {
+        PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext()).edit().clear().apply();
+    }
 }
 

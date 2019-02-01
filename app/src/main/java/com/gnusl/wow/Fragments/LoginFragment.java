@@ -112,7 +112,7 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
         if (edEmailOrPhone.getText().toString().isEmpty()) {
 
             lineEmailOrPhone.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.red));
-            edEmailOrPhone.setError("email or phone is required");
+            edEmailOrPhone.setError("phone is required");
 
         }else if (edPassword.getText().toString().isEmpty()) {
 
@@ -129,7 +129,7 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
         this.progressDialog = ProgressDialog.show(getContext(), "", "Please Wait for register..");
 
         // send request
-        APIConnectionNetwork.Login(edEmailOrPhone.getText().toString(), "", edPassword.getText().toString(),FirebaseInstanceId.getInstance().getToken(), this);
+        APIConnectionNetwork.Login("", edEmailOrPhone.getText().toString(), edPassword.getText().toString(),FirebaseInstanceId.getInstance().getToken(), this);
     }
 
     @Override

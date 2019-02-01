@@ -1,7 +1,6 @@
 package com.gnusl.wow.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,40 +15,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.error.ANError;
-import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
 import com.gnusl.wow.Adapters.SearchFragmentPagerAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
-import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.PagerDelegate;
-import com.gnusl.wow.Delegates.SearchByRoomDelegate;
-import com.gnusl.wow.Delegates.SearchByUsersDelegate;
+import com.gnusl.wow.Delegates.SearchDelegate;
 import com.gnusl.wow.Fragments.SearchRoomFragment;
 import com.gnusl.wow.Fragments.UsersFragment;
-import com.gnusl.wow.Models.Room;
-import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
-import com.gnusl.wow.Utils.KeyboardUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+public class SearchActivity extends AppCompatActivity implements SmartTabLayout.TabProvider, PagerDelegate {
 
-import java.io.File;
-import java.util.ArrayList;
-
-import static android.widget.Toast.LENGTH_SHORT;
-
-public class SearchActivity extends AppCompatActivity implements SmartTabLayout.TabProvider, ConnectionDelegate, PagerDelegate {
-
-    public static final String SEARCH_FOR_USERS="search-for-users";
-    public static final String SEARCH_FOR_ROOMS="search-for-rooms";
+    public static final String SEARCH_FOR_USERS = "search-for-users";
+    public static final String SEARCH_FOR_ROOMS = "search-for-rooms";
 
     private EditText searchEdittext;
-    private ProgressDialog progressDialog;
     private ViewPager viewPager;
-    private SearchByRoomDelegate searchByRoomDelegate;
-    private SearchByUsersDelegate searchByUsersDelegate;
+    private SearchDelegate searchRoomDelegate;
+    private SearchDelegate searchUsersDelegate;
+
+    SearchFragmentPagerAdapter searchFragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +53,15 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
         // init filter
         initializeFiltersByViews();
 
-        if(getIntent().hasExtra(SEARCH_FOR_USERS)){
+        if (getIntent().hasExtra(SEARCH_FOR_USERS)) {
 
             viewPager.setCurrentItem(1);
 
-            // send request
-            APIConnectionNetwork.SearchForUsers("", this);
-
-        }else { // search for rooms
+        } else { // search for rooms
 
             viewPager.setCurrentItem(0);
-
-            // search rooms
-            APIConnectionNetwork.GetAllChannels("", this);
         }
+
     }
 
     private void initializeFiltersByViews() {
@@ -105,7 +85,13 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
 
     private void initializeSmartTabs() {
 
-        SearchFragmentPagerAdapter searchFragmentPagerAdapter = new SearchFragmentPagerAdapter(this, getSupportFragmentManager(), this);
+        searchFragmentPagerAdapter = new SearchFragmentPagerAdapter(this, getSupportFragmentManager(), this);
+
+        searchFragmentPagerAdapter.setSearchRoomFragment(SearchRoomFragment.newInstance());
+        searchFragmentPagerAdapter.setUsersFragment(UsersFragment.newInstance());
+
+        searchRoomDelegate = searchFragmentPagerAdapter.getSearchRoomFragment();
+        searchUsersDelegate= searchFragmentPagerAdapter.getUsersFragment();
 
         viewPager = findViewById(R.id.search_view_pager);
         viewPager.setAdapter(searchFragmentPagerAdapter);
@@ -121,22 +107,13 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
         if (searchEdittext.getText().toString().isEmpty())
             Toast.makeText(this, "you must have something to filter", Toast.LENGTH_SHORT).show();
 
-        else if(viewPager.getCurrentItem()==1){
+        else if (viewPager.getCurrentItem() == 1) {
 
-            // make progress dialog
-            this.progressDialog = ProgressDialog.show(this, "", "search for users..");
+            searchUsersDelegate.onSearchByTag(searchEdittext.getText().toString());
 
-            // search users
-            APIConnectionNetwork.SearchForUsers(searchEdittext.getText().toString(), this);
+        } else {
 
-        }else {
-
-            // make progress dialog
-            this.progressDialog = ProgressDialog.show(this, "", "search for rooms..");
-
-            // search rooms
-            APIConnectionNetwork.GetAllChannels(searchEdittext.getText().toString(), this);
-
+            searchRoomDelegate.onSearchByTag(searchEdittext.getText().toString());
         }
 
     }
@@ -168,67 +145,7 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
     }
 
     @Override
-    public void onConnectionFailure() {
-
-        Toast.makeText(this, "Connection Failure", LENGTH_SHORT).show();
-
-        if (progressDialog != null)
-            progressDialog.dismiss();
-
-    }
-
-    @Override
-    public void onConnectionError(ANError anError) {
-
-        Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
-
-        if (progressDialog != null)
-            progressDialog.dismiss();
-
-    }
-
-    @Override
-    public void onConnectionSuccess(String response) {
-
-    }
-
-    @Override
-    public void onConnectionSuccess(JSONObject jsonObject) {
-
-    }
-
-    @Override
-    public void onConnectionSuccess(JSONArray jsonArray) {
-
-        if(viewPager.getCurrentItem()==1) {
-            // parsing
-            ArrayList<User> users = User.parseJSONArray(jsonArray);
-
-            // call delegate for refresh
-            if (searchByUsersDelegate != null)
-                searchByUsersDelegate.onSearchResultDone(users);
-
-        }else {
-
-            // parsing
-            ArrayList<Room> rooms= Room.parseJSONArray(jsonArray);
-
-            // call delegate for refresh
-            if (searchByRoomDelegate != null)
-                searchByRoomDelegate.onSearchResultDone(rooms);
-        }
-
-        // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
-    }
-
-    @Override
     public void onReplaceFragment(Fragment fragment, int position) {
 
-        if(searchByUsersDelegate==null && fragment instanceof UsersFragment)
-            searchByUsersDelegate= (SearchByUsersDelegate) fragment;
-        else if(searchByRoomDelegate==null && fragment instanceof SearchRoomFragment)
-            searchByRoomDelegate= (SearchByRoomDelegate) fragment;
     }
 }

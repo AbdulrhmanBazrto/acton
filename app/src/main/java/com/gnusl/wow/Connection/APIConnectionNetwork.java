@@ -141,7 +141,7 @@ public class APIConnectionNetwork {
         AndroidNetworking.post(APILinks.Register_Url.getLink())
                 .addHeaders("Accept", "application/json")
                 .addBodyParameter("name", params.getName())
-                .addBodyParameter("email", params.getEmail())
+                //.addBodyParameter("email", params.getEmail())
                 .addBodyParameter("password", params.getPassword())
                 .addBodyParameter("c_password", params.getPassword())
                 .addBodyParameter("mobile", params.getPhone())

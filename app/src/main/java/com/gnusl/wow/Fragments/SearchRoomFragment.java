@@ -1,5 +1,6 @@
 package com.gnusl.wow.Fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,21 +8,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
-import com.gnusl.wow.Adapters.UsersRecyclerViewAdapter;
-import com.gnusl.wow.Delegates.SearchByRoomDelegate;
-import com.gnusl.wow.Delegates.SearchByUsersDelegate;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Delegates.SearchDelegate;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-public class SearchRoomFragment extends Fragment implements SearchByRoomDelegate {
+import static android.widget.Toast.LENGTH_SHORT;
+
+public class SearchRoomFragment extends Fragment implements SearchDelegate, ConnectionDelegate {
 
     private View inflatedView;
     RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
+    private ProgressDialog progressDialog;
 
     public SearchRoomFragment() {
     }
@@ -45,17 +54,10 @@ public class SearchRoomFragment extends Fragment implements SearchByRoomDelegate
         roomsRecyclerViewAdapter= new RoomsRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(roomsRecyclerViewAdapter);
 
+        // search rooms
+        APIConnectionNetwork.GetAllChannels("", this);
+
         return inflatedView;
-    }
-
-    @Override
-    public void onSearchResultDone(ArrayList<Room> rooms) {
-
-        // refresh
-        if(roomsRecyclerViewAdapter!=null){
-            roomsRecyclerViewAdapter.setRooms(rooms);
-            roomsRecyclerViewAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
@@ -64,6 +66,64 @@ public class SearchRoomFragment extends Fragment implements SearchByRoomDelegate
         if (isVisibleToUser && inflatedView != null) {
 
         }
+    }
+
+    @Override
+    public void onSearchByTag(String searchContent) {
+
+        // make progress dialog
+        this.progressDialog = ProgressDialog.show(getContext(), "", "search for rooms..");
+
+        // search rooms
+        APIConnectionNetwork.GetAllChannels(searchContent, this);
+
+    }
+
+    @Override
+    public void onConnectionFailure() {
+
+        Toast.makeText(getContext(), "Connection Failure", LENGTH_SHORT).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+    }
+
+    @Override
+    public void onConnectionError(ANError anError) {
+
+        Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+    }
+
+    @Override
+    public void onConnectionSuccess(String response) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONArray jsonArray) {
+
+        // parsing
+        ArrayList<Room> rooms= Room.parseJSONArray(jsonArray);
+
+        // refresh
+        if(roomsRecyclerViewAdapter!=null){
+            roomsRecyclerViewAdapter.setRooms(rooms);
+            roomsRecyclerViewAdapter.notifyDataSetChanged();
+        }
+
+        // dismiss
+        if (progressDialog != null)
+            progressDialog.dismiss();
     }
 
 }
