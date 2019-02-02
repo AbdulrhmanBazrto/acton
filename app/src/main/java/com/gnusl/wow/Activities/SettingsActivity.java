@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.AccountFragment;
+import com.gnusl.wow.Fragments.BlockListFragment;
 import com.gnusl.wow.Fragments.SettingsFragment;
 import com.gnusl.wow.R;
 
@@ -47,6 +48,13 @@ public class SettingsActivity extends AppCompatActivity {
                 titleTv.setText(getResources().getString(R.string.account));
                 currentFragment=AccountFragment.newInstance();
                 break;
+
+            case BlockListFragment:
+
+                titleTv.setText(getResources().getString(R.string.block_list));
+                currentFragment=BlockListFragment.newInstance();
+                break;
+
         }
 
         fragmentTransaction.replace(R.id.frame_container,currentFragment).commit();

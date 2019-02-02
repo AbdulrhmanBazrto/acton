@@ -266,6 +266,8 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 @Override
                 public void onEvent(ImageView button, boolean buttonState) {
 
+                    post.setLiked(!post.isLiked());
+
                     // send request
                     APIConnectionNetwork.UpdateLike(post.getId(), null);
 

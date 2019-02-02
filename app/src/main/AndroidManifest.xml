@@ -61,7 +61,7 @@
             android:name=".Activities.SplashActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBarSplash" >
+            android:theme="@style/AppTheme.NoActionBarSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -170,9 +170,12 @@
         <activity android:name=".Activities.ProfileGiftsActivity" />
         <activity
             android:name=".Activities.ProfileActivity"
-            android:theme="@style/AppTheme.NoActionBarSettings">
-        </activity>
-        <activity android:name=".Activities.RoomsActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBarSettings" />
+        <activity android:name=".Activities.RoomsActivity" />
+        <activity
+            android:name=".Activities.EarnGoldActivity"
+            android:label="@string/title_activity_earn_gold"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

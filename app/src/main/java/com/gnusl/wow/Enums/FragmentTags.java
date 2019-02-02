@@ -13,6 +13,7 @@ public enum FragmentTags {
     MessagesFragment,
     UsersMessagesFragment,
     SystemMessagesFragment,
+    BlockListFragment,
 
 
 }

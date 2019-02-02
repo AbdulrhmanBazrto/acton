@@ -159,6 +159,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             startActivity(new Intent(MainActivity.this, RechargeActivity.class));
 
+        }else if (id == R.id.earn_gold) {
+
+            startActivity(new Intent(MainActivity.this, EarnGoldActivity.class));
+
         } else if (id == R.id.settings) {
 
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));

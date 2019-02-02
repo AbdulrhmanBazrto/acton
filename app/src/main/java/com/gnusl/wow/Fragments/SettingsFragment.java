@@ -41,6 +41,7 @@ public class SettingsFragment extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         inflatedView.findViewById(R.id.accout_button).setOnClickListener(v->((SettingsActivity)getActivity()).makeFragment(FragmentTags.AccountFragment));
+        inflatedView.findViewById(R.id.block_list).setOnClickListener(v->((SettingsActivity)getActivity()).makeFragment(FragmentTags.BlockListFragment));
         inflatedView.findViewById(R.id.logout_button).setOnClickListener(v->{
 
             AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="?android:attr/borderlessButtonStyle"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="@color/white">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/task_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:src="@drawable/img1"
+        app:civ_border_color="#EEEEEE"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8"/>
+
+    <com.gnusl.wow.Views.AutoFitFontedTextView
+        android:id="@+id/task_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:gravity="start"
+        android:lines="1"
+        android:text="أخذ المايك لمدة 10 دقايق"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toBottomOf="@id/task_icon"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@id/task_icon"
+        app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/dollar_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/dollar"
+        app:layout_constraintTop_toBottomOf="@id/task_description"
+        app:layout_constraintEnd_toStartOf="@id/guideline"/>
+
+    <com.gnusl.wow.Views.FontedTextView
+        android:id="@+id/cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lines="1"
+        android:text="3"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/create_account_shape_transparent"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/dollar_icon"
+        app:layout_constraintTop_toBottomOf="@id/task_description"
+        app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/settings_seperator_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.gnusl.wow.Views.FontedTextView
+        android:id="@+id/left_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lines="1"
+        android:text="التالي"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/active_color_dark"
+        android:textSize="16sp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="@drawable/background_transparent_inside_with_primary_stroke_shape"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
+
+</android.support.constraint.ConstraintLayout>
