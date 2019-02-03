@@ -38,6 +38,9 @@ public enum APILinks {
     Message_Url(Base_API_Url.getLink()+"message"),
     System_Message_Url(Base_API_Url.getLink()+"system/message"),
 
+    // Earn Gold
+    Earn_Gold_Url(Base_API_Url.getLink()+"gold"),
+
     // Following
     Follow_Url(Base_API_Url.getLink()+"follow"),
     Posts_By_Following(Follow_Url.getLink()+"/post");

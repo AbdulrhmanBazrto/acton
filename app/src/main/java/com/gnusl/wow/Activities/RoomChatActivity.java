@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,11 +17,14 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,6 +32,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -43,9 +49,11 @@ import com.gnusl.wow.Connection.APILinks;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SoftInputDelegate;
 import com.gnusl.wow.Fragments.RoomChatFragment;
+import com.gnusl.wow.Fragments.RoomSettingsFragment;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.EnterPassWordRoomPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.KeyboardUtils;
 import com.gnusl.wow.WebRtcClient.CallDelegate;
@@ -145,6 +153,14 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
         // init media
         InitializeMediaPicker();
+
+        // headset vs speaker mode
+        setSpeakerMode();
+
+        // check lock
+        if(getRoom()!=null && getRoom().isHasPassword())
+            EnterPassWordRoomPopUp.show(this,getRoom());
+
     }
 
     private void initViews() {
@@ -227,14 +243,28 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         PeerConnectionParameters params = new PeerConnectionParameters(
                 false, false, displaySize.x, displaySize.y, 30, 1, VIDEO_CODEC_VP9, true, 1, AUDIO_CODEC_OPUS, true);
 
+        client = new WebRtcClient(this, mSocketAddress, params, VideoRendererGui.getEGLContext(), getRoom().getId());
+    }
+
+    public boolean isSpeakerPhoneMode(){
+
+        AudioManager audioManager = ((AudioManager) getSystemService(AUDIO_SERVICE));
+        return audioManager.isSpeakerphoneOn();
+    }
+
+    public void setHeadSetMode(){
+
+        AudioManager audioManager = ((AudioManager) getSystemService(AUDIO_SERVICE));
+        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        audioManager.setSpeakerphoneOn(false);
+    }
+
+    public void setSpeakerMode(){
+
         //setting speakerphone on
         AudioManager audioManager = ((AudioManager) getSystemService(AUDIO_SERVICE));
-        @SuppressWarnings("deprecation")
-        boolean isWiredHeadsetOn = audioManager.isWiredHeadsetOn();
-        audioManager.setMode(isWiredHeadsetOn ? AudioManager.MODE_IN_CALL : AudioManager.MODE_IN_COMMUNICATION);
-        audioManager.setSpeakerphoneOn(!isWiredHeadsetOn);
-
-        client = new WebRtcClient(this, mSocketAddress, params, VideoRendererGui.getEGLContext(), getRoom().getId());
+        audioManager.setMode(AudioManager.MODE_IN_CALL);
+        audioManager.setSpeakerphoneOn(true);
     }
 
     @Override

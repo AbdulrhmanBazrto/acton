@@ -1,20 +1,31 @@
 package com.gnusl.wow.Activities;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
+import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Adapters.EarnGoldSectionAdapter;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.EarnGoldSection;
 import com.gnusl.wow.Models.EarnGoldTask;
 import com.gnusl.wow.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-public class EarnGoldActivity extends AppCompatActivity {
+import static android.widget.Toast.LENGTH_SHORT;
+
+public class EarnGoldActivity extends AppCompatActivity implements ConnectionDelegate {
 
     private EarnGoldSectionAdapter earnGoldSectionAdapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,28 +34,84 @@ public class EarnGoldActivity extends AppCompatActivity {
 
         findViewById(R.id.back_button).setOnClickListener(v->onBackPressed());
 
+        // init adapter
+        initializeAdapter();
+
+        // send request
+        sendEarnGoldDataRequest();
+
+    }
+
+    private void initializeAdapter(){
+
         RecyclerView recyclerView = findViewById(R.id.earn_gold_recycler_view);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        earnGoldSectionAdapter = new EarnGoldSectionAdapter(this);
+        recyclerView.setAdapter(earnGoldSectionAdapter);
+    }
+
+    private void sendEarnGoldDataRequest() {
+
+        // make progress dialog
+        this.progressDialog = ProgressDialog.show(this, "", "loading..");
+
+        // send request
+        APIConnectionNetwork.GetEarnGoldInfo(this);
+    }
+
+    @Override
+    public void onConnectionFailure() {
+
+        Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+    }
+
+    @Override
+    public void onConnectionError(ANError anError) {
+
+        Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
+
+    }
+
+    @Override
+    public void onConnectionSuccess(String response) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onConnectionSuccess(JSONArray jsonArray) {
+
+        // parsing
         EarnGoldSection earnGoldSection = new EarnGoldSection();
         earnGoldSection.setHeaderTitle("المهمات اليومية");
-
-        ArrayList<EarnGoldTask> earnGoldTasks = new ArrayList<>();
-        earnGoldTasks.add(new EarnGoldTask());
-        earnGoldTasks.add(new EarnGoldTask());
-
-        earnGoldSection.setEarnGoldTasks(earnGoldTasks);
+        earnGoldSection.setEarnGoldTasks(EarnGoldTask.parseJSONArray(jsonArray));
 
         ArrayList<EarnGoldSection> earnGoldSections = new ArrayList<>();
         earnGoldSections.add(earnGoldSection);
 
-        earnGoldSectionAdapter = new EarnGoldSectionAdapter(this);
+        // refresh
         earnGoldSectionAdapter.setEarnGoldSections(earnGoldSections);
-        recyclerView.setAdapter(earnGoldSectionAdapter);
         earnGoldSectionAdapter.notifyDataSetChanged();
+
+        if (progressDialog != null)
+            progressDialog.dismiss();
 
     }
 }
+
+

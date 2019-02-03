@@ -32,12 +32,12 @@ public class EarnGoldSectionAdapter extends SectionedRecyclerViewAdapter<Section
 
     @Override
     public int getSectionCount() {
-        return getEarnGoldSections().size();
+        return getEarnGoldSections() != null ? getEarnGoldSections().size() : 0;
     }
 
     @Override
     public int getItemCount(int section) {
-        return getEarnGoldSections().get(section).getEarnGoldTasks().size();
+        return 1;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class EarnGoldSectionAdapter extends SectionedRecyclerViewAdapter<Section
                     .inflate(R.layout.earn_gold_header_view_holder, parent, false);
             return new EarnGoldHeaderViewHolder(v);
 
-        } else{
+        } else {
 
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.earn_gold_block_view_holder, parent, false);
@@ -61,15 +61,15 @@ public class EarnGoldSectionAdapter extends SectionedRecyclerViewAdapter<Section
     @Override
     public void onBindHeaderViewHolder(SectionedViewHolder holder, int section, boolean expanded) {
 
-        EarnGoldSection earnGoldSection=getEarnGoldSections().get(section);
+        EarnGoldSection earnGoldSection = getEarnGoldSections().get(section);
         ((EarnGoldHeaderViewHolder) holder).onBind(earnGoldSection);
     }
 
     @Override
     public void onBindViewHolder(SectionedViewHolder holder, int section, int relativePosition, int absolutePosition) {
 
-        EarnGoldSection earnGoldSection= getEarnGoldSections().get(section);
-        ((EarnGoldBlockViewHolder) holder).onBind(context,earnGoldSection);
+        EarnGoldSection earnGoldSection = getEarnGoldSections().get(section);
+        ((EarnGoldBlockViewHolder) holder).onBind(context, earnGoldSection);
     }
 
     @Override

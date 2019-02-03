@@ -79,7 +79,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     private ProgressDialog progressDialog;
     private ArrayList<Gift> gifts;
     private boolean isRefreshing;
-    private boolean isRechToLimit=false;
+    private boolean isRechToLimit = false;
 
     // pubnub
     private PubNub pubnub;
@@ -231,28 +231,52 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         });
 
-        inflatedView.findViewById(R.id.mony_image).setOnClickListener(v -> {
+        // headset vs speaker mode
+        inflatedView.findViewById(R.id.headset_or_speaker).setOnClickListener(v -> {
 
+            if (!activity.isSpeakerPhoneMode()) {
+
+                activity.setSpeakerMode();
+                ((ImageView) inflatedView.findViewById(R.id.headset_or_speaker)).setImageResource(R.drawable.speaker);
+            } else {
+
+                activity.setHeadSetMode();
+                ((ImageView) inflatedView.findViewById(R.id.headset_or_speaker)).setImageResource(R.drawable.headset);
+            }
 
         });
+
+        inflatedView.findViewById(R.id.share_button).setOnClickListener(v -> {
+
+            shareChannel();
+        });
+    }
+
+    private void shareChannel() {
+
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT,"تعال الى اكتون واعثر علي معرف الغرفة هو !"+String.valueOf(activity.getRoom().getId())+" "+String.valueOf("http://acton.live"));
+        getContext().startActivity(Intent.createChooser(sharingIntent, "مشاركة عن طريق"));
+
     }
 
     private void animateGiftInfo(ChatMessage chatMessage) {
 
         // fill info
-        ((TextView)inflatedView.findViewById(R.id.user_gift_name)).setText(chatMessage.getUserName() != null ? chatMessage.getUserName() : "");
+        ((TextView) inflatedView.findViewById(R.id.user_gift_name)).setText(chatMessage.getUserName() != null ? chatMessage.getUserName() : "");
 
         // user image
         if (chatMessage.getUserImage() != null && !chatMessage.getUserImage().isEmpty())
             Glide.with(getContext())
                     .load(chatMessage.getUserImage())
-                    .into(((ImageView)inflatedView.findViewById(R.id.user_gift_image)));
+                    .into(((ImageView) inflatedView.findViewById(R.id.user_gift_image)));
 
         // gift image message
         if (chatMessage.getGiftImagePath() != null && !chatMessage.getGiftImagePath().isEmpty())
             Glide.with(getContext())
                     .load(chatMessage.getGiftImagePath())
-                    .into(((ImageView)inflatedView.findViewById(R.id.gift_image_from_user)));
+                    .into(((ImageView) inflatedView.findViewById(R.id.gift_image_from_user)));
 
 
         inflatedView.findViewById(R.id.gift_layout_animation).setVisibility(View.VISIBLE);
@@ -449,10 +473,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     chatRecyclerViewAdapter.notifyDataSetChanged();
 
                     // smooth scroll
-                    chatRecyclerView.smoothScrollToPosition(chatRecyclerViewAdapter.getChatMessages().size()-1);
+                    chatRecyclerView.smoothScrollToPosition(chatRecyclerViewAdapter.getChatMessages().size() - 1);
 
                     // gift animation
-                    if(chatMessage.getGiftImagePath()!=null)
+                    if (chatMessage.getGiftImagePath() != null)
                         animateGiftInfo(chatMessage);
                 });
 
@@ -769,8 +793,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             }
 
             // check limit
-            if(chatMessages.isEmpty())
-                isRechToLimit=true;
+            if (chatMessages.isEmpty())
+                isRechToLimit = true;
 
             // disable loading
             chatRecyclerViewAdapter.setLoading(false);

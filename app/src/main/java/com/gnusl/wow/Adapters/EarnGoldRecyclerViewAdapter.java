@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,13 +37,13 @@ public class EarnGoldRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         View view;
 
         view = inflater.inflate(R.layout.earn_gold_task_view_holder, parent, false);
-        return new EarnGoldViewHolder (view);
+        return new EarnGoldViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((EarnGoldViewHolder ) holder).bind(getEarnGoldTasks().get(position), position);
+        ((EarnGoldViewHolder) holder).bind(getEarnGoldTasks().get(position), position);
 
     }
 
@@ -53,29 +54,50 @@ public class EarnGoldRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class EarnGoldViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView title;
-        private TextView content;
-        private AppCompatImageView room_image;
-        private AppCompatImageView flag_image;
-        private TextView user_number;
+        private ImageView taskIcon;
+        private TextView taskDescription;
+        private TextView price;
+        private TextView status;
 
-
-        public EarnGoldViewHolder (View itemView) {
+        public EarnGoldViewHolder(View itemView) {
             super(itemView);
 
-            title = itemView.findViewById(R.id.title);
-            content = itemView.findViewById(R.id.content);
-            user_number = itemView.findViewById(R.id.user_number);
-            room_image = itemView.findViewById(R.id.room_image);
-            flag_image = itemView.findViewById(R.id.flag_image);
+            taskIcon = itemView.findViewById(R.id.task_icon);
+            taskDescription = itemView.findViewById(R.id.task_description);
+            price = itemView.findViewById(R.id.price);
+            status = itemView.findViewById(R.id.status_button);
 
         }
 
         public void bind(final EarnGoldTask earnGoldTask, final int position) {
-            
+
+            // title
+            if (earnGoldTask.getTaskDescription() != null && !earnGoldTask.getTaskDescription().isEmpty())
+                taskDescription.setText(earnGoldTask.getTaskDescription());
+
+            // price
+            price.setText(String.valueOf(earnGoldTask.getPrice()));
+
+            // icon
+            if (earnGoldTask.getIconUrl() != null && !earnGoldTask.getIconUrl().isEmpty())
+                Glide.with(context)
+                        .load(earnGoldTask.getIconUrl())
+                        .into(taskIcon);
+
+            // status
+            if(earnGoldTask.isStatusReady()){
+
+                status.setText("استلام");
+                status.setTextColor(context.getResources().getColor(R.color.white));
+                status.setBackgroundResource(R.drawable.background_primary_inside_shape);
+            }else {
+                status.setText("التالي");
+                status.setTextColor(context.getResources().getColor(R.color.active_color_dark));
+                status.setBackgroundResource(R.drawable.background_transparent_inside_with_primary_stroke_shape);
+            }
 
         }
-        
+
     }
 
     // region setters and getters

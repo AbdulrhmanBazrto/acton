@@ -899,7 +899,7 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetAllRoomMessages(int channelId,int take, int skip, ConnectionDelegate connectionDelegate) {
+    public static void GetAllRoomMessages(int channelId, int take, int skip, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/message?take=" + take + "&skip=" + skip)
 
@@ -1733,4 +1733,34 @@ public class APIConnectionNetwork {
     }
 
 
+    public static void GetEarnGoldInfo(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Earn_Gold_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Earn Gold ", response.toString());
+
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Earn Gold ", anError.getMessage());
+                        Log.d("Earn Gold ", anError.getErrorDetail());
+                    }
+                });
+    }
 }

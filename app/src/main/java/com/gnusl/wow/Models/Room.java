@@ -77,7 +77,7 @@ public class Room implements Parcelable {
         room.setId(jsonObject.optInt("id"));
         room.setName(jsonObject.optString("name"));
         room.setActive(jsonObject.optBoolean("is_active"));
-        room.setHasPassword(jsonObject.optBoolean("has_password"));
+        room.setHasPassword(jsonObject.optInt("has_password")==1);
         room.setPassword(jsonObject.optString("password"));
         room.setUserId(jsonObject.optInt("user_id"));
         room.setNumUsers(jsonObject.optInt("num_users"));
