@@ -1,13 +1,11 @@
 package com.gnusl.wow.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +23,12 @@ import com.gnusl.wow.R;
 
 import java.util.ArrayList;
 
-public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class UsersInRoomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private ArrayList<User> users;
 
-    public UsersRecyclerViewAdapter(Context context, ArrayList<User> users) {
+    public UsersInRoomRecyclerViewAdapter(Context context, ArrayList<User> users) {
         this.context = context;
         this.users = users;
     }

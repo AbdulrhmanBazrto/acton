@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="90dp">
 
-    <android.support.v7.widget.AppCompatImageView
+    <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/user_image"
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_marginStart="24dp"
         android:gravity="center"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/white"
         android:src="@drawable/ic_launcher_wow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

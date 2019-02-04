@@ -8,8 +8,15 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/members"
+        android:orderInCategory="100"
+        android:title="@string/members"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/backround_action"
         android:orderInCategory="100"
         android:title="@string/backround"
         app:showAsAction="never" />
+
 </menu>

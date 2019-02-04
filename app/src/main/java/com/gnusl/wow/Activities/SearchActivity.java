@@ -1,6 +1,5 @@
 package com.gnusl.wow.Activities;
 
-import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,11 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gnusl.wow.Adapters.SearchFragmentPagerAdapter;
-import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Delegates.SearchDelegate;
 import com.gnusl.wow.Fragments.SearchRoomFragment;
-import com.gnusl.wow.Fragments.UsersFragment;
+import com.gnusl.wow.Fragments.SearchUsersFragment;
 import com.gnusl.wow.R;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -88,10 +86,10 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
         searchFragmentPagerAdapter = new SearchFragmentPagerAdapter(this, getSupportFragmentManager(), this);
 
         searchFragmentPagerAdapter.setSearchRoomFragment(SearchRoomFragment.newInstance());
-        searchFragmentPagerAdapter.setUsersFragment(UsersFragment.newInstance());
+        searchFragmentPagerAdapter.setSearchUsersFragment(SearchUsersFragment.newInstance());
 
         searchRoomDelegate = searchFragmentPagerAdapter.getSearchRoomFragment();
-        searchUsersDelegate= searchFragmentPagerAdapter.getUsersFragment();
+        searchUsersDelegate= searchFragmentPagerAdapter.getSearchUsersFragment();
 
         viewPager = findViewById(R.id.search_view_pager);
         viewPager.setAdapter(searchFragmentPagerAdapter);

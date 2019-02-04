@@ -175,6 +175,7 @@
             android:name=".Activities.EarnGoldActivity"
             android:label="@string/title_activity_earn_gold"
             android:theme="@style/AppTheme" />
+        <activity android:name=".Activities.UsersInRoomActivity"></activity>
     </application>
 
 </manifest>

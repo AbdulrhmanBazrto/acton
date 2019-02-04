@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Fragments.SearchRoomFragment;
-import com.gnusl.wow.Fragments.UsersFragment;
+import com.gnusl.wow.Fragments.SearchUsersFragment;
 
 public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -16,7 +16,7 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
     private Fragment mCurrentFragment;
     private PagerDelegate pagerDelegate;
     private SearchRoomFragment searchRoomFragment;
-    private UsersFragment usersFragment;
+    private SearchUsersFragment searchUsersFragment;
 
     public SearchFragmentPagerAdapter(Context context, FragmentManager fm,PagerDelegate pagerDelegate) {
         super(fm);
@@ -30,7 +30,7 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return searchRoomFragment;
         } else
-            return usersFragment;
+            return searchUsersFragment;
 
     }
 
@@ -68,12 +68,12 @@ public class SearchFragmentPagerAdapter extends FragmentPagerAdapter {
         this.searchRoomFragment = searchRoomFragment;
     }
 
-    public UsersFragment getUsersFragment() {
-        return usersFragment;
+    public SearchUsersFragment getSearchUsersFragment() {
+        return searchUsersFragment;
     }
 
-    public void setUsersFragment(UsersFragment usersFragment) {
-        this.usersFragment = usersFragment;
+    public void setSearchUsersFragment(SearchUsersFragment searchUsersFragment) {
+        this.searchUsersFragment = searchUsersFragment;
     }
 }
 

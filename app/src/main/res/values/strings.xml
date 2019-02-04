@@ -62,6 +62,7 @@
     <string name="room_members_content">Max %1$s room members</string>
     <string name="room_level_content">Room upgrade rate increases to %1$s time</string>
     <string name="Settings">الإعدادات</string>
+    <string name="members">الأعضاء</string>
     <string name="backround">الخلفية</string>
     <string name="room_lock">قفل الغرفة</string>
 

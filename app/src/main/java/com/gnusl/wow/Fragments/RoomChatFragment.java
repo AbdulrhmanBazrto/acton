@@ -28,6 +28,7 @@ import com.androidnetworking.error.ANError;
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Activities.RoomSettingsActivity;
+import com.gnusl.wow.Activities.UsersInRoomActivity;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.MicUsersRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
@@ -127,7 +128,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         APIConnectionNetwork.SetUserAttendance(UserAttendanceType.Entrance, activity.getRoom().getId(), this);
 
         // get scores
-        //APIConnectionNetwork.GetScoreUsers(activity.getRoom().getId(), this);
+        APIConnectionNetwork.GetScoreUsers(activity.getRoom().getId(), this);
 
         // get mic users
         APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(),this);
@@ -177,6 +178,12 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         case R.id.settings_action:
 
                             goToRoomSettingsActivity();
+                            break;
+
+                        case R.id.members:
+
+                            // go to users in channel
+                            goToUsersInRoomActivity();
                             break;
 
                         case R.id.backround_action:
@@ -318,6 +325,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         Intent intent = new Intent(getActivity(), RoomSettingsActivity.class);
         intent.putExtra(RoomSettingsActivity.CHANNEL_KEY, ((RoomChatActivity) getActivity()).getRoom());
+        startActivity(intent);
+    }
+
+    private void goToUsersInRoomActivity() {
+
+        Intent intent = new Intent(getActivity(), UsersInRoomActivity.class);
+        intent.putExtra(UsersInRoomActivity.CHANNEL_KEY, ((RoomChatActivity) getActivity()).getRoom());
         startActivity(intent);
     }
 

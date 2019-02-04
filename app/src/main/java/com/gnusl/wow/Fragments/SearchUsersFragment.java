@@ -25,18 +25,18 @@ import java.util.ArrayList;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class UsersFragment extends Fragment implements SearchDelegate,ConnectionDelegate {
+public class SearchUsersFragment extends Fragment implements SearchDelegate,ConnectionDelegate {
 
     private View inflatedView;
     UsersRecyclerViewAdapter usersRecyclerViewAdapter;
     private ProgressDialog progressDialog;
 
-    public UsersFragment() {
+    public SearchUsersFragment() {
     }
 
-    public static UsersFragment newInstance() {
+    public static SearchUsersFragment newInstance() {
 
-        return new UsersFragment();
+        return new SearchUsersFragment();
     }
 
     @Override
