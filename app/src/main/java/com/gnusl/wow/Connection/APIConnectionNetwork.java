@@ -1303,6 +1303,45 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void StoreGift(int channelId,int userIdTo,int giftId,ConnectionDelegate connectionDelegate) {
+
+        Log.d("ROOM ", String.valueOf(channelId));
+
+        AndroidNetworking.post(APILinks.Gifts_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("gift_id", String.valueOf(giftId))
+                .addBodyParameter("user_id_to", String.valueOf(userIdTo))
+                .addBodyParameter("channel_id", String.valueOf(channelId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d(" Store Gift", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Store Gift ", anError.getMessage());
+                        Log.d("Store Gift ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+
     public static void SetUserAttendance(UserAttendanceType attendanceType, int channelId, ConnectionDelegate connectionDelegate) {
 
         Log.d("ROOM ", String.valueOf(channelId));

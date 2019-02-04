@@ -37,6 +37,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.GiftDelegate;
 import com.gnusl.wow.Delegates.MicUserDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
+import com.gnusl.wow.Delegates.UserAttendanceDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Gift;
@@ -83,6 +84,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     private ArrayList<Gift> gifts;
     private boolean isRefreshing;
     private boolean isRechToLimit = false;
+    private boolean shouldSendCrazyWordsToUser = false;
+    private User randomWordUser = null;
 
     // pubnub
     private PubNub pubnub;
@@ -131,7 +134,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         APIConnectionNetwork.GetScoreUsers(activity.getRoom().getId(), this);
 
         // get mic users
-        APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(),this);
+        APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), this);
 
         // get messages
         getAllMessagesRequest();
@@ -210,9 +213,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             ((RoomChatActivity) getActivity()).openGallery(false);
         });
 
-        inflatedView.findViewById(R.id.music_image).setOnClickListener(v -> {
+        inflatedView.findViewById(R.id.crazy_words_image).setOnClickListener(v -> {
 
-            showUsersAttendancePopUp();
+            showUsersAttendancePopUp(user -> {
+
+                randomWordUser = user;
+                if (randomWordUser != null)
+                    shouldSendCrazyWordsToUser = true;
+            });
 
         });
 
@@ -268,15 +276,20 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT,"تعال الى اكتون واعثر علي معرف الغرفة هو !"+String.valueOf(activity.getRoom().getId())+" "+String.valueOf("http://acton.live"));
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, "تعال الى اكتون واعثر علي معرف الغرفة هو !" + String.valueOf(activity.getRoom().getId()) + " " + String.valueOf("http://acton.live"));
         getContext().startActivity(Intent.createChooser(sharingIntent, "مشاركة عن طريق"));
 
     }
 
     private void animateGiftInfo(ChatMessage chatMessage) {
 
+        if (getContext() == null)
+            return;
+
         // fill info
         ((TextView) inflatedView.findViewById(R.id.user_gift_name)).setText(chatMessage.getUserName() != null ? chatMessage.getUserName() : "");
+        ((TextView) inflatedView.findViewById(R.id.user_to_gift_name)).setText(chatMessage.getGiftUserName() != null ? String.valueOf(chatMessage.getGiftUserName() + "<<") : "");
+
 
         // user image
         if (chatMessage.getUserImage() != null && !chatMessage.getUserImage().isEmpty())
@@ -304,6 +317,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             public void onAnimationEnd(Animation animation) {
 
                 new Handler().postDelayed(() -> {
+
+                    if (getContext() == null)
+                        return;
 
                     inflatedView.findViewById(R.id.gift_layout_animation).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.middle_to_right_gift_animation));
                 }, 1600);
@@ -355,7 +371,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        micUsersRecyclerViewAdapter = new MicUsersRecyclerViewAdapter(getContext(), new ArrayList<>(),this);
+        micUsersRecyclerViewAdapter = new MicUsersRecyclerViewAdapter(getContext(), new ArrayList<>(), this);
         recyclerView.setAdapter(micUsersRecyclerViewAdapter);
     }
 
@@ -461,12 +477,12 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
 
                 // check services messages
-                if(message.getMessage().getAsJsonObject().has("Refresh_MIC_USERS")){
+                if (message.getMessage().getAsJsonObject().has("Refresh_MIC_USERS")) {
 
                     // get mic users
-                    APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(),RoomChatFragment.this);
+                    APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), RoomChatFragment.this);
 
-                }else {
+                } else {
 
                     // get user name
                     String userName = message.getMessage().getAsJsonObject().get("user_name").getAsString();
@@ -484,13 +500,16 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
                         chatMessage = new ChatMessage(msg, userName, userImage);
 
-                    } else {
+                    } else { // gift case
 
                         String gift_path = message.getMessage().getAsJsonObject().get("gift_image").getAsString();
+                        String userGiftName = message.getMessage().getAsJsonObject().get("user_gift_name").getAsString();
                         chatMessage = new ChatMessage();
                         chatMessage.setGiftImagePath(gift_path);
+                        chatMessage.setGiftUserName(userGiftName);
                         chatMessage.setUserName(userName);
                         chatMessage.setUserImage(userImage);
+
                     }
 
                     // show message
@@ -594,13 +613,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         }
     }
 
-    public void ShareGiftOnPubnub(Gift gift) {
+    public void ShareGiftOnPubnub(User userGift, Gift gift) {
 
         // create message payload using Gson
         JsonObject messageJsonObject = new JsonObject();
 
         // add gift image
         messageJsonObject.addProperty("gift_image", gift.getPath());
+        messageJsonObject.addProperty("user_gift_name", userGift.getName());
 
         // add user info
         User user = SharedPreferencesUtils.getUser();
@@ -627,7 +647,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         JsonObject messageJsonObject = new JsonObject();
 
         // add gift image
-        messageJsonObject.addProperty("Refresh_MIC_USERS","");
+        messageJsonObject.addProperty("Refresh_MIC_USERS", "");
 
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
             @Override
@@ -663,62 +683,109 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     }
 
-    private boolean shouldSendCrazyWordsToUser = false;
-    private User randomWordUser = null;
+    private void showUsersAttendancePopUp(UserAttendanceDelegate userAttendanceDelegate) {
 
-    private void showUsersAttendancePopUp() {
+        this.progressDialog = ProgressDialog.show(getContext(), "", "get active users..");
 
-       /* if (micUsersRecyclerViewAdapter.getUsers().isEmpty()) {
-
-            Toast.makeText(getContext(), "there isn't any user in room", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Build an AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.TintTheme);
-
-        HashMap<String, Integer> hashMap = new HashMap<>();
-
-        for (User user : micUsersRecyclerViewAdapter.getUsers())
-            hashMap.put(user.getName(), user.getId());
-
-        // String array for alert dialog multi choice items
-        String[] teacher_strings = new String[micUsersRecyclerViewAdapter.getUsers().size()];
-        for (int i = 0; i < micUsersRecyclerViewAdapter.getUsers().size(); i++)
-            teacher_strings[i] = micUsersRecyclerViewAdapter.getUsers().get(i).getName();
-
-        // Set multiple choice items for alert dialog
-
-        builder.setMultiChoiceItems(teacher_strings, null, new DialogInterface.OnMultiChoiceClickListener() {
+        // get user attendance
+        APIConnectionNetwork.GetUserAttendance(activity.getRoom().getId(), new ConnectionDelegate() {
             @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            public void onConnectionFailure() {
 
-                randomWordUser = micUsersRecyclerViewAdapter.getUsers().get(which);
-                if (randomWordUser != null)
-                    shouldSendCrazyWordsToUser = true;
+                Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
+
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+                Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
+
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+
+                if (jsonObject.has("users")) { // refresh scores in room
+                    try {
+                        ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
+
+                        if (users.isEmpty()) {
+
+                            Toast.makeText(getContext(), "there isn't any user in room", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // show popup
+                        // Build an AlertDialog
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.TintTheme);
+                        HashMap<String, Integer> hashMap = new HashMap<>();
+
+                        for (User user : users)
+                            hashMap.put(user.getName(), user.getId());
+
+                        // String array for alert dialog multi choice items
+                        String[] users_strings = new String[users.size()];
+                        for (int i = 0; i < users.size(); i++)
+                            users_strings[i] = users.get(i).getName();
+
+                        final User[] tempUser = {null};
+                        // Set multiple choice items for alert dialog
+                        builder.setMultiChoiceItems(users_strings, null, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                                tempUser[0] = users.get(which);
+                            }
+                        });
+
+                        // Specify the dialog is not cancelable
+                        builder.setCancelable(true);
+
+                        // Set a title for alert dialog
+                        builder.setTitle("Users");
+
+                        // Set the positive/yes button click listener
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                // call delegate
+                                if (userAttendanceDelegate != null && tempUser[0] != null)
+                                    userAttendanceDelegate.onSelectUser(tempUser[0]);
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        // Display the alert dialog on interface
+                        dialog.show();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
 
             }
         });
 
-        // Specify the dialog is not cancelable
-        builder.setCancelable(true);
-
-        // Set a title for alert dialog
-        builder.setTitle("Users");
-
-        // Set the positive/yes button click listener
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Do something when click positive button
-
-            }
-        });
-
-
-        AlertDialog dialog = builder.create();
-        // Display the alert dialog on interface
-        dialog.show();*/
     }
 
 
@@ -777,10 +844,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }else if(jsonObject.has("mic_status")){
+        } else if (jsonObject.has("mic_status")) {
 
             // should refresh
-            APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(),this);
+            APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), this);
 
             // shold send to all users using pubnup to refresh
 
@@ -876,8 +943,15 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onClickToSendGift(Gift gift) {
 
-        // send on pubnup
-        ShareGiftOnPubnub(gift);
+        // show users
+        showUsersAttendancePopUp(user -> {
+
+            // store gift
+            APIConnectionNetwork.StoreGift(activity.getRoom().getId(), user.getId(), gift.getId(), null);
+
+            // send on pubnup
+            ShareGiftOnPubnub(user, gift);
+        });
     }
 
     @Override
@@ -886,7 +960,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         // TODO: should show popup
 
         // send request
-        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(),micId,this);
+        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micId, this);
     }
 
     @Override
