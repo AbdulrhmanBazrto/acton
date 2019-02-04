@@ -10,12 +10,10 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Adapters.RoomTypesRecyclerViewAdapter;
-import com.gnusl.wow.Adapters.UsersChatRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SelectRoomTypeDelegate;
 import com.gnusl.wow.Models.RoomType;
-import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
