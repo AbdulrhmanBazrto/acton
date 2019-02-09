@@ -7,8 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.RoomByCountryActivity;
 import com.gnusl.wow.Models.Country;
 import com.gnusl.wow.Models.Country;
@@ -54,18 +56,26 @@ public class CountryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public class CountryViewHolder extends RecyclerView.ViewHolder {
 
+        private ImageView flag_image;
         private TextView nameTextView;
 
         public CountryViewHolder(View itemView) {
             super(itemView);
 
             nameTextView= itemView.findViewById(R.id.name_text);
+            flag_image= itemView.findViewById(R.id.flag_image);
         }
 
         public void bind(final Country country, final int position) {
 
             // content
             nameTextView.setText(country.getName());
+
+            // flag image
+            if (country.getCountry_code_url() != null && !country.getCountry_code_url().isEmpty())
+                Glide.with(context)
+                        .load(country.getCountry_code_url())
+                        .into(flag_image);
 
             // go to room filter
             itemView.setOnClickListener(v->{

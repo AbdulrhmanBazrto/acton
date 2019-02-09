@@ -107,15 +107,6 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
 
         // set country
         ArrayList<Country> countries = new ArrayList<>();
-        countries.add(new Country("KSA"));
-        countries.add(new Country("KSA"));
-        countries.add(new Country("KSA"));
-        countries.add(new Country("KSA"));
-        countries.add(new Country("KSA"));
-        countries.add(new Country("KSA"));
-        countries.add(new Country("KSA"));
-        countries.add(new Country("KSA"));
-
         exploreSection1.setCountries(countries);
 
         // set activities
@@ -196,12 +187,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
         countiesExploreSection .setHeaderTitle("Countries");
         if (jsonObject.has("country_codes")) {
             try {
-                JSONArray countriesJsonArray = jsonObject.getJSONArray("country_codes");
-                ArrayList<Country> countries = new ArrayList<>();
-                for (int i = 0; i < countriesJsonArray.length(); i++)
-                    countries.add(new Country(countriesJsonArray.getString(i)));
-
-                countiesExploreSection .setCountries(countries);
+                countiesExploreSection .setCountries(Country.parseJSONArray(jsonObject.getJSONArray("country_codes")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
