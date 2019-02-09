@@ -2027,4 +2027,34 @@ public class APIConnectionNetwork {
                 });
     }
 
+    public static void GetAdvertisement(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Advertisement_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Advertisement ", response.toString());
+
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Advertisement ", anError.getMessage());
+                        Log.d("Advertisement ", anError.getErrorDetail());
+                    }
+                });
+    }
 }
