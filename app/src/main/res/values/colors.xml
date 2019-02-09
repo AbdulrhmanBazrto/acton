@@ -15,6 +15,7 @@
     <color name="settings_backround_color">#f0f0f0</color>
     <color name="active_color">#9b5197</color>
     <color name="active_color_dark">#FF864182</color>
+    <color name="active_color_80">#96864182</color>
     <color name="status_bar_room_chat_color">#824c85</color>
     <color name="gifts_dialog_background_color">#392045</color>
     <color name="room_item_title_text_color">#010102</color>
@@ -29,13 +30,18 @@
     <color name="search_hint_text_color">#b9d3ea</color>
     <color name="user_separator_color">#cfcfcf</color>
     <color name="gold_color">#e1ad3d</color>
+    <color name="gold_color_80">#96e1ad3d</color>
     <color name="settings_text_color">#878787</color>
+    <color name="gray_color_80">#96878787</color>
+    <color name="brouwn_color_80">#96634015</color>
     <color name="settings_seperator_color">#e3e3e3</color>
 
     <color name="charcoal_grey">#354745</color>
     <color name="charcoal_grey_20">#33354745</color>
     <color name="red">#e55b58</color>
     <color name="black">#000000</color>
+    <color name="black_80">#96000000</color>
+    <color name="black_50">#64000000</color>
     <color name="transparent">#00000000</color>
 
     <color name="notification_date">#c6c5c6</color>

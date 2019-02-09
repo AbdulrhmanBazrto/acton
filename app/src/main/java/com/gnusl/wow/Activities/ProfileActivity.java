@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -79,6 +80,7 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
         viewPagerTab = findViewById(R.id.top_tab_bar);
 
         findViewById(R.id.back_button).setOnClickListener(v -> onBackPressed());
+        findViewById(R.id.message_button).setOnClickListener(v ->goToMessagesConversationActivity());
     }
 
     private void setUpViewPager() {
@@ -134,6 +136,12 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
         APIConnectionNetwork.GetUserDetails(getUserId(), this);
     }
 
+    private void goToMessagesConversationActivity(){
+
+        Intent intent = new Intent(this, MessagesConversationActivity.class);
+        intent.putExtra(MessagesConversationActivity.USER_ID, getUserId());
+        startActivity(intent);
+    }
 
     @Override
     public void onReplaceFragment(Fragment fragment, int position) {

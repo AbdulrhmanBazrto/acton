@@ -175,7 +175,12 @@
             android:name=".Activities.EarnGoldActivity"
             android:label="@string/title_activity_earn_gold"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Activities.UsersInRoomActivity"></activity>
+        <activity android:name=".Activities.UsersInRoomActivity" />
+        <activity android:name=".Activities.RoomByTagActivity" />
+        <activity android:name=".Activities.RoomByCountryActivity" />
+        <activity android:name=".Activities.ProfileBadgesActivity" />
+        <activity android:name=".Activities.ProfileRoomsActivity" />
+        <activity android:name=".Activities.ProfileMomentsActivity"></activity>
     </application>
 
 </manifest>

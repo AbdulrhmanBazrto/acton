@@ -184,11 +184,12 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             final List<String> segments = intent.getData().getPathSegments();
             callerId = segments.get(0);
         }
-        checkPermissions();
+
+        //checkPermissions();
     }
 
 
-    private void checkPermissions() {
+    public void checkPermissions() {
         permissionChecker.verifyPermissions(this, RequiredPermissions, new PermissionChecker.VerifyPermissionsCallback() {
 
             @Override

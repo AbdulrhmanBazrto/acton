@@ -5,7 +5,8 @@
     android:layout_marginStart="4dp"
     android:layout_marginLeft="4dp"
     android:layout_marginTop="4dp"
-    android:background="@drawable/activity_backround_label_shape"
+    android:id="@+id/root_view"
+    android:background="@drawable/activity_backround_label_brouwn_shape"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -14,7 +15,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:gravity="center"
-        android:textColor="@color/activity_label_text_color"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

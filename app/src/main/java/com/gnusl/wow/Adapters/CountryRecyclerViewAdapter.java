@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.gnusl.wow.Activities.RoomByCountryActivity;
 import com.gnusl.wow.Models.Country;
 import com.gnusl.wow.Models.Country;
 import com.gnusl.wow.R;
@@ -65,6 +66,12 @@ public class CountryRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             // content
             nameTextView.setText(country.getName());
+
+            // go to room filter
+            itemView.setOnClickListener(v->{
+
+                RoomByCountryActivity.show(context,country.getName());
+            });
 
         }
 

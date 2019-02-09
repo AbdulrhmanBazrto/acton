@@ -66,6 +66,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -141,6 +143,21 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         // get gifts
         APIConnectionNetwork.GetGifts(this);
+
+        // animate entrance
+        animateEntranceUser();
+
+        // animate news
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (getActivity() != null)
+                    getActivity().runOnUiThread(() -> animateNewsLayout());
+            }
+        }, 2000, 10000);
+
     }
 
     @Override
@@ -271,6 +288,69 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             shareChannel();
         });
     }
+
+    private void animateEntranceUser() {
+
+        if (getContext() == null)
+            return;
+
+        // fill info
+        ((TextView) inflatedView.findViewById(R.id.entrance_user_name)).setText(SharedPreferencesUtils.getUser().getName());
+        inflatedView.findViewById(R.id.entrance_layout_animation).setVisibility(View.VISIBLE);
+
+        new Handler().postDelayed(() -> {
+
+            inflatedView.findViewById(R.id.entrance_layout_animation).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_entrance_animation));
+            inflatedView.findViewById(R.id.entrance_layout_animation).getAnimation().setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    inflatedView.findViewById(R.id.entrance_layout_animation).setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+        }, 2000);
+    }
+
+    private void animateNewsLayout() {
+
+        if (getContext() == null)
+            return;
+
+        // visible
+        inflatedView.findViewById(R.id.news_layout_animation).setVisibility(View.VISIBLE);
+
+        inflatedView.findViewById(R.id.news_layout_animation).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.news_bar_animation));
+        inflatedView.findViewById(R.id.news_layout_animation).getAnimation().setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                inflatedView.findViewById(R.id.news_layout_animation).setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+    }
+
 
     private void shareChannel() {
 
@@ -958,6 +1038,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     public void onTakeMic(int micId) {
 
         // TODO: should show popup
+
+        // permission
+        activity.checkPermissions();
 
         // send request
         APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micId, this);

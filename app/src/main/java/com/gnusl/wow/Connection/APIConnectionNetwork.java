@@ -1771,6 +1771,69 @@ public class APIConnectionNetwork {
                 });
     }
 
+    public static void GetProfileReceivedRooms(int userId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/gifts?take=50&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("ProfileReceivedRooms ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("ProfileReceivedRooms ", anError.getMessage());
+                        Log.d("ProfileReceivedRooms ", anError.getErrorDetail());
+
+                    }
+                });
+    }
+
+    public static void GetProfilePosts(int userId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/channels?take=50&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("GetProfilePosts ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("GetProfilePosts ", anError.getMessage());
+                        Log.d("GetProfilePosts ", anError.getErrorDetail());
+
+                    }
+                });
+    }
 
     public static void GetEarnGoldInfo(ConnectionDelegate connectionDelegate) {
 
@@ -1869,5 +1932,99 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void GetChannelsByCountry(String country, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/country/"+country+"?skip=0&take=50")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("CHANNELS ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("CHANNELS ", anError.getMessage());
+                        Log.d("CHANNELS ", anError.getErrorDetail());
+                    }
+                });
+
+    }
+
+    public static void GetChannelsByTag(String tag, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/tag/"+tag+"?skip=0&take=50")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("CHANNELS ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("CHANNELS ", anError.getMessage());
+                        Log.d("CHANNELS ", anError.getErrorDetail());
+                    }
+                });
+
+    }
+
+    public static void GetProfileBadges(int userId,ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/badges?take=50&skip=0")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Profile Badges ", response.toString());
+
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Profile Badges ", anError.getMessage());
+                        Log.d("Profile Badges ", anError.getErrorDetail());
+                    }
+                });
+    }
 
 }

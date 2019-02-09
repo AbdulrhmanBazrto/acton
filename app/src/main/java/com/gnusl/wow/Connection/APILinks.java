@@ -41,6 +41,9 @@ public enum APILinks {
     // Earn Gold
     Earn_Gold_Url(Base_API_Url.getLink()+"gold"),
 
+    // badges
+    Profile_Badges_Url(Base_User_Url.getLink()+"/badges"),
+
     // Following
     Follow_Url(Base_API_Url.getLink()+"follow"),
     Posts_By_Following(Follow_Url.getLink()+"/post");
