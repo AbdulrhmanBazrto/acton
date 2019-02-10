@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +18,9 @@ import com.gnusl.wow.Models.MicUser;
 import com.gnusl.wow.R;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
 
 public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -75,13 +80,14 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         private ImageView userImage;
         private TextView userName;
+        private View userImageLayout;
 
         public UserViewHolder(View itemView) {
             super(itemView);
 
             userImage = itemView.findViewById(R.id.user_image);
             userName = itemView.findViewById(R.id.user_name);
-
+            userImageLayout = itemView.findViewById(R.id.user_image_layout);
         }
 
         public void bind(final MicUser micUser, final int position) {
@@ -99,6 +105,42 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
                 if (micUserDelegate != null)
                     micUserDelegate.onSelectUserOnMic(micUser);
+            });
+
+            if (position == 0) {
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        animateSpeakerBackground();
+                    }
+                }, 1000, 1500);
+            }
+        }
+
+
+        private void animateSpeakerBackground() {
+
+            userImageLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.speaker_animation));
+            userImageLayout.getAnimation().setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                    userImageLayout.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    userImageLayout.setVisibility(View.VISIBLE);
+                    userImageLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.speaker_animation));
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
             });
         }
 
