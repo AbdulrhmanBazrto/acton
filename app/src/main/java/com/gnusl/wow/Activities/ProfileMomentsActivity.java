@@ -11,9 +11,12 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Adapters.PostsRecyclerViewAdapter;
-import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
+import com.gnusl.wow.Adapters.PostsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Delegates.OnLoadMoreListener;
+import com.gnusl.wow.Delegates.PostActionsDelegate;
+import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.R;
 
@@ -24,11 +27,11 @@ import java.util.ArrayList;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class ProfileMomentsActivity extends AppCompatActivity implements ConnectionDelegate{
+public class ProfileMomentsActivity extends AppCompatActivity implements ConnectionDelegate, PostActionsDelegate, OnLoadMoreListener {
 
     public final static String USER_ID = "user_id";
 
-    private RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
+    private PostsRecyclerViewAdapter postsRecyclerViewAdapter;
     private ProgressDialog progressDialog;
 
     @Override
@@ -60,14 +63,14 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        roomsRecyclerViewAdapter = new RoomsRecyclerViewAdapter(this, new ArrayList<>());
-        recyclerView.setAdapter(roomsRecyclerViewAdapter);
+        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(this,recyclerView, new ArrayList<>(),this,this,false);
+        recyclerView.setAdapter(postsRecyclerViewAdapter);
     }
 
     private void sendPostsRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading rooms..");
+        this.progressDialog = ProgressDialog.show(this, "", "loading posts..");
 
         // send request
         APIConnectionNetwork.GetProfilePosts(getUserId(),this);
@@ -107,11 +110,11 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<Room> rooms=Room.parseJSONArray(jsonArray);
+        ArrayList<FeaturePost> posts=FeaturePost.parseJSONArray(jsonArray);
 
         // notify
-        roomsRecyclerViewAdapter.setRooms(rooms);
-        roomsRecyclerViewAdapter.notifyDataSetChanged();
+        postsRecyclerViewAdapter.setFeaturePosts(posts);
+        postsRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
         if (progressDialog != null)
@@ -128,5 +131,21 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
         Intent intent=new Intent(activity,ProfileMomentsActivity.class);
         intent.putExtra(USER_ID,userId);
         activity.startActivity(intent);
+    }
+
+    @Override
+    public void onEditPost(FeaturePost post) {
+
+       // CreatePostActivity.launchToEdit(this,post);
+    }
+
+    @Override
+    public void onDeletePost(FeaturePost post) {
+
+    }
+
+    @Override
+    public void onLoadMore() {
+
     }
 }

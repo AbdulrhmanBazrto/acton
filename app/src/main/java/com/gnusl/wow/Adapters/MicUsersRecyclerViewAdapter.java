@@ -1,5 +1,6 @@
 package com.gnusl.wow.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -113,7 +114,8 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     @Override
                     public void run() {
 
-                        animateSpeakerBackground();
+                        if(context instanceof Activity)
+                            ((Activity)context).runOnUiThread(()->animateSpeakerBackground());
                     }
                 }, 1000, 1500);
             }
@@ -121,6 +123,9 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 
         private void animateSpeakerBackground() {
+
+            if(context==null)
+                return;
 
             userImageLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.speaker_animation));
             userImageLayout.getAnimation().setAnimationListener(new Animation.AnimationListener() {
@@ -134,6 +139,9 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onAnimationEnd(Animation animation) {
 
                     userImageLayout.setVisibility(View.VISIBLE);
+
+                    if(context==null)
+                        return;
                     userImageLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.speaker_animation));
                 }
 

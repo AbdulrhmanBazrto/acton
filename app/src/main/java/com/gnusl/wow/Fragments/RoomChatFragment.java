@@ -300,6 +300,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         new Handler().postDelayed(() -> {
 
+            if (getContext() == null)
+                return;
+
             inflatedView.findViewById(R.id.entrance_layout_animation).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_entrance_animation));
             inflatedView.findViewById(R.id.entrance_layout_animation).getAnimation().setAnimationListener(new Animation.AnimationListener() {
                 @Override

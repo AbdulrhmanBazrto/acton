@@ -20,8 +20,11 @@ public class User implements Parcelable {
     private String birthday;
     private String gender;
     private String countryCode;
+    private boolean isFollowed;
+    private int level;
 
     public User(){}
+
 
     protected User(Parcel in) {
         id = in.readInt();
@@ -31,6 +34,7 @@ public class User implements Parcelable {
         birthday = in.readString();
         gender = in.readString();
         countryCode = in.readString();
+        isFollowed = in.readByte() != 0;
         imageResource = in.readInt();
     }
 
@@ -59,6 +63,16 @@ public class User implements Parcelable {
         user.setImage_url(jsonObject.optString("image_url"));
         user.setBirthday(jsonObject.optString("birthday"));
         user.setGender(jsonObject.optString("gender"));
+
+        if(jsonObject.has("is_followed"))
+            user.setFollowed(jsonObject.optBoolean("is_followed"));
+        else
+            user.setFollowed(false);
+
+        if(jsonObject.has("level"))
+            user.setLevel(jsonObject.optInt("level"));
+        else
+            user.setLevel(0);
 
         // country code
         if(jsonObject.has("country_code")){
@@ -164,20 +178,37 @@ public class User implements Parcelable {
         this.countryCode = countryCode;
     }
 
+    public boolean isFollowed() {
+        return isFollowed;
+    }
+
+    public void setFollowed(boolean followed) {
+        isFollowed = followed;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeString(image);
-        dest.writeString(image_url);
-        dest.writeString(birthday);
-        dest.writeString(gender);
-        dest.writeString(countryCode);
-        dest.writeInt(imageResource);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeString(image);
+        parcel.writeString(image_url);
+        parcel.writeString(birthday);
+        parcel.writeString(gender);
+        parcel.writeString(countryCode);
+        parcel.writeByte((byte) (isFollowed ? 1 : 0));
+        parcel.writeInt(imageResource);
     }
 }

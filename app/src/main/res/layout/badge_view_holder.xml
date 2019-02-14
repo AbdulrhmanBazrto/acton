@@ -36,7 +36,7 @@
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:lines="1"
-        android:textColor="@color/white"
+        android:textColor="@color/no_moments_label_text_color"
         android:textSize="13sp"
         android:layout_below="@id/badge_image"
         app:layout_constraintBottom_toBottomOf="parent"

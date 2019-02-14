@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -107,7 +108,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             setRoom(getIntent().getParcelableExtra(CHANNEL_KEY));
 
         // WebRtc implementation
-        AudioConferenceWebRtcImplementation();
+       // AudioConferenceWebRtcImplementation();
 
         // inflate room chat fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -486,7 +487,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     public void onReadyToCall(String callId) {
 
         Log.d("onCallReady callId ", callId);
-        // call(callId);
+         //call(callId);
 
         // start streaming on server
         if (PermissionChecker.hasPermissions(this, RequiredPermissions)) {
@@ -602,5 +603,12 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     public void setShouldLogout(boolean shouldLogout) {
         isShouldLogout = shouldLogout;
+    }
+
+    public static void launch(Activity activity,Room room){
+
+        Intent intent=new Intent(activity, RoomChatActivity.class);
+        intent.putExtra(RoomChatActivity.CHANNEL_KEY,room);
+        activity.startActivity(intent);
     }
 }

@@ -61,7 +61,7 @@ public class WebRtcClient {
     }
 
     private class CreateOfferCommand implements Command {
-        public void execute(String peerId, JSONObject payload) {
+        public void execute(String peerId, JSONObject payload) throws JSONException {
             Log.d(TAG, "CreateOfferCommand");
             Peer peer = peers.get(peerId);
             peer.pc.createOffer(peer, pcConstraints);
@@ -121,11 +121,10 @@ public class WebRtcClient {
         message.put("to", to);
         message.put("type", type);
         message.put("payload", payload);
-        message.put("payload", payload);
         client.emit("message", message);
     }
 
-    public void getStream() {
+    public void getStream() throws JSONException {
         JSONObject getStream = new JSONObject();
         client.emit("getStream", getStream);
     }

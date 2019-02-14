@@ -952,7 +952,7 @@ public class APIConnectionNetwork {
                         Log.d("STREAMS ", response.toString());
 
                         // check have ids
-                        if (response != null && response.length() != 0) {
+                        if (response.length() != 0) {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject jsonObject = response.getJSONObject(i);
@@ -960,8 +960,8 @@ public class APIConnectionNetwork {
                                     // make call
                                     String callerId = jsonObject.getString("id");
 
-                                    // if(!callerId.equalsIgnoreCase(callId))
-                                    callDelegate.makeCallTO(callerId);
+                                    if(!callerId.equalsIgnoreCase(callId))
+                                        callDelegate.makeCallTO(callerId);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -1027,6 +1027,9 @@ public class APIConnectionNetwork {
 
     public static void SendMessageToUser(String message, int userIdTo, ConnectionDelegate connectionDelegate) {
 
+        Log.d("Send Message To user ID", String.valueOf(userIdTo));
+        Log.d("Send Message To user  ", message);
+
         AndroidNetworking.post(APILinks.Message_Url.getLink())
 
                 .addHeaders("Accept", "application/json")
@@ -1050,17 +1053,20 @@ public class APIConnectionNetwork {
                     @Override
                     public void onError(ANError anError) {
 
-                        Log.d("Send Message To user ", anError.getMessage());
-                        Log.d("Send Message To user ", anError.getErrorDetail());
-
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Send Message To user ", String.valueOf(anError.getErrorCode()));
+                        Log.d("Send Message To user ", anError.getMessage());
+
                     }
                 });
 
     }
 
     public static void GetMessagesByUser(int userId, ConnectionDelegate connectionDelegate) {
+
+        Log.d("Messages From User ID ", String.valueOf(userId));
 
         AndroidNetworking.get(APILinks.Message_Url.getLink() + "?user_id=" + String.valueOf(userId) + "&take=10&skip=0")
 
@@ -1677,6 +1683,8 @@ public class APIConnectionNetwork {
 
     public static void GetScoreUsers(int channelId, ConnectionDelegate connectionDelegate) {
 
+        Log.d("CHANNEL_ID ",String.valueOf(channelId));
+
         AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/top?take=10")
 
                 .addHeaders("Accept", "application/json")
@@ -1739,9 +1747,9 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetUserRooms(int userId, ConnectionDelegate connectionDelegate) {
+    public static void GetProfileReceivedRooms(int userId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/channels?take=10&skip=0")
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/channels?take=50&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1751,7 +1759,7 @@ public class APIConnectionNetwork {
                     @Override
                     public void onResponse(JSONArray response) {
 
-                        Log.d("GetUserRooms ", response.toString());
+                        Log.d("ProfileReceivedRooms ", response.toString());
 
                         // handle parse user data
                         if (connectionDelegate != null)
@@ -1764,14 +1772,14 @@ public class APIConnectionNetwork {
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
 
-                        Log.d("GetUserRooms ", anError.getMessage());
-                        Log.d("GetUserRooms ", anError.getErrorDetail());
+                        Log.d("ProfileReceivedRooms ", anError.getMessage());
+                        Log.d("ProfileReceivedRooms ", anError.getErrorDetail());
 
                     }
                 });
     }
 
-    public static void GetProfileReceivedRooms(int userId, ConnectionDelegate connectionDelegate) {
+    public static void GetProfileReceivedGifts(int userId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/gifts?take=50&skip=0")
 
@@ -1805,32 +1813,40 @@ public class APIConnectionNetwork {
 
     public static void GetProfilePosts(int userId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/channels?take=50&skip=0")
+        AndroidNetworking.get(APILinks.Featured_Posts_Url.getLink() + "?user_id=" + userId + "&take=50&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
                 .setPriority(Priority.MEDIUM)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
 
-                        Log.d("GetProfilePosts ", response.toString());
+                        Log.d("POSTS ", response.toString());
 
                         // handle parse user data
-                        if (connectionDelegate != null)
-                            connectionDelegate.onConnectionSuccess(response);
+                        if (connectionDelegate != null) {
+                            if (response.has("posts")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("posts"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
                     }
 
                     @Override
                     public void onError(ANError anError) {
 
+                        Log.d("POSTS ", anError.getMessage());
+                        Log.d("POSTS ", anError.getErrorDetail());
+
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionError(anError);
-
-                        Log.d("GetProfilePosts ", anError.getMessage());
-                        Log.d("GetProfilePosts ", anError.getErrorDetail());
-
                     }
                 });
     }
@@ -2056,5 +2072,42 @@ public class APIConnectionNetwork {
                         Log.d("Advertisement ", anError.getErrorDetail());
                     }
                 });
+    }
+
+    public static void SendFollowToUser(int userId, ConnectionDelegate connectionDelegate) {
+
+        Log.d("Follow To user ID", String.valueOf(userId));
+
+        AndroidNetworking.post(APILinks.Follow_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("user_id", String.valueOf(userId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Follow To user  ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Follow To user  ", String.valueOf(anError.getErrorCode()));
+                        Log.d("Follow To user  ", anError.getMessage());
+
+                    }
+                });
+
     }
 }

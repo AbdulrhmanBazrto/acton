@@ -17,6 +17,7 @@ import com.gnusl.wow.Models.RoomType;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -143,6 +144,13 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
         if (jsonObject.has("channel_id")) {
             Toast.makeText(this, "create channel success", LENGTH_SHORT).show();
             finish();
+
+            // go to new room
+           /* try {
+                RoomChatActivity.launch(this,jsonObject.getInt("channel_id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }*/
         }
     }
 
@@ -159,6 +167,9 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
         roomTypesRecyclerViewAdapter.setRoomTypes(roomTypes);
         roomTypesRecyclerViewAdapter.notifyDataSetChanged();
 
+        // set standard selection
+        if(!roomTypes.isEmpty())
+            onSelectedRoomType(roomTypes.get(0));
     }
 
     @Override

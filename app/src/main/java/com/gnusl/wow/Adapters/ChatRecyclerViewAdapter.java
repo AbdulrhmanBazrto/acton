@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.ProfileActivity;
+import com.gnusl.wow.Application.WowApplication;
 import com.gnusl.wow.Connection.APILinks;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Models.ChatMessage;
@@ -34,7 +35,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private OnLoadMoreListener loadMoreListener;
     private ArrayList<ChatMessage> chatMessages;
 
-    public ChatRecyclerViewAdapter(Context context, RecyclerView recyclerView, ArrayList<ChatMessage> chatMessages,OnLoadMoreListener delegate) {
+    public ChatRecyclerViewAdapter(Context context, RecyclerView recyclerView, ArrayList<ChatMessage> chatMessages, OnLoadMoreListener delegate) {
         this.context = context;
         this.chatMessages = chatMessages;
         this.loadMoreListener = delegate;
@@ -118,13 +119,15 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             // user image
             if (chatMessage.getUserImage() != null && !chatMessage.getUserImage().isEmpty())
-                Glide.with(context)
+                Glide.with(WowApplication.getAppContext())
                         .load(chatMessage.getUserImage())
                         .into(userImage);
+
             else if (chatMessage.getUser() != null && chatMessage.getUser().getImage_url() != null && !chatMessage.getUser().getImage_url().isEmpty())
-                Glide.with(context)
+                Glide.with(WowApplication.getAppContext())
                         .load(chatMessage.getUser().getImage_url())
                         .into(userImage);
+
 
             // go to profile
             userImage.setOnClickListener(v -> {

@@ -15,8 +15,8 @@ android {
         applicationId "com.gnusl.wow"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 4 // 3 on store
-        versionName "1.2.1" // 1.2 on store
+        versionCode 5 // 4 on store
+        versionName "1.2.2" // 1.2.1 on store
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

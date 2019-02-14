@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -364,5 +365,18 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         // send
         if (mustBeRefreshPosts)
             EventBus.getDefault().post("Refresh_Posts");
+    }
+
+    public static void launch(Activity activity){
+
+        Intent intent = new Intent(activity, CreatePostActivity.class);
+        activity.startActivity(intent);
+    }
+
+    public static void launchToEdit(Activity activity,FeaturePost post){
+
+        Intent intent = new Intent(activity, CreatePostActivity.class);
+        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY, post);
+        activity.startActivity(intent);
     }
 }

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
     private ViewPager viewPager;
     private Fragment mCurrentFragment;
     private ProgressDialog progressDialog;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,8 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
         viewPagerTab = findViewById(R.id.top_tab_bar);
 
         findViewById(R.id.back_button).setOnClickListener(v -> onBackPressed());
-        findViewById(R.id.message_button).setOnClickListener(v ->goToMessagesConversationActivity());
+        findViewById(R.id.messages_button).setOnClickListener(v ->goToMessagesConversationActivity());
+        findViewById(R.id.follow_button).setOnClickListener(v->sendFollowedUser());
     }
 
     private void setUpViewPager() {
@@ -143,6 +146,20 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
         startActivity(intent);
     }
 
+    private void sendFollowedUser(){
+
+        if(getUser().isFollowed()) {
+            getUser().setFollowed(false);
+            ((ImageView) findViewById(R.id.follow_icon)).setImageResource(R.drawable.ic_action_heart_unactive);
+        }else {
+            getUser().setFollowed(true);
+            ((ImageView) findViewById(R.id.follow_icon)).setImageResource(R.drawable.ic_action_heart_active);
+        }
+
+        // send request
+        APIConnectionNetwork.SendFollowToUser(getUserId(),this);
+    }
+
     @Override
     public void onReplaceFragment(Fragment fragment, int position) {
 
@@ -177,27 +194,35 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
         return inflatedView;
     }
 
-    private void refreshUserDetails(User user) {
+    private void refreshUserDetails() {
 
-        if (user == null)
+        if (getUser() == null)
             return;
 
         // load image
-        if (user.getImage_url() != null && !user.getImage_url().isEmpty())
+        if (getUser().getImage_url() != null && !user.getImage_url().isEmpty())
             Glide.with(this)
-                    .load(user.getImage_url())
+                    .load(getUser().getImage_url())
                     .into((ImageView) findViewById(R.id.user_image));
 
         // name
-        ((TextView) findViewById(R.id.user_name)).setText(user.getName());
+        ((TextView) findViewById(R.id.user_name)).setText(getUser().getName());
 
         // id
-        ((TextView) findViewById(R.id.user_Id)).setText(String.valueOf("ID: " + user.getId()));
+        ((TextView) findViewById(R.id.user_Id)).setText(String.valueOf("ID: " + getUser().getId()));
+
+        // progress & level
+        ((ProgressBar) findViewById(R.id.progressBar)).setProgress(getUser().getLevel()*10);
+        ((TextView) findViewById(R.id.percent_text)).setText(String.valueOf((getUser().getLevel()*10)+"/100"));
+        ((TextView) findViewById(R.id.level_2)).setText(String.valueOf("Lv"+getUser().getLevel()));
+
+        // followed
+        ((ImageView) findViewById(R.id.follow_icon)).setImageResource(getUser().isFollowed()?R.drawable.ic_action_heart_active:R.drawable.ic_action_heart_unactive);
 
         // personal info
-        if(mCurrentFragment!=null && mCurrentFragment instanceof PersonalInfoProfileFragment){
+        if(mCurrentFragment instanceof PersonalInfoProfileFragment){
 
-            ((PersonalInfoProfileFragment) mCurrentFragment).getCountryCodeTv().setText(user.getCountryCode());
+            ((PersonalInfoProfileFragment) mCurrentFragment).getCountryCodeTv().setText(getUser().getCountryCode());
         }
     }
 
@@ -236,8 +261,10 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
             try {
                 User user = User.newInstance(jsonObject.getJSONObject("user"));
 
+                setUser(user);
+
                 // refresh
-                refreshUserDetails(user);
+                refreshUserDetails();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -256,5 +283,13 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
     public int getUserId() {
 
         return getIntent().getIntExtra(USER_ID, 0);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

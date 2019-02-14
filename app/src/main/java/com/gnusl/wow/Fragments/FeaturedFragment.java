@@ -202,9 +202,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
     @Override
     public void onEditPost(FeaturePost post) {
 
-        Intent intent = new Intent(getActivity(), CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY, post);
-        startActivity(intent);
+       CreatePostActivity.launchToEdit(getActivity(),post);
     }
 
     @Override

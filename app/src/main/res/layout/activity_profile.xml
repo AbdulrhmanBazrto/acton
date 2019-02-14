@@ -97,7 +97,7 @@
             android:layout_height="3dp"
             android:layout_marginTop="16dp"
             android:indeterminate="false"
-            android:max="500"
+            android:max="100"
             android:progress="10"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
             app:layout_constraintStart_toEndOf="@id/start_guideline"
@@ -204,35 +204,146 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
-                app:layout_constraintBottom_toTopOf="@id/message_button"
+                app:layout_constraintBottom_toTopOf="@id/bottom_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/top_tab_bar">
 
             </android.support.v4.view.ViewPager>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/message_button"
+            <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:id="@+id/bottom_layout"
                 android:layout_marginBottom="0dp"
                 android:background="@drawable/side_nav_bar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:text="المحادثة"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/follow_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/follow_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:adjustViewBounds="true"
+                            android:gravity="center"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_action_heart_active"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                        <com.gnusl.wow.Views.FontedTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center"
+                            android:lines="1"
+                            android:text="متابعة"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/follow_icon"
+                            app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/messages_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/messages_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:adjustViewBounds="true"
+                            android:gravity="center"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_action_message_unactive"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                        <com.gnusl.wow.Views.FontedTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center"
+                            android:lines="1"
+                            android:text="الرسائل"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/messages_icon"
+                            app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
+
+                    </android.support.constraint.ConstraintLayout>
+
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/in_room_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/in_room_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:adjustViewBounds="true"
+                            android:gravity="center"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_action_room_unactive"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                        <com.gnusl.wow.Views.FontedTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center"
+                            android:lines="1"
+                            android:text="في الغرفة"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/in_room_icon"
+                            app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
+
+                    </android.support.constraint.ConstraintLayout>
+                </LinearLayout>
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
