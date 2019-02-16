@@ -14,6 +14,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -30,7 +31,6 @@ public class UsersInRoomActivity extends AppCompatActivity implements Connection
     private Room room;
 
     private UsersInRoomRecyclerViewAdapter usersInRoomRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class UsersInRoomActivity extends AppCompatActivity implements Connection
     private void sendUsersInRoomDataRequest(){
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "get active users..");
+        LoaderPopUp.show(this);
 
         // get users
         APIConnectionNetwork.GetUserAttendance(getRoom().getId(), this);
@@ -76,8 +76,7 @@ public class UsersInRoomActivity extends AppCompatActivity implements Connection
 
         Toast.makeText(this, "Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -86,8 +85,7 @@ public class UsersInRoomActivity extends AppCompatActivity implements Connection
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -109,8 +107,7 @@ public class UsersInRoomActivity extends AppCompatActivity implements Connection
         }
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 

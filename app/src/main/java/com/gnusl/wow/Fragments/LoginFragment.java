@@ -18,6 +18,7 @@ import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -35,7 +36,6 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
     private EditText edEmailOrPhone, edPassword;
     private View lineEmailOrPhone,linePassword;
     private TextView loginBtn;
-    private ProgressDialog progressDialog;
 
     public LoginFragment() {
     }
@@ -126,7 +126,7 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
     private void sendLoginRequest(){
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "Please Wait for register..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.Login("", edEmailOrPhone.getText().toString(), edPassword.getText().toString(),FirebaseInstanceId.getInstance().getToken(), this);
@@ -137,8 +137,7 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
 
         Toast.makeText(getContext(), "your credential incorrect", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -146,8 +145,7 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -187,8 +185,7 @@ public class LoginFragment extends Fragment implements ConnectionDelegate {
 
         }
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SearchDelegate;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -30,7 +31,6 @@ public class SearchRoomFragment extends Fragment implements SearchDelegate, Conn
 
     private View inflatedView;
     RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     public SearchRoomFragment() {
     }
@@ -72,7 +72,7 @@ public class SearchRoomFragment extends Fragment implements SearchDelegate, Conn
     public void onSearchByTag(String searchContent) {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "search for rooms..");
+        LoaderPopUp.show(getActivity());
 
         // search rooms
         APIConnectionNetwork.GetAllChannels(searchContent, this);
@@ -84,8 +84,7 @@ public class SearchRoomFragment extends Fragment implements SearchDelegate, Conn
 
         Toast.makeText(getContext(), "Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -94,8 +93,7 @@ public class SearchRoomFragment extends Fragment implements SearchDelegate, Conn
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -122,8 +120,7 @@ public class SearchRoomFragment extends Fragment implements SearchDelegate, Conn
         }
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
 }

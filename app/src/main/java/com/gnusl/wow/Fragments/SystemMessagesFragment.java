@@ -22,6 +22,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.SystemMessage;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -35,7 +36,6 @@ public class SystemMessagesFragment extends Fragment implements ConnectionDelega
 
     private View inflatedView;
     private SystemMessagesRecyclerViewAdapter systemMessagesRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
 
     public SystemMessagesFragment() {
@@ -71,7 +71,7 @@ public class SystemMessagesFragment extends Fragment implements ConnectionDelega
     private void sendMessagesRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading messsages..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.GetSystemMessages(this);
@@ -90,8 +90,7 @@ public class SystemMessagesFragment extends Fragment implements ConnectionDelega
 
         Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -100,8 +99,7 @@ public class SystemMessagesFragment extends Fragment implements ConnectionDelega
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -126,8 +124,7 @@ public class SystemMessagesFragment extends Fragment implements ConnectionDelega
         systemMessagesRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override

@@ -31,6 +31,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.RoomSettingsFragment;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.WebRtcClient.PermissionChecker;
@@ -60,7 +61,6 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
     private TextView userName;
     private TextView userBirthdateTv;
     private TextView userSixTv;
-    private ProgressDialog progressDialog;
     BroadcastReceiver imageBroadcastReceiver;
 
     @Override
@@ -103,7 +103,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
                         public void onInput(MaterialDialog dialog, CharSequence input) {
 
                             // show progress
-                            progressDialog = ProgressDialog.show(UserDetailsActivity.this, "", "update name..");
+                            LoaderPopUp.show(UserDetailsActivity.this);
 
                             // show in text
                             userName.setText(input.toString());
@@ -135,7 +135,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
                             userSixTv.setText(text);
 
                             // show progress
-                            progressDialog = ProgressDialog.show(UserDetailsActivity.this, "", "update gender..");
+                            LoaderPopUp.show(UserDetailsActivity.this);
 
                             // send request
                             APIConnectionNetwork.UpdateUserGender(text.toString(),UserDetailsActivity.this);
@@ -223,7 +223,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
 
         // TODO : upload image
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "change your image..");
+        LoaderPopUp.show(this);
 
         // upload image
         APIConnectionNetwork.UploadImage(mediaFile, this);
@@ -272,8 +272,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
 
         Toast.makeText(this, "failure response..", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -281,8 +280,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
 
         Toast.makeText(this, "error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -306,8 +304,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
         }
 
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -328,8 +325,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
             }
         }
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -341,7 +337,7 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
         userBirthdateTv.setText(dateString);
 
         // show progress
-        progressDialog = ProgressDialog.show(UserDetailsActivity.this, "", "update birthday..");
+        LoaderPopUp.show(UserDetailsActivity.this);
 
         // update user
         APIConnectionNetwork.UpdateUserBirthDate(dateString,this);

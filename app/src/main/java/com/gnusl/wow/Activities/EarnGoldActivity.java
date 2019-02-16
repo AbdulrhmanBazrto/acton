@@ -13,6 +13,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.EarnGoldSection;
 import com.gnusl.wow.Models.EarnGoldTask;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -25,7 +26,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class EarnGoldActivity extends AppCompatActivity implements ConnectionDelegate {
 
     private EarnGoldSectionAdapter earnGoldSectionAdapter;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class EarnGoldActivity extends AppCompatActivity implements ConnectionDel
     private void sendEarnGoldDataRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetEarnGoldInfo(this);
@@ -68,8 +68,7 @@ public class EarnGoldActivity extends AppCompatActivity implements ConnectionDel
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -78,8 +77,7 @@ public class EarnGoldActivity extends AppCompatActivity implements ConnectionDel
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -108,8 +106,7 @@ public class EarnGoldActivity extends AppCompatActivity implements ConnectionDel
         earnGoldSectionAdapter.setEarnGoldSections(earnGoldSections);
         earnGoldSectionAdapter.notifyDataSetChanged();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 }

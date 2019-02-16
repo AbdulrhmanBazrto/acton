@@ -20,6 +20,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
@@ -42,7 +43,6 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
     private View inflatedView;
     private boolean isRefreshing;
     private PostsRecyclerViewAdapter postsRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     public FeaturedFragment() {
     }
@@ -79,7 +79,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
         isRefreshing = true;
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading posts..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.GetAllFeaturedPosts(SharedPreferencesUtils.getUser().getId(), PAGE_SIZE_ITEMS, postsRecyclerViewAdapter.getFeaturePosts().size(), this);
@@ -101,8 +101,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
 
         Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         // disable loading
         if (postsRecyclerViewAdapter != null) {
@@ -117,8 +116,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         // disable loading
         if (postsRecyclerViewAdapter != null) {
@@ -137,8 +135,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
     public void onConnectionSuccess(JSONObject jsonObject) {
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         // refresh posts
         sendPostsRequest();
@@ -176,8 +173,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
         }
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Subscribe
@@ -215,7 +211,7 @@ public class FeaturedFragment extends Fragment implements ConnectionDelegate, Po
                 (dialog, which) -> {
 
                     // make progress dialog
-                    this.progressDialog = ProgressDialog.show(getContext(), "", "Deleting your post..");
+                    LoaderPopUp.show(getActivity());
 
                     // send request
                     APIConnectionNetwork.DeletePost(post.getId(), this);

@@ -39,6 +39,7 @@ import com.gnusl.wow.Adapters.MediaGridViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.FeaturePost;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
 import com.gnusl.wow.Views.FontedEditText;
@@ -69,7 +70,6 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
     private CircularImageView profile_image;
     private AutoFitFontedTextView name;
     private FontedEditText text;
-    private ProgressDialog progressDialog;
     private FeaturePost featurePost;
     private boolean isEditMode=false;
     BroadcastReceiver videoBroadcastReceiver;
@@ -170,7 +170,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
             if(!files.isEmpty()){
 
                 // make progress dialog
-                this.progressDialog = ProgressDialog.show(this, "", "uploading your Image..");
+                LoaderPopUp.show(this);
 
                 // upload image
                 APIConnectionNetwork.UploadImage(adapter.getImagesAsFiles().get(0),this);
@@ -187,7 +187,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         if(!isEditMode) {
 
             // make progress dialog
-            this.progressDialog = ProgressDialog.show(this, "", "uploading your post..");
+            LoaderPopUp.show(this);
 
             // send request
             APIConnectionNetwork.CreateNewPost(text.getText().toString(), imageName, this);
@@ -195,7 +195,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         }else {
 
             // make progress dialog
-            this.progressDialog = ProgressDialog.show(this, "", "Updating your post..");
+            LoaderPopUp.show(this);
 
             // send request
             APIConnectionNetwork.UpdatePost(featurePost.getId(),text.getText().toString(), this);
@@ -275,8 +275,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         Toast.makeText(this, "failure with share your post..", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
 
     }
@@ -286,8 +285,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         Toast.makeText(this, "error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -299,8 +297,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         if (jsonObject.has("post_id")) {
             Toast.makeText(this, "success share..", Toast.LENGTH_SHORT).show();

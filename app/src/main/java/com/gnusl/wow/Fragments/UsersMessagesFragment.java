@@ -17,6 +17,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Models.UserMessage;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -30,7 +31,6 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
 
     private View inflatedView;
     private TextView messagetextView;
-    private ProgressDialog progressDialog;
     private RecyclerView recyclerView;
     private UsersMessegesAdapter usersMessegesAdapter;
 
@@ -66,7 +66,7 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
     private void sendUsersMessagesRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading users messages..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.GetUsersMessages(this);
@@ -85,8 +85,7 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
 
         Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -95,8 +94,7 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -130,8 +128,7 @@ public class UsersMessagesFragment extends Fragment implements ConnectionDelegat
         }
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override

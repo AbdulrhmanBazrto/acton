@@ -20,6 +20,7 @@ import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Models.GiftRoomRank;
 import com.gnusl.wow.Models.GiftUserRank;
 import com.gnusl.wow.Models.RefreshGiftsDelegate;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.FontedTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -39,7 +40,6 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
     private SmartTabLayout viewPagerTab;
     private ViewPager viewPager;
     private Fragment mCurrentFragment;
-    private ProgressDialog progressDialog;
 
     // received data
     private ArrayList<GiftUserRank> todayReceivedUserRanks;
@@ -130,7 +130,7 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
     private void sendGiftsRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading data..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetExploreGifts(this);
@@ -273,8 +273,7 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -283,8 +282,7 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -324,8 +322,7 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
             }
         }
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         // send event
         EventBus.getDefault().post(new RefreshGiftsDelegate());

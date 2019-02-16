@@ -21,6 +21,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Advertisement;
 import com.gnusl.wow.Models.Room;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.GraphicsUtil;
 
@@ -41,8 +42,6 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
     private RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
     private ViewPager advertisementViewPager;
     private AdvertisementPagerAdapter advertisementPagerAdapter;
-    private ProgressDialog progressDialog;
-
 
     public AllRoomsFragment() {
     }
@@ -68,13 +67,13 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
         roomsRecyclerViewAdapter = new RoomsRecyclerViewAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(roomsRecyclerViewAdapter);
 
-        advertisementPagerAdapter=new AdvertisementPagerAdapter(getContext(),new ArrayList<>());
+        advertisementPagerAdapter = new AdvertisementPagerAdapter(getContext(), new ArrayList<>());
         advertisementViewPager.setAdapter(advertisementPagerAdapter);
 
         // go to create room
-        inflatedView.setOnClickListener(v->{
+        inflatedView.setOnClickListener(v -> {
 
-            getActivity().startActivity(new Intent(getActivity(),CreateRoomActivity.class));
+            getActivity().startActivity(new Intent(getActivity(), CreateRoomActivity.class));
         });
 
         return inflatedView;
@@ -83,11 +82,10 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
 
     private void sendChannelsRequest() {
 
-        // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading channels..");
+        LoaderPopUp.show(getActivity());
 
         // send request
-        APIConnectionNetwork.GetAllChannels(null,this);
+        APIConnectionNetwork.GetAllChannels(null, this);
     }
 
     private void sendAdvertisementRequest() {
@@ -97,16 +95,16 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
             @Override
             public void onConnectionFailure() {
 
-                ConstraintLayout.LayoutParams layoutParams= (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
-                layoutParams.height=GraphicsUtil.pxFromDp(0f);
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
+                layoutParams.height = GraphicsUtil.pxFromDp(0f);
                 advertisementViewPager.setLayoutParams(layoutParams);
             }
 
             @Override
             public void onConnectionError(ANError anError) {
 
-                ConstraintLayout.LayoutParams layoutParams= (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
-                layoutParams.height=GraphicsUtil.pxFromDp(0f);
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
+                layoutParams.height = GraphicsUtil.pxFromDp(0f);
                 advertisementViewPager.setLayoutParams(layoutParams);
             }
 
@@ -123,20 +121,20 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
             @Override
             public void onConnectionSuccess(JSONArray jsonArray) {
 
-                ArrayList<Advertisement> advertisements=Advertisement.parseJSONArray(jsonArray);
+                ArrayList<Advertisement> advertisements = Advertisement.parseJSONArray(jsonArray);
 
-                if(!advertisements.isEmpty()) {
+                if (!advertisements.isEmpty()) {
 
-                    ConstraintLayout.LayoutParams layoutParams= (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
-                    layoutParams.height=GraphicsUtil.pxFromDp(100f);
+                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
+                    layoutParams.height = GraphicsUtil.pxFromDp(100f);
                     advertisementViewPager.setLayoutParams(layoutParams);
 
                     advertisementPagerAdapter.setAdvertisements(advertisements);
                     advertisementPagerAdapter.notifyDataSetChanged();
-                }else {
+                } else {
 
-                    ConstraintLayout.LayoutParams layoutParams= (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
-                    layoutParams.height=GraphicsUtil.pxFromDp(0f);
+                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) advertisementViewPager.getLayoutParams();
+                    layoutParams.height = GraphicsUtil.pxFromDp(0f);
                     advertisementViewPager.setLayoutParams(layoutParams);
 
                 }
@@ -147,7 +145,7 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && inflatedView != null && roomsRecyclerViewAdapter!=null && roomsRecyclerViewAdapter.getRooms().isEmpty()) {
+        if (isVisibleToUser && inflatedView != null && roomsRecyclerViewAdapter != null && roomsRecyclerViewAdapter.getRooms().isEmpty()) {
 
             // send request
             sendChannelsRequest();
@@ -162,9 +160,7 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
 
         Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
-
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -172,8 +168,7 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -191,15 +186,14 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<Room> rooms=Room.parseJSONArray(jsonArray);
+        ArrayList<Room> rooms = Room.parseJSONArray(jsonArray);
 
         // notify
         roomsRecyclerViewAdapter.setRooms(rooms);
         roomsRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 }
 

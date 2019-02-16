@@ -15,6 +15,7 @@ import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Room;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -29,7 +30,6 @@ public class RoomByCountryActivity extends AppCompatActivity implements Connecti
     public final static String TAG_KEY = "tag_key";
 
     private RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
     private String tag;
 
     @Override
@@ -66,7 +66,7 @@ public class RoomByCountryActivity extends AppCompatActivity implements Connecti
     private void sendChannelsRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading channels..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetChannelsByCountry(getTag(), this);
@@ -77,8 +77,7 @@ public class RoomByCountryActivity extends AppCompatActivity implements Connecti
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -87,8 +86,7 @@ public class RoomByCountryActivity extends AppCompatActivity implements Connecti
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -113,8 +111,7 @@ public class RoomByCountryActivity extends AppCompatActivity implements Connecti
         roomsRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     public String getTag() {

@@ -20,6 +20,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.LockRoomPopUpDelegate;
 import com.gnusl.wow.Delegates.SelectLockTypeDelegate;
 import com.gnusl.wow.Models.RoomLockType;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.Popups.LockRoomPopUp;
 import com.gnusl.wow.R;
 
@@ -34,8 +35,6 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
 
     private View inflatedView;
     private RoomSettingsActivity activity;
-
-    private ProgressDialog progressDialog;
     private TextView roomNameTv;
     private RoomLockTypeAdapter roomLockTypeAdapter;
 
@@ -84,7 +83,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
     private void getAllLockTypes(){
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "get Room Lock Types..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.GetRoomLockType(this);
@@ -104,8 +103,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
 
         Toast.makeText(getContext(), "failure response..", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -113,8 +111,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
 
         Toast.makeText(getContext(), "error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -125,8 +122,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -140,8 +136,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
         roomLockTypeAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override

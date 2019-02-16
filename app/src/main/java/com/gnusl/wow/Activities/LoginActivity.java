@@ -31,6 +31,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.SocialType;
 import com.gnusl.wow.Models.RegisterParams;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
@@ -67,8 +68,6 @@ import retrofit2.Call;
 import static android.widget.Toast.LENGTH_LONG;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionDelegate {
-
-    private ProgressDialog progressDialog;
 
     // facebook
     private CallbackManager callbackManager;
@@ -161,8 +160,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                                             String id = object.getString("id");
                                             String email = object.getString("email");
 
-                                            if (progressDialog != null)
-                                                progressDialog.dismiss();
+                                            LoaderPopUp.dismissLoader();
 
                                             // prepare user credential
                                             RegisterParams params = new RegisterParams();
@@ -183,7 +181,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                                             APIConnectionNetwork.LoginBySocial(params, LoginActivity.this);
 
                                             // progress
-                                            progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
+                                            LoaderPopUp.show(LoginActivity.this);
 
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -203,8 +201,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
                         Toast.makeText(LoginActivity.this, "end proccess by facebook try again", LENGTH_LONG).show();
 
-                        if (progressDialog != null)
-                            progressDialog.dismiss();
+                        LoaderPopUp.dismissLoader();
                     }
 
                     @Override
@@ -213,8 +210,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
                         Toast.makeText(LoginActivity.this, "Facebook Error try again", LENGTH_LONG).show();
 
-                        if (progressDialog != null)
-                            progressDialog.dismiss();
+                        LoaderPopUp.dismissLoader();
                     }
                 });
     }
@@ -225,7 +221,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
 
         // progress
-        this.progressDialog = ProgressDialog.show(this, "", "Login with facebook account..");
+        LoaderPopUp.show(this);
 
     }
 
@@ -270,7 +266,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                     APIConnectionNetwork.LoginBySocial(params, LoginActivity.this);
 
                     // progress
-                    progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
+                    LoaderPopUp.show(this);
 
 
                 }
@@ -343,7 +339,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
                 APIConnectionNetwork.LoginBySocial(params, LoginActivity.this);
 
                 // progress
-                progressDialog = ProgressDialog.show(LoginActivity.this, "", "please wait send your credential to server..");
+                LoaderPopUp.show(LoginActivity.this);
 
 
             }
@@ -405,8 +401,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
         Toast.makeText(this, "your credential incorrect", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -414,8 +409,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
         Toast.makeText(this, "Error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -456,8 +450,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
         }
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 

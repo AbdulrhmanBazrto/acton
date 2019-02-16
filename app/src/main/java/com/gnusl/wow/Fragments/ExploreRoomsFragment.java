@@ -19,6 +19,7 @@ import com.gnusl.wow.Models.Country;
 import com.gnusl.wow.Models.ExploreSection;
 import com.gnusl.wow.Models.TopGiftExplorer;
 import com.gnusl.wow.Models.Room;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -37,7 +38,6 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
 
     private View inflatedView;
     private ExploreRecyclerViewSectionAdapter exploreRecyclerViewSectionAdapter;
-    private ProgressDialog progressDialog;
 
     public ExploreRoomsFragment() {
     }
@@ -72,7 +72,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
     private void sendExploreDataRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.GetExploreContent(this);
@@ -154,8 +154,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
 
         Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -164,8 +163,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -245,8 +243,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
         exploreRecyclerViewSectionAdapter.setExploreSections(exploreSections);
         exploreRecyclerViewSectionAdapter.notifyDataSetChanged();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override

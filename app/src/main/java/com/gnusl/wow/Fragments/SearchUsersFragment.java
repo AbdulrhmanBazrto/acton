@@ -16,6 +16,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SearchDelegate;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -29,7 +30,6 @@ public class SearchUsersFragment extends Fragment implements SearchDelegate,Conn
 
     private View inflatedView;
     UsersRecyclerViewAdapter usersRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     public SearchUsersFragment() {
     }
@@ -71,7 +71,7 @@ public class SearchUsersFragment extends Fragment implements SearchDelegate,Conn
     public void onSearchByTag(String searchContent) {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "search for users..");
+        LoaderPopUp.show(getActivity());
 
         // search users
         APIConnectionNetwork.SearchForUsers(searchContent, this);
@@ -82,8 +82,7 @@ public class SearchUsersFragment extends Fragment implements SearchDelegate,Conn
 
         Toast.makeText(getContext(), "Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -92,8 +91,7 @@ public class SearchUsersFragment extends Fragment implements SearchDelegate,Conn
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -120,8 +118,7 @@ public class SearchUsersFragment extends Fragment implements SearchDelegate,Conn
         }
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
 }

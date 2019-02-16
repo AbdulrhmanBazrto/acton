@@ -15,6 +15,7 @@ import com.gnusl.wow.Adapters.BadgesRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Badge;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.google.gson.JsonArray;
 
@@ -31,7 +32,6 @@ public class ProfileBadgesActivity extends AppCompatActivity implements Connecti
     public final static String USER_ID = "user_id";
 
     private BadgesRecyclerViewAdapter badgesRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class ProfileBadgesActivity extends AppCompatActivity implements Connecti
     private void sendProfileBadgesDataRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetProfileBadges(getUserId(),this);
@@ -78,8 +78,7 @@ public class ProfileBadgesActivity extends AppCompatActivity implements Connecti
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -88,8 +87,7 @@ public class ProfileBadgesActivity extends AppCompatActivity implements Connecti
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -113,8 +111,7 @@ public class ProfileBadgesActivity extends AppCompatActivity implements Connecti
         badgesRecyclerViewAdapter.setBadges(badges);
         badgesRecyclerViewAdapter.notifyDataSetChanged();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 

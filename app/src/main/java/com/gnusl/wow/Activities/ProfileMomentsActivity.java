@@ -18,6 +18,7 @@ import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Models.Room;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -32,7 +33,6 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
     public final static String USER_ID = "user_id";
 
     private PostsRecyclerViewAdapter postsRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
     private void sendPostsRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading posts..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetProfilePosts(getUserId(),this);
@@ -81,8 +81,7 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -91,8 +90,7 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -117,8 +115,7 @@ public class ProfileMomentsActivity extends AppCompatActivity implements Connect
         postsRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     public int getUserId() {

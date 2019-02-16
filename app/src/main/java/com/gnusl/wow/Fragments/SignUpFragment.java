@@ -23,6 +23,7 @@ import com.gnusl.wow.Activities.RegisterActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.RegisterParams;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
@@ -50,7 +51,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
     View containerView;
     long birthdate = -1;
     String code;
-    private ProgressDialog progressDialog;
     //endregion
 
     private View inflatedView;
@@ -222,7 +222,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
         APIConnectionNetwork.RegisterNewUser(params,this);
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "Please Wait for register..");
+        LoaderPopUp.show(getActivity());
 
     }
 
@@ -244,8 +244,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
 
         Toast.makeText(getContext(), "your credential incorrect", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -253,8 +252,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -294,8 +292,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
 
         }
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 

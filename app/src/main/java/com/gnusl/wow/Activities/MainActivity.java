@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ((TextView) headerView.findViewById(R.id.name_text)).setText(user.getName());
 
             // Id
-            ((TextView) headerView.findViewById(R.id.id_text)).setText(String.valueOf("ID:" + user.getName()));
+            ((TextView) headerView.findViewById(R.id.id_text)).setText(String.valueOf("LV"+user.getLevel()+" "+"ID:" + user.getId()));
 
             // user image
             if (user.getImage_url() != null && !user.getImage_url().isEmpty())

@@ -13,6 +13,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -25,7 +26,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class FollowersActivity extends AppCompatActivity implements ConnectionDelegate {
 
     FollowersRecyclerViewAdapter followersRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class FollowersActivity extends AppCompatActivity implements ConnectionDe
     private void sendFollowersRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading followers..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetFollowers(this);
@@ -68,8 +68,7 @@ public class FollowersActivity extends AppCompatActivity implements ConnectionDe
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -78,8 +77,7 @@ public class FollowersActivity extends AppCompatActivity implements ConnectionDe
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -104,7 +102,6 @@ public class FollowersActivity extends AppCompatActivity implements ConnectionDe
         followersRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 }

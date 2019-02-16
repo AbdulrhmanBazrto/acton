@@ -37,6 +37,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.MessageImageDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Models.Message;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Utils.NetworkUtils;
@@ -75,8 +76,6 @@ public class MessagesConversationFragment extends Fragment implements Connection
     private boolean isNotMoreMessages = false;
     private boolean isLockToRefresh = true;
     private int user_id;
-
-    private ProgressDialog progressDialog;
 
     @SuppressLint("ValidFragment")
     public MessagesConversationFragment(int user_id) {
@@ -165,7 +164,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
     private void sendMessagesRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading messeges..");
+        LoaderPopUp.show(getActivity());
 
         isLockToRefresh = true;
 
@@ -263,8 +262,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
         if (getContext() != null)
             Toast.makeText(getContext(), "no messages more..", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
 
     }
@@ -277,8 +275,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
 
         isLockToRefresh = false;
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         updateAdapterWithError();
     }
@@ -287,8 +284,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
     public void onConnectionSuccess(String response) {
 
         // send message response
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
 
         isLockToRefresh = false;
@@ -316,8 +312,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // sync messages
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         isLockToRefresh = false;
 

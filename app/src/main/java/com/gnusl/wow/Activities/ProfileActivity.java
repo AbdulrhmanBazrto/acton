@@ -31,6 +31,7 @@ import com.gnusl.wow.Models.GiftRoomRank;
 import com.gnusl.wow.Models.GiftUserRank;
 import com.gnusl.wow.Models.RefreshGiftsDelegate;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Views.FontedTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -49,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
     private SmartTabLayout viewPagerTab;
     private ViewPager viewPager;
     private Fragment mCurrentFragment;
-    private ProgressDialog progressDialog;
     private User user;
 
     @Override
@@ -133,7 +133,7 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
     private void sendUserDetailsRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading user info..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetUserDetails(getUserId(), this);
@@ -232,8 +232,7 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -242,8 +241,7 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -270,8 +268,7 @@ public class ProfileActivity extends AppCompatActivity implements PagerDelegate,
             }
         }
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 

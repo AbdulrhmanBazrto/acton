@@ -19,6 +19,7 @@ import com.gnusl.wow.Activities.SettingsActivity;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.FragmentTags;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -30,8 +31,6 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
 
     private View inflatedView;
     private RoomSettingsActivity activity;
-
-    private ProgressDialog progressDialog;
     private TextView roomNameTv;
 
     public RoomSettingsFragment() {
@@ -69,7 +68,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
                         public void onInput(MaterialDialog dialog, CharSequence input) {
 
                             // show progress
-                            progressDialog = ProgressDialog.show(getContext(), "", "change room name..");
+                            LoaderPopUp.show(getActivity());
 
                             // show in text
                             roomNameTv.setText(input.toString());
@@ -101,8 +100,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
 
         Toast.makeText(getContext(), "failure response..", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -110,8 +108,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
 
         Toast.makeText(getContext(), "error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -122,8 +119,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override

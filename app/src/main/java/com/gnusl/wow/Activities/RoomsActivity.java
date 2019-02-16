@@ -14,6 +14,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -26,7 +27,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class RoomsActivity extends AppCompatActivity implements ConnectionDelegate {
 
     RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class RoomsActivity extends AppCompatActivity implements ConnectionDelega
     private void sendRoomsRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading rooms..");
+        LoaderPopUp.show(this);
 
         // send request
        // APIConnectionNetwork.GetUserRooms(this);
@@ -69,8 +69,7 @@ public class RoomsActivity extends AppCompatActivity implements ConnectionDelega
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -79,8 +78,7 @@ public class RoomsActivity extends AppCompatActivity implements ConnectionDelega
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -105,7 +103,6 @@ public class RoomsActivity extends AppCompatActivity implements ConnectionDelega
         roomsRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 }

@@ -34,7 +34,6 @@ public class LockRoomPopUp extends DialogFragment implements ConnectionDelegate 
     private RoomLockType roomLockType;
     private EditText password;
     private EditText confirm_password;
-    private ProgressDialog progressDialog;
     private LockRoomPopUpDelegate lockRoomPopUpDelegate;
 
     @Override
@@ -93,7 +92,7 @@ public class LockRoomPopUp extends DialogFragment implements ConnectionDelegate 
     private void sendRoomPassword(){
 
         // show progress
-        progressDialog = ProgressDialog.show(getContext(), "", "save room password..");
+        LoaderPopUp.show(getActivity());
 
         // save password
         APIConnectionNetwork.SetRoomPassWord(password.getText().toString(),getRoom().getId(),getRoomLockType().getId(),this);
@@ -114,8 +113,7 @@ public class LockRoomPopUp extends DialogFragment implements ConnectionDelegate 
 
         Toast.makeText(getContext(), "failure response..", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -123,8 +121,7 @@ public class LockRoomPopUp extends DialogFragment implements ConnectionDelegate 
 
         Toast.makeText(getContext(), "error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -135,8 +132,7 @@ public class LockRoomPopUp extends DialogFragment implements ConnectionDelegate 
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         dismiss();
 

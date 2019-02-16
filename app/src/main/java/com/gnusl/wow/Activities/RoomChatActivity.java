@@ -34,6 +34,7 @@ import com.gnusl.wow.Delegates.SoftInputDelegate;
 import com.gnusl.wow.Fragments.RoomChatFragment;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Popups.EnterPassWordRoomPopUp;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.KeyboardUtils;
 import com.gnusl.wow.WebRtcClient.CallDelegate;
@@ -95,7 +96,6 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
     private View softInputKeyboardLayout;
     private EditText messageEditText;
-    private ProgressDialog progressDialog;
     private boolean isUploadingForBackground = false;
     private boolean isShouldLogout = false;
 
@@ -424,10 +424,10 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         // TODO : upload image
         // make progress dialog
         if (isUploadingForBackground)
-            this.progressDialog = ProgressDialog.show(this, "", "change your background..");
+            LoaderPopUp.show(this);
 
         else
-            this.progressDialog = ProgressDialog.show(this, "", "upload your photo..");
+            LoaderPopUp.show(this);
 
         // upload image
         APIConnectionNetwork.UploadImage(mediaFile, this);
@@ -548,8 +548,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
         Toast.makeText(this, "failure response..", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -557,8 +556,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
         Toast.makeText(this, "error Connection try again", LENGTH_LONG).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -587,8 +585,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             return;
         }
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 

@@ -13,7 +13,9 @@ import com.gnusl.wow.Adapters.RoomTypesRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.SelectRoomTypeDelegate;
+import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.RoomType;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -32,7 +34,6 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
     private TextView levelsTv;
 
     private RoomTypesRecyclerViewAdapter roomTypesRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
     private RoomType roomType;
 
     @Override
@@ -62,7 +63,7 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
     private void getChannelsTypesRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(this, "", "loading channels types..");
+        LoaderPopUp.show(this);
 
         // send request
         APIConnectionNetwork.GetChannelsTypes(this);
@@ -88,7 +89,7 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
         else {
 
             // make progress dialog
-            this.progressDialog = ProgressDialog.show(this, "", "create channel..");
+            LoaderPopUp.show(this);
 
             // send request
             APIConnectionNetwork.CreateNewRoom(roomType.getId(), this);
@@ -116,8 +117,7 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
 
         Toast.makeText(this, " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -126,8 +126,7 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
 
         Toast.makeText(this, "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -138,27 +137,23 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        // parse room
+        Room room=Room.newInstance(jsonObject);
 
-        if (jsonObject.has("channel_id")) {
-            Toast.makeText(this, "create channel success", LENGTH_SHORT).show();
-            finish();
+        LoaderPopUp.dismissLoader();
 
-            // go to new room
-           /* try {
-                RoomChatActivity.launch(this,jsonObject.getInt("channel_id"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
-        }
+        Toast.makeText(this, "create channel success", LENGTH_SHORT).show();
+        finish();
+
+        // go to new room
+        RoomChatActivity.launch(this,room);
+
     }
 
     @Override
     public void onConnectionSuccess(JSONArray jsonArray) {
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
         // parsing
         ArrayList<RoomType> roomTypes = RoomType.parseJSONArray(jsonArray);
@@ -168,14 +163,14 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
         roomTypesRecyclerViewAdapter.notifyDataSetChanged();
 
         // set standard selection
-        if(!roomTypes.isEmpty())
+        if (!roomTypes.isEmpty())
             onSelectedRoomType(roomTypes.get(0));
     }
 
     @Override
     public void onSelectedRoomType(RoomType roomType) {
 
-        this.roomType=roomType;
+        this.roomType = roomType;
 
         // show details
         showRoomDetails(roomType);

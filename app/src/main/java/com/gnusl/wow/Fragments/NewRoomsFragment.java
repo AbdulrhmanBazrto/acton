@@ -15,6 +15,7 @@ import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Room;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
 import org.json.JSONArray;
@@ -34,7 +35,6 @@ public class NewRoomsFragment extends Fragment implements ConnectionDelegate {
 
     private View inflatedView;
     private RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
 
     public NewRoomsFragment() {
     }
@@ -68,7 +68,7 @@ public class NewRoomsFragment extends Fragment implements ConnectionDelegate {
     private void sendChannelsRequest() {
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading channels..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.GetAllChannels(null,this);
@@ -89,8 +89,7 @@ public class NewRoomsFragment extends Fragment implements ConnectionDelegate {
 
         Toast.makeText(getContext(), " Connection Failure", Toast.LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -99,8 +98,7 @@ public class NewRoomsFragment extends Fragment implements ConnectionDelegate {
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -125,8 +123,7 @@ public class NewRoomsFragment extends Fragment implements ConnectionDelegate {
         roomsRecyclerViewAdapter.notifyDataSetChanged();
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 }
 

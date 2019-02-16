@@ -44,6 +44,7 @@ import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.MicUser;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.GiftsRoomDialog;
+import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.gson.JsonElement;
@@ -82,7 +83,6 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     private RecyclerView chatRecyclerView;
     private MicUsersRecyclerViewAdapter micUsersRecyclerViewAdapter;
     private UsersScoreRoomRecyclerViewAdapter usersScoreRoomRecyclerViewAdapter;
-    private ProgressDialog progressDialog;
     private ArrayList<Gift> gifts;
     private boolean isRefreshing;
     private boolean isRechToLimit = false;
@@ -759,7 +759,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         isRefreshing = true;
 
         // make progress dialog
-        this.progressDialog = ProgressDialog.show(getContext(), "", "loading messages..");
+        LoaderPopUp.show(getActivity());
 
         // send request
         APIConnectionNetwork.GetAllRoomMessages(activity.getRoom().getId(), PAGE_SIZE_ITEMS, chatRecyclerViewAdapter.getChatMessages().size(), this);
@@ -768,7 +768,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     private void showUsersAttendancePopUp(UserAttendanceDelegate userAttendanceDelegate) {
 
-        this.progressDialog = ProgressDialog.show(getContext(), "", "get active users..");
+        LoaderPopUp.show(getActivity());
 
         // get user attendance
         APIConnectionNetwork.GetUserAttendance(activity.getRoom().getId(), new ConnectionDelegate() {
@@ -777,8 +777,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
                 Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
 
-                if (progressDialog != null)
-                    progressDialog.dismiss();
+                LoaderPopUp.dismissLoader();
 
             }
 
@@ -787,8 +786,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
                 Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-                if (progressDialog != null)
-                    progressDialog.dismiss();
+                LoaderPopUp.dismissLoader();
 
             }
 
@@ -859,8 +857,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     }
                 }
 
-                if (progressDialog != null)
-                    progressDialog.dismiss();
+                LoaderPopUp.dismissLoader();
             }
 
             @Override
@@ -877,8 +874,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -887,8 +883,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
 
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
 
     }
 
@@ -937,8 +932,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         }
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
@@ -1002,8 +996,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         }
 
         // dismiss
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        LoaderPopUp.dismissLoader();
     }
 
     @Override
