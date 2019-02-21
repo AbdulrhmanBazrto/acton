@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Models.User;
@@ -37,7 +38,7 @@ public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((UserViewHolder)holder).bind(getUsers().get(position), position);
+        ((UserViewHolder) holder).bind(getUsers().get(position), position);
 
     }
 
@@ -49,20 +50,26 @@ public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView userImage;
+        private TextView userName;
 
         public UserViewHolder(View itemView) {
             super(itemView);
 
-            userImage= itemView.findViewById(R.id.user_image);
+            userImage = itemView.findViewById(R.id.user_image);
+            userName = itemView.findViewById(R.id.user_name);
 
         }
 
         public void bind(final User user, final int position) {
 
+            userName.setText(user.getName());
+
             if (user.getImage_url() != null && !user.getImage_url().isEmpty())
                 Glide.with(context)
                         .load(user.getImage_url())
                         .into(userImage);
+            else
+                userImage.setImageResource(R.drawable.user);
 
         }
 
@@ -76,6 +83,7 @@ public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     public void setUsers(ArrayList<User> users) {
         this.users = users;
+        notifyDataSetChanged();
     }
 
     // endregion

@@ -136,7 +136,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         initializeViews();
 
         // score user
-        initializeUsersScore();
+//        initializeUsersScore();
+        setUpUserAttendanceRecycler();
 
         // users in room
         initializeUsersInRoomAdapter();
@@ -497,14 +498,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     private void initializeUsersScore() {
 
-        RecyclerView recyclerView = inflatedView.findViewById(R.id.score_user_recycler_view);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        usersScoreRoomRecyclerViewAdapter = new UsersScoreRoomRecyclerViewAdapter(getContext(), new ArrayList<>());
-        recyclerView.setAdapter(usersScoreRoomRecyclerViewAdapter);
     }
 
     private void initializeUsersInRoomAdapter() {
@@ -844,6 +838,65 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     }
 
+    private void setUpUserAttendanceRecycler() {
+
+        RecyclerView recyclerView = inflatedView.findViewById(R.id.score_user_recycler_view);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        usersScoreRoomRecyclerViewAdapter = new UsersScoreRoomRecyclerViewAdapter(getContext(), new ArrayList<>());
+        recyclerView.setAdapter(usersScoreRoomRecyclerViewAdapter);
+
+
+        APIConnectionNetwork.GetUserAttendance(activity.getRoom().getId(), new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+                Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
+
+                LoaderPopUp.dismissLoader();
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+                Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
+
+                LoaderPopUp.dismissLoader();
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+
+                if (jsonObject.has("users")) { // refresh scores in room
+
+                    try {
+                        ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
+                        usersScoreRoomRecyclerViewAdapter.setUsers(users);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
+        });
+    }
+
     private void showUsersAttendancePopUp(UserAttendanceDelegate userAttendanceDelegate) {
 
         LoaderPopUp.show(getActivity());
@@ -993,14 +1046,16 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else if (jsonObject.has("score_users")) { // refresh scores in room
-            try {
-                usersScoreRoomRecyclerViewAdapter.setUsers(User.parseJSONArray(jsonObject.getJSONArray("score_users")));
-                usersScoreRoomRecyclerViewAdapter.notifyDataSetChanged();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else if (jsonObject.has("mic_status")) {
+        }
+//        else if (jsonObject.has("score_users")) { // refresh scores in room
+//            try {
+//                usersScoreRoomRecyclerViewAdapter.setUsers(User.parseJSONArray(jsonObject.getJSONArray("score_users")));
+//                usersScoreRoomRecyclerViewAdapter.notifyDataSetChanged();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        else if (jsonObject.has("mic_status")) {
 
             // should refresh
             APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), this);
