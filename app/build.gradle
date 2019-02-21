@@ -19,7 +19,6 @@ android {
         versionName "1.2.2" // 1.2.1 on store
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         lintOptions {
             abortOnError false
         }

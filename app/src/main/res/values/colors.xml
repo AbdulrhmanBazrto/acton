@@ -40,6 +40,8 @@
     <color name="charcoal_grey_20">#33354745</color>
     <color name="red">#e55b58</color>
     <color name="black">#000000</color>
+    <color name="black_100">#d4000000</color>
+    <color name="black_90">#aa000000</color>
     <color name="black_80">#96000000</color>
     <color name="black_50">#64000000</color>
     <color name="transparent">#00000000</color>

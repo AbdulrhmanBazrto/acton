@@ -1,26 +1,38 @@
 package com.gnusl.wow.Fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,16 +49,19 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.GiftDelegate;
 import com.gnusl.wow.Delegates.MicUserDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
+import com.gnusl.wow.Delegates.ShowHeartsClickListner;
 import com.gnusl.wow.Delegates.UserAttendanceDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.MicUser;
+import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.GiftsRoomDialog;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
+import com.gnusl.wow.Utils.ZigZagAnimation;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PNConfiguration;
@@ -73,12 +88,13 @@ import java.util.TimerTask;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate, MicUserDelegate {
+public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate, MicUserDelegate, ShowHeartsClickListner {
 
     private static final int PAGE_SIZE_ITEMS = 5;
+    private Room room;
 
     private RoomChatActivity activity;
-    private View inflatedView;
+    private View inflatedView, cl_room_name;
     private ChatRecyclerViewAdapter chatRecyclerViewAdapter;
     private RecyclerView chatRecyclerView;
     private MicUsersRecyclerViewAdapter micUsersRecyclerViewAdapter;
@@ -96,9 +112,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     public RoomChatFragment() {
     }
 
-    public static RoomChatFragment newInstance() {
+    @SuppressLint("ValidFragment")
+    public RoomChatFragment(Room room) {
+        this.room = room;
+    }
 
-        return new RoomChatFragment();
+    public static RoomChatFragment newInstance(Room room) {
+
+        return new RoomChatFragment(room);
     }
 
     @Override
@@ -182,6 +203,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             ((RoomChatActivity) getActivity()).onRequestToShowKeyboard();
 
             inflatedView.findViewById(R.id.frame).setVisibility(View.VISIBLE);
+        });
+
+        inflatedView.findViewById(R.id.cl_room_name).setOnClickListener(v -> {
+            showRoomNameDialog();
         });
 
         inflatedView.findViewById(R.id.more_icon).setOnClickListener(v -> {
@@ -287,6 +312,42 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
             shareChannel();
         });
+    }
+
+    private void showRoomNameDialog() {
+        if (getActivity() != null) {
+
+            View viewById = inflatedView.findViewById(R.id.cl_room_info);
+            viewById.setVisibility(View.VISIBLE);
+
+            viewById.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewById.setVisibility(View.GONE);
+                }
+            });
+
+            ImageView roomImage = inflatedView.findViewById(R.id.iv_room_image);
+            TextView tvRoomName = inflatedView.findViewById(R.id.tv_room_name);
+            TextView tvRoomId = inflatedView.findViewById(R.id.tv_room_id);
+            TextView tvRoomMembersCount = inflatedView.findViewById(R.id.tv_room_members_count);
+            ImageView ivRoomLocation = inflatedView.findViewById(R.id.iv_room_location);
+
+            tvRoomName.setText(room.getName());
+
+            tvRoomId.setText("| ID: " + room.getId());
+
+            Glide.with(getActivity())
+                    .load(room.getCountryCodeUrl())
+                    .into(ivRoomLocation);
+
+            tvRoomMembersCount.setText("| users: " + room.getNumUsers());
+
+            if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty() && getActivity() != null)
+                Glide.with(getActivity())
+                        .load(room.getBackgroundUrl())
+                        .into(roomImage);
+        }
     }
 
     private void animateEntranceUser() {
@@ -461,32 +522,49 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     private void initializeChatAdapter() {
 
         chatRecyclerView = inflatedView.findViewById(R.id.chat_recycler_view);
+        chatRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    show();
+                }
+                return false;
+            }
+        });
+
+        inflatedView.findViewById(R.id.root_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show();
+            }
+        });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         chatRecyclerView.setLayoutManager(linearLayoutManager);
 
-        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(getContext(), chatRecyclerView, new ArrayList<>(), this);
+        chatRecyclerViewAdapter = new ChatRecyclerViewAdapter(getContext(), chatRecyclerView, new ArrayList<>(), this, this);
         chatRecyclerView.setAdapter(chatRecyclerViewAdapter);
     }
 
     private void setUserInformation() {
 
-        User user = SharedPreferencesUtils.getUser();
-        if (user != null) {
+//        User user = SharedPreferencesUtils.getUser();
+//        if (user != null) {
 
-            // name
-            ((TextView) inflatedView.findViewById(R.id.user_name)).setText(user.getName());
+        // name
+        ((TextView) inflatedView.findViewById(R.id.user_name)).setText(room.getName());
 
-            // Id
-            ((TextView) inflatedView.findViewById(R.id.user_Id)).setText(String.valueOf("ID:" + user.getId()));
+        // Id
+        ((TextView) inflatedView.findViewById(R.id.user_Id)).setText(String.valueOf("ID:" + room.getId()));
 
-            // user image
-            if (user.getImage_url() != null && !user.getImage_url().isEmpty())
-                Glide.with(getContext())
-                        .load(user.getImage_url())
-                        .into(((ImageView) inflatedView.findViewById(R.id.user_image)));
-        }
+        // user image
+        if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty() && getActivity() != null)
+            Glide.with(getActivity())
+                    .load(room.getBackgroundUrl())
+                    .into(((ImageView) inflatedView.findViewById(R.id.user_image)));
+
+
     }
 
     private boolean shouldGenerateCrazyWords = false;
@@ -1055,6 +1133,68 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         isRechToLimit = rechToLimit;
     }
 
+    @Override
+    public void show() {
+        ConstraintLayout rootView = inflatedView.findViewById(R.id.root_view);
+
+        ImageView heartAnimation = new ImageView(getActivity());
+        heartAnimation.setLayoutParams(new android.view.ViewGroup.LayoutParams(75, 75));
+        heartAnimation.setId(View.generateViewId());
+        Random rander = new Random();
+        int Max = 4;
+        int Min = 1;
+        int i = rander.nextInt(Max - Min + 1);
+        switch (i) {
+            case 1: {
+                heartAnimation.setImageResource(R.drawable.h4);
+                break;
+            }
+            case 2: {
+                heartAnimation.setImageResource(R.drawable.h2);
+                break;
+            }
+            case 3: {
+                heartAnimation.setImageResource(R.drawable.h3);
+                break;
+            }
+            default:
+                heartAnimation.setImageResource(R.drawable.h3);
+                break;
+        }
+
+        rootView.addView(heartAnimation);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(rootView);
+
+//        constraintSet.connect(heartAnimation.getId(), ConstraintSet.TOP, rootView.getId(), ConstraintSet.TOP);
+        constraintSet.connect(heartAnimation.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM);
+        constraintSet.connect(heartAnimation.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT, 60);
+
+
+        constraintSet.applyTo(rootView);
+
+//        heartAnimation.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.show_heart));
+        heartAnimation.startAnimation(new ZigZagAnimation());
+
+        heartAnimation.getAnimation().setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                rootView.removeView(heartAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
 }
 
 

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ActonAndroid.iml" filepath="$PROJECT_DIR$/.idea/ActonAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/MediaChooser/MediaChooser.iml" filepath="$PROJECT_DIR$/MediaChooser/MediaChooser.iml" />
       <module fileurl="file://$PROJECT_DIR$/SlidingActivity/SlidingActivity.iml" filepath="$PROJECT_DIR$/SlidingActivity/SlidingActivity.iml" />
       <module fileurl="file://$PROJECT_DIR$/Wow.iml" filepath="$PROJECT_DIR$/Wow.iml" />

@@ -17,6 +17,7 @@ import com.gnusl.wow.Activities.ProfileActivity;
 import com.gnusl.wow.Application.WowApplication;
 import com.gnusl.wow.Connection.APILinks;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
+import com.gnusl.wow.Delegates.ShowHeartsClickListner;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
@@ -29,16 +30,18 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final static int TEXT_MESSAGE_HOLDER = 0;
     private final static int IMAGE_MESSAGE_HOLDER = 1;
     private static int LOAD_MORE_HOLDER = 2;
+    private final ShowHeartsClickListner showHeartsClickListener;
 
     private Context context;
     private boolean isLoading = false;
     private OnLoadMoreListener loadMoreListener;
     private ArrayList<ChatMessage> chatMessages;
 
-    public ChatRecyclerViewAdapter(Context context, RecyclerView recyclerView, ArrayList<ChatMessage> chatMessages, OnLoadMoreListener delegate) {
+    public ChatRecyclerViewAdapter(Context context, RecyclerView recyclerView, ArrayList<ChatMessage> chatMessages, OnLoadMoreListener delegate, ShowHeartsClickListner showHeartsClickListner) {
         this.context = context;
         this.chatMessages = chatMessages;
         this.loadMoreListener = delegate;
+        this.showHeartsClickListener = showHeartsClickListner;
 
     }
 
@@ -139,6 +142,13 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showHeartsClickListener.show();
+                }
+            });
+
         }
 
     }
@@ -193,6 +203,13 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     Intent intent = new Intent(context, ProfileActivity.class);
                     intent.putExtra(ProfileActivity.USER_ID, chatMessage.getUser().getId());
                     context.startActivity(intent);
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showHeartsClickListener.show();
                 }
             });
         }

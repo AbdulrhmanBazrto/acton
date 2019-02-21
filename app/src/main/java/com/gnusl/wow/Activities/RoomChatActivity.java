@@ -112,7 +112,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
         // inflate room chat fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        roomChatFragment = RoomChatFragment.newInstance();
+        roomChatFragment = RoomChatFragment.newInstance(room);
         fragmentTransaction.replace(R.id.frame_container, roomChatFragment).commit();
 
         // initialize views
