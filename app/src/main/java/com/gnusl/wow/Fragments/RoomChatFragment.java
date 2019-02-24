@@ -30,6 +30,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
@@ -329,12 +330,67 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             });
 
             ImageView roomImage = inflatedView.findViewById(R.id.iv_room_image);
-            TextView tvRoomName = inflatedView.findViewById(R.id.tv_room_name);
+            TextView tvRoomLevel = inflatedView.findViewById(R.id.tv_room_level);
             TextView tvRoomId = inflatedView.findViewById(R.id.tv_room_id);
+            TextView tvLanguage = inflatedView.findViewById(R.id.tv_language);
             TextView tvRoomMembersCount = inflatedView.findViewById(R.id.tv_room_members_count);
             ImageView ivRoomLocation = inflatedView.findViewById(R.id.iv_room_location);
+            Button btnRoomFollow = inflatedView.findViewById(R.id.btn_follow);
+            Button btnRoomJoin = inflatedView.findViewById(R.id.btn_join);
 
-            tvRoomName.setText(room.getName());
+            if (room.isFollowing()) {
+                btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
+            } else {
+                btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_empty_heart), null, null, null);
+            }
+
+            btnRoomFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    APIConnectionNetwork.FollowRoom(room.getId(), new ConnectionDelegate() {
+                        @Override
+                        public void onConnectionFailure() {
+
+                        }
+
+                        @Override
+                        public void onConnectionError(ANError anError) {
+
+                        }
+
+                        @Override
+                        public void onConnectionSuccess(String response) {
+
+                        }
+
+                        @Override
+                        public void onConnectionSuccess(JSONObject jsonObject) {
+                            if (jsonObject.has("status")) {
+                                if (jsonObject.optString("status").equalsIgnoreCase("follow")) {
+                                    btnRoomFollow.setText("unfollow");
+                                    btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
+                                } else if (jsonObject.optString("status").equalsIgnoreCase("unfollow")) {
+                                    btnRoomFollow.setText("follow");
+                                    btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_empty_heart), null, null, null);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onConnectionSuccess(JSONArray jsonArray) {
+
+                        }
+                    });
+                }
+            });
+
+
+            btnRoomJoin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
             tvRoomId.setText("| ID: " + room.getId());
 
@@ -344,10 +400,44 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
             tvRoomMembersCount.setText("| users: " + room.getNumUsers());
 
-            if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty() && getActivity() != null)
-                Glide.with(getActivity())
-                        .load(room.getBackgroundUrl())
-                        .into(roomImage);
+            APIConnectionNetwork.GetRoomInfo(room.getId(), new ConnectionDelegate() {
+                @Override
+                public void onConnectionFailure() {
+
+                }
+
+                @Override
+                public void onConnectionError(ANError anError) {
+
+                }
+
+                @Override
+                public void onConnectionSuccess(String response) {
+
+                }
+
+                @Override
+                public void onConnectionSuccess(JSONObject jsonObject) {
+                    if (jsonObject.has("thumbnail_url"))
+                        Glide.with(getActivity())
+                                .load(jsonObject.optString("thumbnail_url"))
+                                .into(roomImage);
+
+                    tvRoomLevel.setText("LV. " + jsonObject.optString("level"));
+                    if (jsonObject.optString("language").equalsIgnoreCase("en"))
+                        tvLanguage.setText("english");
+                    else if (jsonObject.optString("language").equalsIgnoreCase("ar"))
+                        tvLanguage.setText("العربية");
+
+                }
+
+                @Override
+                public void onConnectionSuccess(JSONArray jsonArray) {
+
+                }
+            });
+
+
         }
     }
 

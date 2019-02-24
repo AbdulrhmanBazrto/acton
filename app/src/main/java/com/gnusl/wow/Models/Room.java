@@ -32,8 +32,10 @@ public class Room implements Parcelable {
     private String backgroundUrl;
     private String countryCodeUrl;
     private User user;
+    private boolean isFollowing;
 
-    public Room(){}
+    public Room() {
+    }
 
     protected Room(Parcel in) {
         id = in.readInt();
@@ -53,6 +55,7 @@ public class Room implements Parcelable {
         backgroundUrl = in.readString();
         countryCodeUrl = in.readString();
         user = in.readParcelable(User.class.getClassLoader());
+        isFollowing = in.readByte() != 0;
     }
 
     public static final Creator<Room> CREATOR = new Creator<Room>() {
@@ -77,7 +80,7 @@ public class Room implements Parcelable {
         room.setId(jsonObject.optInt("id"));
         room.setName(jsonObject.optString("name"));
         room.setActive(jsonObject.optBoolean("is_active"));
-        room.setHasPassword(jsonObject.optInt("has_password")==1);
+        room.setHasPassword(jsonObject.optInt("has_password") == 1);
         room.setPassword(jsonObject.optString("password"));
         room.setUserId(jsonObject.optInt("user_id"));
         room.setNumUsers(jsonObject.optInt("num_users"));
@@ -90,9 +93,10 @@ public class Room implements Parcelable {
         room.setDescription(jsonObject.optString("description"));
         room.setBackgroundUrl(jsonObject.optString("background_url"));
         room.setCountryCodeUrl(jsonObject.optString("country_code_url"));
+        room.setFollowing(jsonObject.optBoolean("is_follow"));
 
         // user
-        if(jsonObject.has("user")) {
+        if (jsonObject.has("user")) {
             try {
                 room.setUser(User.newInstance(jsonObject.getJSONObject("user")));
             } catch (JSONException e) {
@@ -109,8 +113,8 @@ public class Room implements Parcelable {
             return null;
         }
 
-        ArrayList<Room> rooms=new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++) {
+        ArrayList<Room> rooms = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 rooms.add(Room.newInstance(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
@@ -118,6 +122,14 @@ public class Room implements Parcelable {
             }
         }
         return rooms;
+    }
+
+    public boolean isFollowing() {
+        return isFollowing;
+    }
+
+    public void setFollowing(boolean following) {
+        isFollowing = following;
     }
 
     public int getId() {
@@ -280,5 +292,6 @@ public class Room implements Parcelable {
         parcel.writeString(backgroundUrl);
         parcel.writeString(countryCodeUrl);
         parcel.writeParcelable(user, i);
+        parcel.writeByte((byte) (isFollowing ? 1 : 0));
     }
 }

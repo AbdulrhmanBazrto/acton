@@ -603,6 +603,16 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
+            android:id="@+id/iv_complain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cl_room_info_bg"
+            app:srcCompat="@drawable/icon_complain" />
+
+        <ImageView
             android:id="@+id/iv_room_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -617,22 +627,54 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:drawableRight="@drawable/icon_language"
+            android:drawablePadding="10dp"
+            android:gravity="center"
             android:text="العربية"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_room_image" />
 
-        <TextView
-            android:id="@+id/tv_room_name"
+        <LinearLayout
+            android:id="@+id/ll_lvl_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Test"
-            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_language" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_language">
+
+
+            <TextView
+                android:id="@+id/tv_room_level"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/shape_bg_room_level"
+                android:gravity="center"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="1dp"
+                android:text="LV."
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_room_name"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="1dp"
+                android:text="LV."
+                android:textColor="@color/white" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_info"
@@ -642,14 +684,7 @@
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_room_name">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="country: "
-                android:textColor="@color/white" />
-
+            app:layout_constraintTop_toBottomOf="@+id/ll_lvl_name">
 
             <ImageView
                 android:id="@+id/iv_room_location"
@@ -658,6 +693,13 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:textColor="@color/white" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                app:srcCompat="@drawable/icon_pin_location" />
+
 
             <TextView
                 android:id="@+id/tv_room_members_count"
@@ -679,19 +721,19 @@
                 android:textColor="@color/white" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_room_status"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="aa"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ll_info" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_room_status"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="5dp"-->
+        <!--android:layout_marginEnd="5dp"-->
+        <!--android:paddingStart="20dp"-->
+        <!--android:paddingEnd="20dp"-->
+        <!--android:text="aa"-->
+        <!--android:textColor="@color/white"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/ll_info" />-->
 
 
         <android.support.constraint.Guideline
@@ -705,12 +747,13 @@
             android:layout_width="1dp"
             android:layout_height="45dp"
             android:background="@color/white"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline" />
 
         <View
             android:layout_width="0dp"
-            android:layout_height="1dp"
+            android:layout_height="0.5dp"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -724,6 +767,7 @@
             android:background="@color/transparent"
             android:text="join"
             android:textColor="@color/white"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent" />
@@ -734,11 +778,16 @@
             android:layout_height="40dp"
             android:layout_marginBottom="5dp"
             android:background="@color/transparent"
+            android:drawableStart="@drawable/icon_empty_heart"
+            android:drawablePadding="-50dp"
+            android:gravity="center"
+            android:paddingStart="140dp"
+            android:paddingEnd="90dp"
             android:text="follow"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guideline" />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

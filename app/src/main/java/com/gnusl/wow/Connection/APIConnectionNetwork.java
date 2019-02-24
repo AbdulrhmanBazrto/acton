@@ -960,7 +960,7 @@ public class APIConnectionNetwork {
                                     // make call
                                     String callerId = jsonObject.getString("id");
 
-                                    if(!callerId.equalsIgnoreCase(callId))
+                                    if (!callerId.equalsIgnoreCase(callId))
                                         callDelegate.makeCallTO(callerId);
 
                                 } catch (JSONException e) {
@@ -1309,7 +1309,7 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void StoreGift(int channelId,int userIdTo,int giftId,ConnectionDelegate connectionDelegate) {
+    public static void StoreGift(int channelId, int userIdTo, int giftId, ConnectionDelegate connectionDelegate) {
 
         Log.d("ROOM ", String.valueOf(channelId));
 
@@ -1683,7 +1683,7 @@ public class APIConnectionNetwork {
 
     public static void GetScoreUsers(int channelId, ConnectionDelegate connectionDelegate) {
 
-        Log.d("CHANNEL_ID ",String.valueOf(channelId));
+        Log.d("CHANNEL_ID ", String.valueOf(channelId));
 
         AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/top?take=10")
 
@@ -1950,7 +1950,7 @@ public class APIConnectionNetwork {
 
     public static void GetChannelsByCountry(String country, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/country/"+country+"?skip=0&take=50")
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/country/" + country + "?skip=0&take=50")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -1982,7 +1982,7 @@ public class APIConnectionNetwork {
 
     public static void GetChannelsByTag(String tag, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Channels_Url.getLink()+"/tag/"+tag+"?skip=0&take=50")
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/tag/" + tag + "?skip=0&take=50")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -2012,7 +2012,7 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetProfileBadges(int userId,ConnectionDelegate connectionDelegate) {
+    public static void GetProfileBadges(int userId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/badges?take=50&skip=0")
 
@@ -2109,5 +2109,65 @@ public class APIConnectionNetwork {
                     }
                 });
 
+    }
+
+    public static void GetRoomInfo(int id, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/" + id + "/details")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Followers ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void FollowRoom(int roomId, ConnectionDelegate connectionDelegate) {
+        AndroidNetworking.post(APILinks.Follow_Channel_Url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("channel_id", String.valueOf(roomId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Followers ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
     }
 }
