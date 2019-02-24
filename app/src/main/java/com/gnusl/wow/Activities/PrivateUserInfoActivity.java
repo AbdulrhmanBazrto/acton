@@ -3,6 +3,7 @@ package com.gnusl.wow.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +46,10 @@ public class PrivateUserInfoActivity extends AppCompatActivity {
             startActivity(new Intent(this, ProfileGiftsActivity.class));
         });
 
+        findViewById(R.id.ll_badges).setOnClickListener(v -> {
+            startActivity(new Intent(this, BadgesActivity.class));
+        });
+
         // refresh user details
         setUserInfo(SharedPreferencesUtils.getUser());
     }
@@ -61,7 +66,7 @@ public class PrivateUserInfoActivity extends AppCompatActivity {
                     .into((ImageView) findViewById(R.id.user_image));
 
         // name
-        ((TextView)findViewById(R.id.user_name)).setText(user.getName());
+        ((TextView) findViewById(R.id.user_name)).setText(user.getName());
 
     }
 

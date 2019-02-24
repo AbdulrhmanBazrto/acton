@@ -46,7 +46,8 @@ public enum APILinks {
     Advertisement_Url(Base_API_Url.getLink() + "ad"),
 
     // badges
-    Profile_Badges_Url(Base_User_Url.getLink() + "/badges"),
+    All_Badges_Url(Base_User_Url.getLink() + "/badge"),
+    My_Profile_Badges_Url(Base_User_Url.getLink() + "/user/badges?take=10000000&skip=0"),
 
     // Following
     Follow_Url(Base_API_Url.getLink() + "follow"),

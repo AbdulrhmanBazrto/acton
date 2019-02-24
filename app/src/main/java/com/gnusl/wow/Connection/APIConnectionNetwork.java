@@ -8,6 +8,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.RegisterParams;
@@ -2014,7 +2015,7 @@ public class APIConnectionNetwork {
 
     public static void GetProfileBadges(int userId, ConnectionDelegate connectionDelegate) {
 
-        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/badges?take=50&skip=0")
+        AndroidNetworking.get(APILinks.Base_User_Url.getLink() + "/" + String.valueOf(userId) + "/badges?take=500&skip=0")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
@@ -2028,6 +2029,66 @@ public class APIConnectionNetwork {
 
                         if (connectionDelegate != null) {
                             connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Profile Badges ", anError.getMessage());
+                        Log.d("Profile Badges ", anError.getErrorDetail());
+                    }
+                });
+    }
+
+    public static void GetMyBadges(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.My_Profile_Badges_Url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Profile Badges ", response.toString());
+
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Profile Badges ", anError.getMessage());
+                        Log.d("Profile Badges ", anError.getErrorDetail());
+                    }
+                });
+    }
+
+    public static void GetAllBadges(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.All_Badges_Url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.d("Profile Badges ", response.toString());
+
+                        if (connectionDelegate != null) {
+//                            connectionDelegate.onConnectionSuccess(new JSONObject(response).optJSONArray("badges"));
                         }
                     }
 

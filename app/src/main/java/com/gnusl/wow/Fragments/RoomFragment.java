@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -56,7 +57,7 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         inflatedView = inflater.inflate(R.layout.fragment_room, container, false);
 
@@ -67,7 +68,6 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
         initializeSmartTabs();
 
         // handling daily login dialog
-//        initializeDailyLoginDialog();
         DialyLoginPopUp.show(getActivity());
 
         // open drawer
@@ -82,6 +82,35 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
                 intent.putExtra(SearchActivity.SEARCH_FOR_ROOMS, "");
                 startActivity(intent);
             });
+
+
+        try {
+            JSONArray loginJsonArray = null;
+            String dailyLoginArrayStr = SharedPreferencesUtils.getDailyLoginArray();
+            if (dailyLoginArrayStr.equalsIgnoreCase(""))
+                loginJsonArray = new JSONArray();
+            else
+                loginJsonArray = new JSONArray(dailyLoginArrayStr);
+
+            JSONObject lastLogin = loginJsonArray.getJSONObject(loginJsonArray.length());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+
+            if (lastLogin != null && lastLogin.optLong("timestamp") > calendar.getTimeInMillis()) {
+                inflatedView.findViewById(R.id.btn_showDailyLogin).setVisibility(View.GONE);
+            } else {
+                inflatedView.findViewById(R.id.btn_showDailyLogin).setVisibility(View.VISIBLE);
+            }
+        } catch (JSONException e) {
+
+        }
+        inflatedView.findViewById(R.id.btn_showDailyLogin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialyLoginPopUp.show(getActivity());
+            }
+        });
 
         return inflatedView;
     }

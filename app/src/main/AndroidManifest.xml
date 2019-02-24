@@ -180,7 +180,8 @@
         <activity android:name=".Activities.RoomByCountryActivity" />
         <activity android:name=".Activities.ProfileBadgesActivity" />
         <activity android:name=".Activities.ProfileRoomsActivity" />
-        <activity android:name=".Activities.ProfileMomentsActivity"></activity>
+        <activity android:name=".Activities.ProfileMomentsActivity" />
+        <activity android:name=".Activities.BadgesActivity"></activity>
     </application>
 
 </manifest>
