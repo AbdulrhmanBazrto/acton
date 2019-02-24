@@ -331,6 +331,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
             ImageView roomImage = inflatedView.findViewById(R.id.iv_room_image);
             TextView tvRoomLevel = inflatedView.findViewById(R.id.tv_room_level);
+            TextView tvRoomName = inflatedView.findViewById(R.id.tv_room_name);
             TextView tvRoomId = inflatedView.findViewById(R.id.tv_room_id);
             TextView tvLanguage = inflatedView.findViewById(R.id.tv_language);
             TextView tvRoomMembersCount = inflatedView.findViewById(R.id.tv_room_members_count);
@@ -339,10 +340,14 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             Button btnRoomJoin = inflatedView.findViewById(R.id.btn_join);
 
             if (room.isFollowing()) {
+                btnRoomFollow.setText("following");
                 btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
             } else {
+                btnRoomFollow.setText("follow");
                 btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_empty_heart), null, null, null);
             }
+
+            tvRoomName.setText(room.getName());
 
             btnRoomFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -367,7 +372,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         public void onConnectionSuccess(JSONObject jsonObject) {
                             if (jsonObject.has("status")) {
                                 if (jsonObject.optString("status").equalsIgnoreCase("follow")) {
-                                    btnRoomFollow.setText("unfollow");
+                                    btnRoomFollow.setText("following");
                                     btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
                                 } else if (jsonObject.optString("status").equalsIgnoreCase("unfollow")) {
                                     btnRoomFollow.setText("follow");

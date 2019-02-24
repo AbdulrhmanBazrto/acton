@@ -108,7 +108,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             setRoom(getIntent().getParcelableExtra(CHANNEL_KEY));
 
         // WebRtc implementation
-       // AudioConferenceWebRtcImplementation();
+        // AudioConferenceWebRtcImplementation();
 
         // inflate room chat fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -125,8 +125,8 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         setSpeakerMode();
 
         // check lock
-        if(getRoom()!=null && getRoom().isHasPassword())
-            EnterPassWordRoomPopUp.show(this,getRoom());
+        if (getRoom() != null && getRoom().isHasPassword())
+            EnterPassWordRoomPopUp.show(this, getRoom());
 
     }
 
@@ -214,20 +214,20 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         client = new WebRtcClient(this, mSocketAddress, params, VideoRendererGui.getEGLContext(), getRoom().getId());
     }
 
-    public boolean isSpeakerPhoneMode(){
+    public boolean isSpeakerPhoneMode() {
 
         AudioManager audioManager = ((AudioManager) getSystemService(AUDIO_SERVICE));
         return audioManager.isSpeakerphoneOn();
     }
 
-    public void setHeadSetMode(){
+    public void setHeadSetMode() {
 
         AudioManager audioManager = ((AudioManager) getSystemService(AUDIO_SERVICE));
         audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         audioManager.setSpeakerphoneOn(false);
     }
 
-    public void setSpeakerMode(){
+    public void setSpeakerMode() {
 
         //setting speakerphone on
         AudioManager audioManager = ((AudioManager) getSystemService(AUDIO_SERVICE));
@@ -238,7 +238,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     @Override
     public void onBackPressed() {
 
-        if(isShouldLogout)
+        if (isShouldLogout)
             super.onBackPressed();
         else
             roomChatFragment.showLogOutFrame();
@@ -487,7 +487,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     public void onReadyToCall(String callId) {
 
         Log.d("onCallReady callId ", callId);
-         //call(callId);
+        //call(callId);
 
         // start streaming on server
         if (PermissionChecker.hasPermissions(this, RequiredPermissions)) {
@@ -576,7 +576,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
                     APIConnectionNetwork.ChangeRoomBackground(jsonObject.getString("image"), getRoom().getId(), this);
 
                 else   // send image as message
-                    SendImageMessageRequest(APILinks.Base_Media_Url.getLink()+jsonObject.getString("image"));
+                    SendImageMessageRequest(APILinks.Base_Media_Url.getLink() + jsonObject.getString("image"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -602,10 +602,10 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         isShouldLogout = shouldLogout;
     }
 
-    public static void launch(Activity activity,Room room){
+    public static void launch(Activity activity, Room room) {
 
-        Intent intent=new Intent(activity, RoomChatActivity.class);
-        intent.putExtra(RoomChatActivity.CHANNEL_KEY,room);
+        Intent intent = new Intent(activity, RoomChatActivity.class);
+        intent.putExtra(RoomChatActivity.CHANNEL_KEY, room);
         activity.startActivity(intent);
     }
 }

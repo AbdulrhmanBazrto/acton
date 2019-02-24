@@ -12,13 +12,14 @@ import java.lang.reflect.Type;
 
 public class SharedPreferencesUtils {
 
-    private final static String User="user";
-    private final static String Token="token";
+    private final static String User = "user";
+    private final static String Token = "token";
+    private final static String LoginArray = "loginArray";
 
     public static void saveUser(User user) {
-        SharedPreferences.Editor sharedPreferences= PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext()).edit();
+        SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext()).edit();
         Gson gson = new Gson();
-        sharedPreferences.putString(User,gson.toJson(user));
+        sharedPreferences.putString(User, gson.toJson(user));
         sharedPreferences.apply();
 
     }
@@ -27,17 +28,18 @@ public class SharedPreferencesUtils {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext());
         Gson gson = new Gson();
         String json = sharedPreferences.getString(User, "");
-        if (json==null || json.isEmpty()) {
+        if (json == null || json.isEmpty()) {
             return null;
         } else {
-            Type type = (new TypeToken<User>() {}).getType();
-            return (User)gson.fromJson(json, type);
+            Type type = (new TypeToken<User>() {
+            }).getType();
+            return (User) gson.fromJson(json, type);
         }
     }
 
     public static void saveToken(String token) {
-        SharedPreferences.Editor sharedPreferences= PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext()).edit();
-        sharedPreferences.putString(Token,token);
+        SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext()).edit();
+        sharedPreferences.putString(Token, token);
         sharedPreferences.apply();
 
     }
@@ -45,6 +47,18 @@ public class SharedPreferencesUtils {
     public static String getToken() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext());
         return sharedPreferences.getString(Token, "");
+    }
+
+    public static String getDailyLoginArray() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext());
+        return sharedPreferences.getString(LoginArray, "");
+    }
+
+    public static void setDailyLoginArray(String loginArray) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(WowApplication.getAppContext());
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(LoginArray, loginArray);
+        edit.apply();
     }
 
     public static void clear() {

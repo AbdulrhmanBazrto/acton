@@ -3,6 +3,7 @@ package com.gnusl.wow.Fragments;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -22,11 +23,18 @@ import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Activities.SearchActivity;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
 import com.gnusl.wow.Models.User;
+import com.gnusl.wow.Popups.DialyLoginPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -58,16 +66,20 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
         // initialize top bar with viewpager
         initializeSmartTabs();
 
+        // handling daily login dialog
+//        initializeDailyLoginDialog();
+        DialyLoginPopUp.show(getActivity());
+
         // open drawer
         if (getActivity() instanceof MainActivity)
-            inflatedView.findViewById(R.id.right_icon).setOnClickListener(v->((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START));
+            inflatedView.findViewById(R.id.right_icon).setOnClickListener(v -> ((MainActivity) getActivity()).getDrawer().openDrawer(GravityCompat.START));
 
         // open search
         if (getActivity() instanceof MainActivity)
-            inflatedView.findViewById(R.id.search_icon).setOnClickListener(v->{
+            inflatedView.findViewById(R.id.search_icon).setOnClickListener(v -> {
 
-                Intent intent=new Intent(getActivity(),SearchActivity.class);
-                intent.putExtra(SearchActivity.SEARCH_FOR_ROOMS,"");
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra(SearchActivity.SEARCH_FOR_ROOMS, "");
                 startActivity(intent);
             });
 

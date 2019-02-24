@@ -111,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // message section logic
             if (getmCurrentFragment() instanceof MessagesContainerFragment) {
 
-                if(!(((MessagesContainerFragment)getmCurrentFragment()).getmCurrentFragment() instanceof MessagesFragment))
-                    ((MessagesContainerFragment)getmCurrentFragment()).replaceFragment(FragmentTags.MessagesFragment);
+                if (!(((MessagesContainerFragment) getmCurrentFragment()).getmCurrentFragment() instanceof MessagesFragment))
+                    ((MessagesContainerFragment) getmCurrentFragment()).replaceFragment(FragmentTags.MessagesFragment);
 
             } else
                 super.onBackPressed();
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             startActivity(new Intent(MainActivity.this, RechargeActivity.class));
 
-        }else if (id == R.id.earn_gold) {
+        } else if (id == R.id.earn_gold) {
 
             startActivity(new Intent(MainActivity.this, EarnGoldActivity.class));
 
@@ -237,10 +237,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void initializeHeaderNavigation(View navigationView){
+    private void initializeHeaderNavigation(View navigationView) {
 
         // go to profile
-        navigationView.findViewById(R.id.imageView).setOnClickListener(v->startActivity(new Intent(this,PrivateUserInfoActivity.class)));
+        navigationView.findViewById(R.id.imageView).setOnClickListener(v -> startActivity(new Intent(this, PrivateUserInfoActivity.class)));
 
         // set user info
         setUserInformation(navigationView);
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ((TextView) headerView.findViewById(R.id.name_text)).setText(user.getName());
 
             // Id
-            ((TextView) headerView.findViewById(R.id.id_text)).setText(String.valueOf("LV"+user.getLevel()+" "+"ID:" + user.getId()));
+            ((TextView) headerView.findViewById(R.id.id_text)).setText(String.valueOf("LV" + user.getLevel() + " " + "ID:" + user.getId()));
 
             // user image
             if (user.getImage_url() != null && !user.getImage_url().isEmpty())

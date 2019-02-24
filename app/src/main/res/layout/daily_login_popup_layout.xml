@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:background="@color/white"
+    android:minWidth="350dp"
+    android:minHeight="500dp">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.26" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/background_dialy_login_header"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_daily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="الحضور اليومي"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_login7days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_bg_room_level"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="1dp"
+        android:text="سجل 7 ايام للحصول على هدية مفاجأة"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_daily" />
+
+    <ImageView
+        android:id="@+id/iv_first"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_bg_gift"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@+id/guideline3"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        app:srcCompat="@drawable/icon_normal_gift" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/iv_first_check"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/shape_bg_daily_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/iv_first"
+        app:layout_constraintTop_toTopOf="@+id/iv_first">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_tick" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_second"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_bg_gift"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@+id/guideline2"
+        app:layout_constraintRight_toLeftOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        app:srcCompat="@drawable/icon_normal_gift" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/iv_second_check"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/shape_bg_daily_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/iv_second"
+        app:layout_constraintTop_toTopOf="@+id/iv_second">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_tick" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_third"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_bg_gift"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@+id/guideline1"
+        app:layout_constraintRight_toLeftOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        app:srcCompat="@drawable/icon_normal_gift" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/iv_third_check"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/shape_bg_daily_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/iv_third"
+        app:layout_constraintTop_toTopOf="@+id/iv_third">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_tick" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_fourth"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_bg_gift"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        app:srcCompat="@drawable/icon_normal_gift" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/iv_fourth_check"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/shape_bg_daily_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/iv_fourth"
+        app:layout_constraintTop_toTopOf="@+id/iv_fourth">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_tick" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_fifth"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_bg_gift"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@+id/guideline3"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_first"
+        app:srcCompat="@drawable/icon_normal_gift" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/iv_fifth_check"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/shape_bg_daily_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/iv_fifth"
+        app:layout_constraintTop_toTopOf="@+id/iv_fifth">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_tick" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_sixth"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_bg_gift"
+        android:paddingStart="10dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@+id/guideline2"
+        app:layout_constraintRight_toLeftOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_first"
+        app:srcCompat="@drawable/icon_normal_gift" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/iv_six_check"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/shape_bg_daily_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/iv_sixth"
+        app:layout_constraintTop_toTopOf="@+id/iv_sixth">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_tick" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_seventh"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_bg_gift"
+        android:paddingStart="10dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="15dp"
+        android:scaleType="fitCenter"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_first"
+        app:srcCompat="@drawable/icon_gift_box_big" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/iv_seven_check"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/shape_bg_daily_gift"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="@+id/iv_seventh"
+        app:layout_constraintTop_toTopOf="@+id/iv_seventh">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_right_tick" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_login_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:paddingStart="10dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="15dp"
+        android:scaleType="fitCenter"
+        android:text="لقد سجلت الدخول لمدة 1 يوم"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_fifth"
+        app:srcCompat="@drawable/icon_gift_box_big" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/shape_bg_daily_login"
+        android:gravity="center"
+        android:paddingStart="10dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="15dp"
+        android:scaleType="fitCenter"
+        android:text="تسجيل الدخول"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_login_count"
+        app:srcCompat="@drawable/icon_gift_box_big" />
+
+
+</android.support.constraint.ConstraintLayout>

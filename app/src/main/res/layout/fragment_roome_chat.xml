@@ -663,7 +663,7 @@
 
             <TextView
                 android:id="@+id/tv_room_name"
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
@@ -671,7 +671,6 @@
                 android:paddingTop="1dp"
                 android:paddingEnd="5dp"
                 android:paddingBottom="1dp"
-                android:text="LV."
                 android:textColor="@color/white" />
 
         </LinearLayout>
