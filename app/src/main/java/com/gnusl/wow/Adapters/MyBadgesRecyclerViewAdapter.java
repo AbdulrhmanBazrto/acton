@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Models.Badge;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -52,21 +55,32 @@ public class MyBadgesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView badgeImage;
+        private ProgressBar load_progress;
 
 
         public UserViewHolder(View itemView) {
             super(itemView);
 
             badgeImage = itemView.findViewById(R.id.badge_image);
-
+            load_progress = itemView.findViewById(R.id.load_progress);
         }
 
         public void bind(final Badge badge, final int position) {
 
             if (badge.getPath() != null && !badge.getPath().isEmpty())
-                Glide.with(context)
+                Picasso.with(context)
                         .load(badge.getPath())
-                        .into(badgeImage);
+                        .into(badgeImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                load_progress.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
 
 
         }

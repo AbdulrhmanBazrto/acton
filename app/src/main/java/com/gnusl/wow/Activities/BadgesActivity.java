@@ -29,7 +29,7 @@ public class BadgesActivity extends AppCompatActivity {
 
     RecyclerView rvAllBadges;
     AllBadgesRecyclerViewAdapter allBadgesRecyclerViewAdapter;
-    ArrayList<Badge> myBadges;
+    ArrayList<Badge> myBadges = new ArrayList<>();
 
     TabLayout badgeTabLayout;
 
@@ -62,7 +62,6 @@ public class BadgesActivity extends AppCompatActivity {
         rvAllBadges.setLayoutManager(gridLayoutManager);
         allBadgesRecyclerViewAdapter = new AllBadgesRecyclerViewAdapter(this, new ArrayList<>());
         rvAllBadges.setAdapter(allBadgesRecyclerViewAdapter);
-        getBadges();
 
         badgeTabLayout.getTabAt(1).select();
 
@@ -70,9 +69,9 @@ public class BadgesActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                    queryType = 0;
-                } else if (tab.getPosition() == 1) {
                     queryType = 1;
+                } else if (tab.getPosition() == 1) {
+                    queryType = 0;
                 }
                 LoaderPopUp.show(BadgesActivity.this);
                 getBadges();
@@ -143,9 +142,9 @@ public class BadgesActivity extends AppCompatActivity {
                 }
 
                 if (queryType == 0) {
-
+                    allBadgesRecyclerViewAdapter.setUsers(honorBadges);
                 } else {
-
+                    allBadgesRecyclerViewAdapter.setUsers(achBadges);
                 }
             }
         });
@@ -181,6 +180,7 @@ public class BadgesActivity extends AppCompatActivity {
                     myBadges.get(i).setGranted(true);
                 }
                 myBadgesRecyclerViewAdapter.setUsers(myBadges);
+                getBadges();
             }
         });
     }

@@ -2081,14 +2081,14 @@ public class APIConnectionNetwork {
                 .addHeaders("Authorization", APIUtils.getAuthorization())
                 .setPriority(Priority.MEDIUM)
                 .build()
-                .getAsString(new StringRequestListener() {
+                .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
 
                         Log.d("Profile Badges ", response.toString());
 
                         if (connectionDelegate != null) {
-//                            connectionDelegate.onConnectionSuccess(new JSONObject(response).optJSONArray("badges"));
+                            connectionDelegate.onConnectionSuccess(response.optJSONArray("badges"));
                         }
                     }
 
