@@ -239,7 +239,6 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
                         case R.id.backround_action:
 
-                            ((RoomChatActivity) getActivity()).openGallery(true);
                             break;
                     }
 
