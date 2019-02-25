@@ -3,6 +3,7 @@ package com.gnusl.wow.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,7 +55,7 @@ public class WeekGiftsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         inflatedView = inflater.inflate(R.layout.fragment_week_gifts, container, false);
 
@@ -67,12 +68,12 @@ public class WeekGiftsFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        if(parentFragment instanceof RoomGiftsFragment){
+        if (parentFragment instanceof RoomGiftsFragment || parentFragment instanceof RoomTopGiftsFragment) {
 
             giftRoomsRankingRecyclerViewAdapter = new GiftRoomsRankingRecyclerViewAdapter(getContext(), new ArrayList<>());
             recyclerView.setAdapter(giftRoomsRankingRecyclerViewAdapter);
 
-        }else {
+        } else {
             giftUsersRankingRecyclerViewAdapter = new GiftUsersRankingRecyclerViewAdapter(getContext(), new ArrayList<>());
             recyclerView.setAdapter(giftUsersRankingRecyclerViewAdapter);
         }
@@ -82,12 +83,12 @@ public class WeekGiftsFragment extends Fragment {
 
     public void refreshUsersData(ArrayList<GiftUserRank> giftUserRanks) {
 
-        if(giftUserRanks==null) {
+        if (giftUserRanks == null) {
             content_container.setVisibility(View.GONE);
             return;
         }
 
-        if(giftUserRanks.isEmpty()) {
+        if (giftUserRanks.isEmpty()) {
             content_container.setVisibility(View.GONE);
             return;
         }
@@ -97,14 +98,14 @@ public class WeekGiftsFragment extends Fragment {
         giftUsersRankingRecyclerViewAdapter.notifyDataSetChanged();
     }
 
-    public void refreshRoomsData(ArrayList<GiftRoomRank> giftRoomRanks){
+    public void refreshRoomsData(ArrayList<GiftRoomRank> giftRoomRanks) {
 
-        if(giftRoomRanks==null) {
+        if (giftRoomRanks == null) {
             content_container.setVisibility(View.GONE);
             return;
         }
 
-        if(giftRoomRanks.isEmpty()) {
+        if (giftRoomRanks.isEmpty()) {
             content_container.setVisibility(View.GONE);
             return;
         }

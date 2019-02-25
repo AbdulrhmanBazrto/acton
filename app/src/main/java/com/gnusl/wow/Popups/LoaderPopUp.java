@@ -34,17 +34,18 @@ public class LoaderPopUp extends DialogFragment {
         return dialog;
     }
 
-    public static void show(FragmentActivity fragmentActivity){
+    public static void show(FragmentActivity fragmentActivity) {
 
-        if(loaderPopUp==null)
-            loaderPopUp=new LoaderPopUp();
-
-        loaderPopUp.show(fragmentActivity.getSupportFragmentManager(),"");
+        if (loaderPopUp == null)
+            loaderPopUp = new LoaderPopUp();
+        if (fragmentActivity == null)
+            return;
+        loaderPopUp.show(fragmentActivity.getSupportFragmentManager(), "");
     }
 
-    public static void dismissLoader(){
+    public static void dismissLoader() {
 
-        if(loaderPopUp==null)
+        if (loaderPopUp == null)
             return;
 
         loaderPopUp.dismiss();

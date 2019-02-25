@@ -3,6 +3,7 @@ package com.gnusl.wow.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,7 +55,7 @@ public class DayGiftsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         inflatedView = inflater.inflate(R.layout.fragment_day_gifts, container, false);
 
@@ -67,7 +68,7 @@ public class DayGiftsFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        if(parentFragment instanceof RoomGiftsFragment){
+        if(parentFragment instanceof RoomGiftsFragment || parentFragment instanceof RoomTopGiftsFragment ){
 
             giftRoomsRankingRecyclerViewAdapter = new GiftRoomsRankingRecyclerViewAdapter(getContext(), new ArrayList<>());
             recyclerView.setAdapter(giftRoomsRankingRecyclerViewAdapter);

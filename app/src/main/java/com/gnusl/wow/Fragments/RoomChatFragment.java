@@ -41,6 +41,7 @@ import com.androidnetworking.error.ANError;
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Activities.RoomSettingsActivity;
+import com.gnusl.wow.Activities.RoomTopGiftsActivity;
 import com.gnusl.wow.Activities.UsersInRoomActivity;
 import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.MicUsersRecyclerViewAdapter;
@@ -313,6 +314,12 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         inflatedView.findViewById(R.id.share_button).setOnClickListener(v -> {
 
             shareChannel();
+        });
+
+        inflatedView.findViewById(R.id.follow_score).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), RoomTopGiftsActivity.class);
+            intent.putExtra("roomId", room.getId());
+            startActivity(intent);
         });
     }
 
