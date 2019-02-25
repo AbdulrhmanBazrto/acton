@@ -111,6 +111,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     private PubNub pubnub;
     String channelName = "awesomeChannel";
 
+
+    Button btnRoomFollow;
+
     public RoomChatFragment() {
     }
 
@@ -193,7 +196,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     }
 
     private void initializeViews() {
-
+        btnRoomFollow = inflatedView.findViewById(R.id.btn_follow);
         inflatedView.findViewById(R.id.frame).setOnClickListener(v -> {
 
             ((RoomChatActivity) getActivity()).onRequestToHideKeyboard();
@@ -321,6 +324,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             intent.putExtra("roomId", room.getId());
             startActivity(intent);
         });
+
+        inflatedView.findViewById(R.id.iv_follow_room).setOnClickListener(v -> {
+            followUnfollowRoom();
+        });
     }
 
     private void showRoomNameDialog() {
@@ -343,15 +350,16 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             TextView tvLanguage = inflatedView.findViewById(R.id.tv_language);
             TextView tvRoomMembersCount = inflatedView.findViewById(R.id.tv_room_members_count);
             ImageView ivRoomLocation = inflatedView.findViewById(R.id.iv_room_location);
-            Button btnRoomFollow = inflatedView.findViewById(R.id.btn_follow);
             Button btnRoomJoin = inflatedView.findViewById(R.id.btn_join);
 
             if (room.isFollowing()) {
                 btnRoomFollow.setText("following");
                 btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
+                ((ImageView) inflatedView.findViewById(R.id.iv_follow_room)).setImageResource(R.drawable.icon_full_heart);
             } else {
                 btnRoomFollow.setText("follow");
                 btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_empty_heart), null, null, null);
+                ((ImageView) inflatedView.findViewById(R.id.iv_follow_room)).setImageResource(R.drawable.icon_empty_heart);
             }
 
             tvRoomName.setText(room.getName());
@@ -359,40 +367,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             btnRoomFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    APIConnectionNetwork.FollowRoom(room.getId(), new ConnectionDelegate() {
-                        @Override
-                        public void onConnectionFailure() {
-
-                        }
-
-                        @Override
-                        public void onConnectionError(ANError anError) {
-
-                        }
-
-                        @Override
-                        public void onConnectionSuccess(String response) {
-
-                        }
-
-                        @Override
-                        public void onConnectionSuccess(JSONObject jsonObject) {
-                            if (jsonObject.has("status")) {
-                                if (jsonObject.optString("status").equalsIgnoreCase("follow")) {
-                                    btnRoomFollow.setText("following");
-                                    btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
-                                } else if (jsonObject.optString("status").equalsIgnoreCase("unfollow")) {
-                                    btnRoomFollow.setText("follow");
-                                    btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_empty_heart), null, null, null);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onConnectionSuccess(JSONArray jsonArray) {
-
-                        }
-                    });
+                    followUnfollowRoom();
                 }
             });
 
@@ -451,6 +426,45 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
 
         }
+    }
+
+    private void followUnfollowRoom() {
+        APIConnectionNetwork.FollowRoom(room.getId(), new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+                if (jsonObject.has("status")) {
+                    if (jsonObject.optString("status").equalsIgnoreCase("follow")) {
+                        btnRoomFollow.setText("following");
+                        btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
+                        ((ImageView) inflatedView.findViewById(R.id.iv_follow_room)).setImageResource(R.drawable.icon_full_heart);
+                    } else if (jsonObject.optString("status").equalsIgnoreCase("unfollow")) {
+                        btnRoomFollow.setText("follow");
+                        btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_empty_heart), null, null, null);
+                        ((ImageView) inflatedView.findViewById(R.id.iv_follow_room)).setImageResource(R.drawable.icon_empty_heart);
+                    }
+                }
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
+        });
     }
 
     private void animateEntranceUser() {
