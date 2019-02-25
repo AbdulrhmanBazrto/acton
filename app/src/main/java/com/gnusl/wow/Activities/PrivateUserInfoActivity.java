@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Fragments.MyMomentsFragment;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
@@ -49,6 +50,12 @@ public class PrivateUserInfoActivity extends AppCompatActivity {
         findViewById(R.id.ll_badges).setOnClickListener(v -> {
             startActivity(new Intent(this, BadgesActivity.class));
         });
+
+        findViewById(R.id.visitors).setOnClickListener(v ->
+                startActivity(new Intent(this, VisitorsActivity.class)));
+
+        findViewById(R.id.moments).setOnClickListener(v ->
+                startActivity(new Intent(this, MyMomentsActivity.class)));
 
         // refresh user details
         setUserInfo(SharedPreferencesUtils.getUser());

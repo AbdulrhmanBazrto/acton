@@ -326,6 +326,47 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void GetMyPosts(int take, int skip, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_API_Url.getLink() + "post?take=" + take + "&skip=" + skip)
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Following POSTS ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            if (response.has("posts")) {
+                                try {
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("posts"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    connectionDelegate.onConnectionFailure();
+                                }
+                            } else
+                                connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Following POSTS ", anError.getMessage());
+                        Log.d("Following POSTS ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void UpdateLike(int postId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Update_Like_Url.getLink() + "?post_id=" + postId)
@@ -1637,6 +1678,37 @@ public class APIConnectionNetwork {
                         // handle parse user data
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Following ", anError.getMessage());
+                        Log.d("Following ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void GetVisitors(int userId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Base_API_Url.getLink() + "visit/" + userId)
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Following ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response.optJSONArray("visitors"));
                     }
 
                     @Override

@@ -182,6 +182,8 @@
         <activity android:name=".Activities.ProfileRoomsActivity" />
         <activity android:name=".Activities.ProfileMomentsActivity" />
         <activity android:name=".Activities.BadgesActivity"></activity>
+        <activity android:name=".Activities.VisitorsActivity" />
+        <activity android:name=".Activities.MyMomentsActivity" />
     </application>
 
 </manifest>

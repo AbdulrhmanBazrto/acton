@@ -1,6 +1,5 @@
 package com.gnusl.wow.Fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,7 +22,6 @@ import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
-import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,19 +36,19 @@ import static android.widget.Toast.LENGTH_SHORT;
  * Created by Yehia on 9/30/2018.
  */
 
-public class FollowingFragment extends Fragment implements ConnectionDelegate, PostActionsDelegate, OnLoadMoreListener {
+public class MyMomentsFragment extends Fragment implements ConnectionDelegate, PostActionsDelegate, OnLoadMoreListener {
 
     private static final int PAGE_SIZE_ITEMS = 5;
     private boolean isRefreshing;
     private View inflatedView;
     private PostsRecyclerViewAdapter postsRecyclerViewAdapter;
 
-    public FollowingFragment() {
+    public MyMomentsFragment() {
     }
 
-    public static FollowingFragment newInstance() {
+    public static MyMomentsFragment newInstance() {
 
-        return new FollowingFragment();
+        return new MyMomentsFragment();
     }
 
     @Override
@@ -65,11 +63,11 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(getContext(),recyclerView, new ArrayList<>(), this,this,true);
+        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(getContext(), recyclerView, new ArrayList<>(), this, this, false);
         recyclerView.setAdapter(postsRecyclerViewAdapter);
 
         // send request
-        APIConnectionNetwork.GetAllFollowingPosts(PAGE_SIZE_ITEMS, postsRecyclerViewAdapter.getFeaturePosts().size(), this);
+        APIConnectionNetwork.GetMyPosts(PAGE_SIZE_ITEMS, postsRecyclerViewAdapter.getFeaturePosts().size(), this);
 
         return inflatedView;
     }
@@ -86,7 +84,7 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
         LoaderPopUp.show(getActivity());
 
         // send request
-        APIConnectionNetwork.GetAllFollowingPosts(PAGE_SIZE_ITEMS, postsRecyclerViewAdapter.getFeaturePosts().size(), this);
+        APIConnectionNetwork.GetMyPosts(PAGE_SIZE_ITEMS, postsRecyclerViewAdapter.getFeaturePosts().size(), this);
     }
 
     @Override
@@ -170,7 +168,7 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
             }
 
             // check limit
-            if(featurePosts.isEmpty())
+            if (featurePosts.isEmpty())
                 postsRecyclerViewAdapter.setRechToLimit(true);
 
             isRefreshing = false;
@@ -203,8 +201,8 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
     @Override
     public void onEditPost(FeaturePost post) {
 
-        Intent intent=new Intent(getActivity(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY,post);
+        Intent intent = new Intent(getActivity(), CreatePostActivity.class);
+        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY, post);
         startActivity(intent);
     }
 
