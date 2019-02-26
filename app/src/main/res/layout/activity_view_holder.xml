@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="4dp"
     android:layout_marginLeft="4dp"
     android:layout_marginTop="4dp"
-    android:id="@+id/root_view"
-    android:background="@drawable/activity_backround_label_brouwn_shape"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/activity_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:gravity="center"
+        android:padding="5dp"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

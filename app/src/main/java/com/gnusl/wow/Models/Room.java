@@ -33,6 +33,8 @@ public class Room implements Parcelable {
     private String countryCodeUrl;
     private User user;
     private boolean isFollowing;
+    private String thumbnailUrl;
+    private String tag;
 
     public Room() {
     }
@@ -56,6 +58,8 @@ public class Room implements Parcelable {
         countryCodeUrl = in.readString();
         user = in.readParcelable(User.class.getClassLoader());
         isFollowing = in.readByte() != 0;
+        thumbnailUrl = in.readString();
+        tag = in.readString();
     }
 
     public static final Creator<Room> CREATOR = new Creator<Room>() {
@@ -94,6 +98,8 @@ public class Room implements Parcelable {
         room.setBackgroundUrl(jsonObject.optString("background_url"));
         room.setCountryCodeUrl(jsonObject.optString("country_code_url"));
         room.setFollowing(jsonObject.optBoolean("is_follow"));
+        room.setThumbnailUrl(jsonObject.optString("thumbnail_url"));
+        room.setTag(jsonObject.optString("tag"));
 
         // user
         if (jsonObject.has("user")) {
@@ -268,6 +274,23 @@ public class Room implements Parcelable {
         this.numUsers = numUsers;
     }
 
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -293,5 +316,7 @@ public class Room implements Parcelable {
         parcel.writeString(countryCodeUrl);
         parcel.writeParcelable(user, i);
         parcel.writeByte((byte) (isFollowing ? 1 : 0));
+        parcel.writeString(thumbnailUrl);
+        parcel.writeString(tag);
     }
 }

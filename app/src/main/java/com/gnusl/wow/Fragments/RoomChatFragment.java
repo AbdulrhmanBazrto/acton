@@ -217,35 +217,70 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         inflatedView.findViewById(R.id.more_icon).setOnClickListener(v -> {
 
-            PopupMenu dropDownMenu = new PopupMenu(getContext(), inflatedView.findViewById(R.id.more_icon));
-            dropDownMenu.getMenuInflater().inflate(R.menu.more_room_option, dropDownMenu.getMenu());
-            dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId()) {
+                PopupMenu dropDownMenu = new PopupMenu(getContext(), inflatedView.findViewById(R.id.more_icon));
+                dropDownMenu.getMenuInflater().inflate(R.menu.more_room_option, dropDownMenu.getMenu());
+                dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
 
-                    switch (menuItem.getItemId()) {
+                        switch (menuItem.getItemId()) {
 
-                        case R.id.settings_action:
+                            case R.id.action_settings:
+                                goToRoomSettingsActivity();
+                                break;
 
-                            goToRoomSettingsActivity();
-                            break;
+                            case R.id.action_members:
 
-                        case R.id.members:
+                                // go to users in channel
+                                goToUsersInRoomActivity();
+                                break;
 
-                            // go to users in channel
-                            goToUsersInRoomActivity();
-                            break;
+                            case R.id.action_themes:
 
-                        case R.id.backround_action:
+                                break;
+                            case R.id.action_develop:
 
-                            break;
+                                break;
+                            case R.id.action_lock:
+
+                                break;
+                            case R.id.action_mute:
+
+                                break;
+                        }
+
+                        return true;
                     }
+                });
+                dropDownMenu.show();
+            } else {
+                PopupMenu dropDownMenu = new PopupMenu(getContext(), inflatedView.findViewById(R.id.more_icon));
+                dropDownMenu.getMenuInflater().inflate(R.menu.more_room_option_user, dropDownMenu.getMenu());
+                dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                    return true;
-                }
-            });
-            dropDownMenu.show();
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        switch (menuItem.getItemId()) {
+
+                            case R.id.action_members:
+
+                                // go to users in channel
+                                goToUsersInRoomActivity();
+                                break;
+
+                            case R.id.action_mute:
+
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
+                dropDownMenu.show();
+            }
         });
 
 
@@ -670,7 +705,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         // user image
         if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty() && getActivity() != null)
             Glide.with(getActivity())
-                    .load(room.getBackgroundUrl())
+                    .load(room.getThumbnailUrl())
                     .into(((ImageView) inflatedView.findViewById(R.id.user_image)));
 
 

@@ -65,7 +65,7 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(getContext(),recyclerView, new ArrayList<>(), this,this,true);
+        postsRecyclerViewAdapter = new PostsRecyclerViewAdapter(getContext(), recyclerView, new ArrayList<>(), this, this, true);
         recyclerView.setAdapter(postsRecyclerViewAdapter);
 
         // send request
@@ -170,7 +170,7 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
             }
 
             // check limit
-            if(featurePosts.isEmpty())
+            if (featurePosts.isEmpty())
                 postsRecyclerViewAdapter.setRechToLimit(true);
 
             isRefreshing = false;
@@ -178,7 +178,11 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
         }
 
         // dismiss
-        LoaderPopUp.dismissLoader();
+        try {
+            LoaderPopUp.dismissLoader();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Subscribe
@@ -203,8 +207,8 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
     @Override
     public void onEditPost(FeaturePost post) {
 
-        Intent intent=new Intent(getActivity(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY,post);
+        Intent intent = new Intent(getActivity(), CreatePostActivity.class);
+        intent.putExtra(CreatePostActivity.UPDATE_POST_KEY, post);
         startActivity(intent);
     }
 

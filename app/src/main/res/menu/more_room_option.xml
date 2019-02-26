@@ -2,21 +2,39 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/settings_action"
+        android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/Settings"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/members"
+        android:id="@+id/action_members"
         android:orderInCategory="100"
         android:title="@string/members"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/backround_action"
+        android:id="@+id/action_themes"
         android:orderInCategory="100"
-        android:title="@string/backround"
+        android:title="الموضوعات"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_develop"
+        android:orderInCategory="100"
+        android:title="تطوير"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_lock"
+        android:orderInCategory="100"
+        android:title="قفل"
+        app:showAsAction="never" />
+    <item
+
+        android:id="@+id/action_mute"
+        android:orderInCategory="100"
+        android:title="كتم"
         app:showAsAction="never" />
 
 </menu>

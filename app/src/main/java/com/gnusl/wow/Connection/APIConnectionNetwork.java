@@ -862,6 +862,147 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void ChangeRoomDescription(String description, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("description", description)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void ChangeRoomPrice(String price, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("subscription_price", price)
+                .addBodyParameter("is_free", price.equalsIgnoreCase("0") ? "1" : "0")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void ChangeRoomPicture(String pic_path, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("thumbnail_path", pic_path)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void ChangeRoomTag(String tag, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("tag", tag)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void SetRoomPassWord(String password, int channelId, int channelTypeId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
