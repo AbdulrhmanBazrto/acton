@@ -92,7 +92,7 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
             else
                 loginJsonArray = new JSONArray(dailyLoginArrayStr);
 
-            JSONObject lastLogin = loginJsonArray.getJSONObject(loginJsonArray.length());
+            JSONObject lastLogin = loginJsonArray.getJSONObject(loginJsonArray.length() - 1);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             calendar.add(Calendar.DAY_OF_YEAR, -1);
