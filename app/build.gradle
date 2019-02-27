@@ -105,6 +105,8 @@ dependencies {
     implementation 'com.github.rey5137:material:1.2.4'
     implementation 'com.github.joielechong:countrycodepicker:2.2.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+    // in app purchases
+    implementation 'com.android.billingclient:billing:1.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
