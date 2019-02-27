@@ -133,7 +133,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
 
                             // show progress
                             LoaderPopUp.show(getActivity());
-
+                            activity.getRoom().setDescription(input.toString());
                             // send request
                             APIConnectionNetwork.ChangeRoomDescription(input.toString(), activity.getRoom().getId(), RoomSettingsFragment.this);
                         }

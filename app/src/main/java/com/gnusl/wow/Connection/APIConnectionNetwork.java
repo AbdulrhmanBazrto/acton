@@ -827,6 +827,41 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void ChangeRoomBackgroundId(int backgroundId, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("background_id", String.valueOf(backgroundId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Background", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Background ", anError.getMessage());
+                        Log.d("Change Background ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void ChangeRoomName(String name, int channelId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
@@ -1003,6 +1038,41 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void ChangeRoomType(int type, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("channel_type_id", String.valueOf(type))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void SetRoomPassWord(String password, int channelId, int channelTypeId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
@@ -1066,6 +1136,39 @@ public class APIConnectionNetwork {
                                 }
                             } else
                                 connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Lock Type ", anError.getMessage());
+                        Log.d("Lock Type ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetRoomBackgrouns(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/backgrounds")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Lock Type ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
                         }
                     }
 

@@ -181,10 +181,13 @@
         <activity android:name=".Activities.ProfileBadgesActivity" />
         <activity android:name=".Activities.ProfileRoomsActivity" />
         <activity android:name=".Activities.ProfileMomentsActivity" />
-        <activity android:name=".Activities.BadgesActivity"></activity>
+        <activity android:name=".Activities.BadgesActivity" />
         <activity android:name=".Activities.VisitorsActivity" />
         <activity android:name=".Activities.MyMomentsActivity" />
         <activity android:name=".Activities.RoomTopGiftsActivity" />
+        <activity android:name=".Activities.RoomLockSettingActivity" />
+        <activity android:name=".Activities.RoomBackgroundActivity"></activity>
+        <activity android:name=".Activities.DevelopRoomActivity" />
     </application>
 
 </manifest>

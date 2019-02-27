@@ -35,6 +35,7 @@ public class Room implements Parcelable {
     private boolean isFollowing;
     private String thumbnailUrl;
     private String tag;
+    private int backgroundId;
 
     public Room() {
     }
@@ -60,6 +61,7 @@ public class Room implements Parcelable {
         isFollowing = in.readByte() != 0;
         thumbnailUrl = in.readString();
         tag = in.readString();
+        backgroundId = in.readInt();
     }
 
     public static final Creator<Room> CREATOR = new Creator<Room>() {
@@ -100,6 +102,7 @@ public class Room implements Parcelable {
         room.setFollowing(jsonObject.optBoolean("is_follow"));
         room.setThumbnailUrl(jsonObject.optString("thumbnail_url"));
         room.setTag(jsonObject.optString("tag"));
+        room.setBackgroundId(jsonObject.optInt("background_id"));
 
         // user
         if (jsonObject.has("user")) {
@@ -291,6 +294,14 @@ public class Room implements Parcelable {
         this.tag = tag;
     }
 
+    public int getBackgroundId() {
+        return backgroundId;
+    }
+
+    public void setBackgroundId(int backgroundId) {
+        this.backgroundId = backgroundId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -318,5 +329,6 @@ public class Room implements Parcelable {
         parcel.writeByte((byte) (isFollowing ? 1 : 0));
         parcel.writeString(thumbnailUrl);
         parcel.writeString(tag);
+        parcel.writeInt(backgroundId);
     }
 }

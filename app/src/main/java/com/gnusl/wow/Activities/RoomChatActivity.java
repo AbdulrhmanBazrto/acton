@@ -43,6 +43,7 @@ import com.gnusl.wow.WebRtcClient.PermissionChecker;
 import com.gnusl.wow.WebRtcClient.WebRtcClient;
 import com.learnncode.mediachooser.MediaChooser;
 import com.learnncode.mediachooser.activity.HomeScreenMediaChooser;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -607,5 +608,9 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         Intent intent = new Intent(activity, RoomChatActivity.class);
         intent.putExtra(RoomChatActivity.CHANNEL_KEY, room);
         activity.startActivity(intent);
+    }
+
+    public void changeBackGround(String background_url) {
+        Picasso.with(this).load(background_url).into(((AppCompatImageView) findViewById(R.id.backround_image)));
     }
 }

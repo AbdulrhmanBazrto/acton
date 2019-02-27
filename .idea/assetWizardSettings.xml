@@ -30,8 +30,11 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="d5321a" />
-                            <entry key="outputName" value="icon_daily_login_calendar" />
-                            <entry key="sourceFile" value="C:\Users\AbdelrahmanBaz\Pictures\acton\calendar.svg" />
+                            <entry key="height" value="111" />
+                            <entry key="outputName" value="icon_owned" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\AbdelrahmanBaz\Pictures\acton\label1.svg" />
+                            <entry key="width" value="193" />
                           </map>
                         </option>
                       </PersistentState>

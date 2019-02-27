@@ -39,7 +39,10 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Activities.DevelopRoomActivity;
+import com.gnusl.wow.Activities.RoomBackgroundActivity;
 import com.gnusl.wow.Activities.RoomChatActivity;
+import com.gnusl.wow.Activities.RoomLockSettingActivity;
 import com.gnusl.wow.Activities.RoomSettingsActivity;
 import com.gnusl.wow.Activities.RoomTopGiftsActivity;
 import com.gnusl.wow.Activities.UsersInRoomActivity;
@@ -238,13 +241,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                                 break;
 
                             case R.id.action_themes:
-
+                                goToRoomThemesActivity();
                                 break;
                             case R.id.action_develop:
-
+                                goToRoomDevelopActivity();
                                 break;
                             case R.id.action_lock:
-
+                                goToRoomSettingsLockActivity();
                                 break;
                             case R.id.action_mute:
 
@@ -574,6 +577,27 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         sharingIntent.putExtra(Intent.EXTRA_TEXT, "تعال الى اكتون واعثر علي معرف الغرفة هو !" + String.valueOf(activity.getRoom().getId()) + " " + String.valueOf("http://acton.live"));
         getContext().startActivity(Intent.createChooser(sharingIntent, "مشاركة عن طريق"));
 
+    }
+
+    private void goToRoomSettingsLockActivity() {
+
+        Intent intent = new Intent(getActivity(), RoomLockSettingActivity.class);
+        intent.putExtra(RoomSettingsActivity.CHANNEL_KEY, ((RoomChatActivity) getActivity()).getRoom());
+        startActivity(intent);
+    }
+
+    private void goToRoomThemesActivity() {
+
+        Intent intent = new Intent(getActivity(), RoomBackgroundActivity.class);
+        intent.putExtra(RoomSettingsActivity.CHANNEL_KEY, ((RoomChatActivity) getActivity()).getRoom());
+        startActivity(intent);
+    }
+
+    private void goToRoomDevelopActivity() {
+
+        Intent intent = new Intent(getActivity(), DevelopRoomActivity.class);
+        intent.putExtra(RoomSettingsActivity.CHANNEL_KEY, ((RoomChatActivity) getActivity()).getRoom());
+        startActivity(intent);
     }
 
     private void animateGiftInfo(ChatMessage chatMessage) {
@@ -1399,6 +1423,41 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        APIConnectionNetwork.GetRoomInfo(room.getId(), new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+                if (jsonObject.has("background_url") && getActivity() != null)
+                    activity.changeBackGround(jsonObject.optString("background_url"));
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
+        });
+
+
     }
 }
 

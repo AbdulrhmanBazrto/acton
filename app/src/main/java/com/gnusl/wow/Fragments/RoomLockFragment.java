@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.gnusl.wow.Activities.RoomLockSettingActivity;
 import com.gnusl.wow.Activities.RoomSettingsActivity;
 import com.gnusl.wow.Adapters.RoomLockTypeAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
@@ -35,6 +36,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
 
     private View inflatedView;
     private RoomSettingsActivity activity;
+    private RoomLockSettingActivity activity1;
     private TextView roomNameTv;
     private RoomLockTypeAdapter roomLockTypeAdapter;
 
@@ -63,7 +65,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
         return inflatedView;
     }
 
-    private void findViews(){
+    private void findViews() {
 
 
     }
@@ -76,11 +78,11 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        roomLockTypeAdapter= new RoomLockTypeAdapter(getContext(), new ArrayList<>(),this);
+        roomLockTypeAdapter = new RoomLockTypeAdapter(getContext(), new ArrayList<>(), this);
         recyclerView.setAdapter(roomLockTypeAdapter);
     }
 
-    private void getAllLockTypes(){
+    private void getAllLockTypes() {
 
         // make progress dialog
         LoaderPopUp.show(getActivity());
@@ -93,8 +95,10 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if(context instanceof RoomSettingsActivity)
-            activity= (RoomSettingsActivity) context;
+        if (context instanceof RoomSettingsActivity)
+            activity = (RoomSettingsActivity) context;
+        else if (context instanceof RoomLockSettingActivity)
+            activity1 = (RoomLockSettingActivity) context;
 
     }
 
@@ -129,7 +133,7 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<RoomLockType> rooms=RoomLockType.parseJSONArray(jsonArray);
+        ArrayList<RoomLockType> rooms = RoomLockType.parseJSONArray(jsonArray);
 
         // notify
         roomLockTypeAdapter.setRoomTypes(rooms);
@@ -143,13 +147,16 @@ public class RoomLockFragment extends Fragment implements ConnectionDelegate, Se
     public void onSelectRoomLockType(RoomLockType roomLockType) {
 
         // show popup
-        LockRoomPopUp.show(getActivity(),activity.getRoom(),roomLockType,this);
+        if (activity != null)
+            LockRoomPopUp.show(getActivity(), activity.getRoom(), roomLockType, this);
+        else if (activity1 != null)
+            LockRoomPopUp.show(getActivity(), activity1.getRoom(), roomLockType, this);
     }
 
     @Override
     public void onSetPasswordSuccess(RoomLockType roomLockType) {
 
-        ((TextView)inflatedView.findViewById(R.id.month_value)).setText(roomLockType.getName());
+        ((TextView) inflatedView.findViewById(R.id.month_value)).setText(roomLockType.getName());
 
     }
 }
