@@ -15,8 +15,8 @@ android {
         applicationId "com.gnusl.wow"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 5 // 4 on store
-        versionName "1.2.2" // 1.2.1 on store
+        versionCode 6 // 5 on store
+        versionName "1.2.3" // 1.2.2 on store
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         lintOptions {
