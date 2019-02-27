@@ -12,11 +12,11 @@ android {
     }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.gnusl.wow"
+        applicationId 'com.gnusl.acton'
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 6 // 5 on store
-        versionName "1.2.3" // 1.2.2 on store
+        versionCode 1 // 5 on store
+        versionName "0.9" // 1.2.2 on store
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         lintOptions {
@@ -31,7 +31,6 @@ android {
             signingConfig signingConfigs.config
         }
     }
-
     sourceSets {
         main {
             java.srcDirs = ['src/main/java', '../../../generated-src/java']
@@ -39,10 +38,11 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    productFlavors {
     }
 }
 
@@ -65,40 +65,34 @@ dependencies {
     //Optional: see how to use the utility.
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
     implementation 'com.afollestad:sectioned-recyclerview:0.5.0'
-
-    implementation 'com.pubnub:pubnub-gson:4.20.0' // pubnub
-    api 'io.pristine:libjingle:9694@aar' // webRtc
-    implementation 'com.github.nkzawa:socket.io-client:0.4.2' // socket io
-
+    implementation 'com.pubnub:pubnub-gson:4.20.0'
+    // pubnub
+    api 'io.pristine:libjingle:9694@aar'
+    // webRtc
+    implementation 'com.github.nkzawa:socket.io-client:0.4.2'
+    // socket io
     // android networking
     implementation 'com.amitshekhar.android:android-networking:1.0.1'
-
     // FireBase
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-crash:16.2.1'
-
     //Facebook
     implementation 'com.facebook.android:facebook-android-sdk:4.5.0'
-
     // google sign in
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-
     // twitter
     implementation 'com.twitter.sdk.android:twitter-core:3.2.0@aar'
     implementation('com.twitter.sdk.android:twitter:3.2.0@aar') {
         transitive = true
     }
-
     // like animation
     implementation 'com.github.varunest:sparkbutton:1.0.6'
-
     implementation project(':SlidingActivity')
     implementation project(':MediaChooser')
     implementation 'com.klinkerapps:peekview:1.2.3'
     implementation 'com.mikhaellopez:circularimageview:3.0.2'
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     implementation 'org.greenrobot:eventbus:3.0.0'
-
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'

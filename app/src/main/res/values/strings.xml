@@ -1,6 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Acton</string>
 
+    <string name="facebook_app_id">368435650570560</string>
+    <string name="fb_login_protocol_scheme">fb368435650570560</string>
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY" tools:ignore="ExtraTranslation">prZt7FaAVZSqUCIiu6EVVIfbR</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET" tools:ignore="ExtraTranslation">ButS0DrBWqlQ9CmUmgwOQYH9DvAzFwN8wwhvTPS5pcdNq5srr0</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -33,11 +40,6 @@
     <string name="host">gnusl.com</string>
     <string name="port">3000</string>
 
-    <string name="facebook_app_id">368435650570560</string>
-    <string name="fb_login_protocol_scheme">fb368435650570560</string>
-
-    <string name="com.twitter.sdk.android.CONSUMER_KEY" tools:ignore="ExtraTranslation">prZt7FaAVZSqUCIiu6EVVIfbR</string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET" tools:ignore="ExtraTranslation">ButS0DrBWqlQ9CmUmgwOQYH9DvAzFwN8wwhvTPS5pcdNq5srr0</string>
 
     <string name="full_name">Full name</string>
     <string name="email">Email</string>

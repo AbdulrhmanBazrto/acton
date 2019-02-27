@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.gnusl.wow.Activities.LoginActivity">
 
+
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -89,11 +90,11 @@
             android:text="Join us with"
             android:textColor="@color/white"
             android:textSize="24sp"
-            app:typefaceAsset="fonts/SFUIText-Regular.ttf"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/instagram_button"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/instagram_button"/>
+            app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/facebook_button"
@@ -101,12 +102,12 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/ic_f"
-            app:layout_constraintHorizontal_bias="0.08"
-            app:layout_constraintVertical_bias="0.65"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.08"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
 
 
         <android.support.v7.widget.AppCompatImageView
@@ -115,12 +116,12 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/ic_t"
-            app:layout_constraintHorizontal_bias="0.29"
-            app:layout_constraintVertical_bias="0.65"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.29"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/instagram_button"
@@ -128,12 +129,12 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/ic_i"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.65"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/google_button"
@@ -141,12 +142,12 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/ic_g"
-            app:layout_constraintHorizontal_bias="0.72"
-            app:layout_constraintVertical_bias="0.65"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.72"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/accout_button"
@@ -154,13 +155,26 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/ic_m"
-            app:layout_constraintHorizontal_bias="0.93"
-            app:layout_constraintVertical_bias="0.65"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.93"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/billing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_i"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.65" />
 
 </android.support.constraint.ConstraintLayout>

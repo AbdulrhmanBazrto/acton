@@ -187,8 +187,10 @@
         <activity android:name=".Activities.MyMomentsActivity" />
         <activity android:name=".Activities.RoomTopGiftsActivity" />
         <activity android:name=".Activities.RoomLockSettingActivity" />
-        <activity android:name=".Activities.RoomBackgroundActivity"></activity>
+        <activity android:name=".Activities.RoomBackgroundActivity" />
         <activity android:name=".Activities.DevelopRoomActivity" />
+        <activity android:name="com.gnusl.acton.billingActivity" />
+        <activity android:name="com.gnusl.acton.BillingActivity"></activity>
     </application>
 
 </manifest>

@@ -1,43 +1,35 @@
 {
   "project_info": {
-    "project_number": "628503359741",
-    "firebase_url": "https://wowchatroom.firebaseio.com",
-    "project_id": "wowchatroom",
-    "storage_bucket": "wowchatroom.appspot.com"
+    "project_number": "824990715563",
+    "firebase_url": "https://gnusl-acton.firebaseio.com",
+    "project_id": "gnusl-acton",
+    "storage_bucket": "gnusl-acton.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:628503359741:android:da0f384b02c8f8f9",
+        "mobilesdk_app_id": "1:824990715563:android:784e2006318c90df",
         "android_client_info": {
-          "package_name": "com.gnusl.wow"
+          "package_name": "com.gnusl.acton"
         }
       },
       "oauth_client": [
         {
-          "client_id": "628503359741-n7qb6mu0g4besrgb4ottqciotj05dt2e.apps.googleusercontent.com",
+          "client_id": "824990715563-6gdtch37u2i0tjp17b1aj49hki4mg6hc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.gnusl.wow",
-            "certificate_hash": "356d68fdfcc33d53a5ec559b3e4a79cd69e79e88"
+            "package_name": "com.gnusl.acton",
+            "certificate_hash": "b273bfeb4718c583cf49e2573511a06397ed3d4d"
           }
         },
         {
-          "client_id": "628503359741-upfq9cftij30ke971bhubdctvsfopnas.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.gnusl.wow",
-            "certificate_hash": "65ccb1303d66e82c9f5540cc91ddf0dfa9f3292f"
-          }
-        },
-        {
-          "client_id": "628503359741-dub3594fe15in2q0mav6m6v2a0ejkid1.apps.googleusercontent.com",
+          "client_id": "824990715563-73pe0fap3b8vqcc76k7ibjcd6sh5a005.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD2aW4uiV5H4odrRftcVYnm5t1PzmjPdHg"
+          "current_key": "AIzaSyDPPS6LESVEG-REgpefShfAtYF1_V46D2A"
         }
       ],
       "services": {
@@ -48,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "628503359741-b3dqlebh3rto66efaker5dl5aqatk5o5.apps.googleusercontent.com",
+              "client_id": "824990715563-73pe0fap3b8vqcc76k7ibjcd6sh5a005.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
