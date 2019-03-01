@@ -63,7 +63,7 @@ public class BillingRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         public ActivityViewHolder(View itemView) {
             super(itemView);
 
-            activityTextView = itemView.findViewById(R.id.activity_text);
+            activityTextView = itemView.findViewById(R.id.text);
         }
 
         public void bind(final SkuDetails activity, int position) {

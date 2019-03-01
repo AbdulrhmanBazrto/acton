@@ -32,7 +32,6 @@ public class BillingActivity extends AppCompatActivity implements PurchasesUpdat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billing);
 
-
         rvProducts = findViewById(R.id.products);
         skuDetails = new ArrayList<>();
         skuDetails.add("10_dollars_pkg");
