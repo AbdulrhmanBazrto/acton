@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Acton</string>
+    <string name="app_name">Acton.Live</string>
 
     <string name="facebook_app_id">368435650570560</string>
     <string name="fb_login_protocol_scheme">fb368435650570560</string>

@@ -1,31 +1,35 @@
 package com.gnusl.wow.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.gnusl.wow.Activities.RoomChatActivity;
-import com.gnusl.wow.Models.Room;
+import com.android.billingclient.api.SkuDetails;
+import com.gnusl.wow.Delegates.ReChargeDelegate;
 import com.gnusl.wow.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RechargeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
+    private List<SkuDetails> skuDetails;
+    ReChargeDelegate reChargeDelegate;
 
-    public RechargeRecyclerViewAdapter(Context context) {
+    public RechargeRecyclerViewAdapter(Context context, List<SkuDetails> skuDetails, ReChargeDelegate reChargeDelegate) {
         this.context = context;
+        this.skuDetails = skuDetails;
+        this.reChargeDelegate = reChargeDelegate;
 
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
@@ -35,26 +39,40 @@ public class RechargeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        ((RechargeItemViewHolder) holder).bind();
+        ((RechargeItemViewHolder) holder).bind(skuDetails.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return 8;
+        return skuDetails.size();
     }
 
     public class RechargeItemViewHolder extends RecyclerView.ViewHolder {
 
+        TextView tvCoins, tvPrice;
+
         public RechargeItemViewHolder(View itemView) {
             super(itemView);
+            tvCoins = itemView.findViewById(R.id.tv_coins);
+            tvPrice = itemView.findViewById(R.id.tv_price);
 
         }
 
-        public void bind() {
+        public void bind(SkuDetails skuDetails) {
 
+            tvPrice.setText(skuDetails.getPrice());
+            tvCoins.setText(skuDetails.getDescription());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (reChargeDelegate != null)
+                        reChargeDelegate.onClick(skuDetails);
+                }
+            });
 
         }
 

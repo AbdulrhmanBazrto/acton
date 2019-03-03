@@ -190,7 +190,8 @@
         <activity android:name=".Activities.RoomBackgroundActivity" />
         <activity android:name=".Activities.DevelopRoomActivity" />
         <activity android:name="com.gnusl.acton.billingActivity" />
-        <activity android:name="com.gnusl.acton.BillingActivity"></activity>
+        <activity android:name="com.gnusl.acton.BillingActivity" />
+        <activity android:name=".Activities.AristocracyActivity"></activity>
     </application>
 
 </manifest>

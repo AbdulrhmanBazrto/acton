@@ -7,12 +7,9 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.androidnetworking.interfaces.StringRequestListener;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.RegisterParams;
-import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.WebRtcClient.CallDelegate;
 
@@ -2390,6 +2387,37 @@ public class APIConnectionNetwork {
                 });
     }
 
+    public static void StoreBadge(int badgId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.My_Profile_Badges_Url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("badge_id", String.valueOf(badgId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Profile Badges ", response.toString());
+
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Profile Badges ", anError.getMessage());
+                        Log.d("Profile Badges ", anError.getErrorDetail());
+                    }
+                });
+    }
+
     public static void GetAllBadges(ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.get(APILinks.All_Badges_Url.getLink())
@@ -2405,6 +2433,67 @@ public class APIConnectionNetwork {
 
                         if (connectionDelegate != null) {
                             connectionDelegate.onConnectionSuccess(response.optJSONArray("badges"));
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Profile Badges ", anError.getMessage());
+                        Log.d("Profile Badges ", anError.getErrorDetail());
+                    }
+                });
+    }
+
+    public static void GetAristocracy(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Get_Aristocracy_Url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        Log.d("Profile Badges ", response.toString());
+
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+
+                        Log.d("Profile Badges ", anError.getMessage());
+                        Log.d("Profile Badges ", anError.getErrorDetail());
+                    }
+                });
+    }
+
+    public static void SaveAristocracy(int arstId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.Get_Aristocracy_Url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("aristocracy_id", String.valueOf(arstId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Profile Badges ", response.toString());
+
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
                         }
                     }
 
@@ -2524,6 +2613,36 @@ public class APIConnectionNetwork {
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
                 .addBodyParameter("channel_id", String.valueOf(roomId))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Followers ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void StorePayment(String value, ConnectionDelegate connectionDelegate) {
+        AndroidNetworking.post(APILinks.Store_Payment.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("payment", "100")
+                .addBodyParameter("description", "desc")
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

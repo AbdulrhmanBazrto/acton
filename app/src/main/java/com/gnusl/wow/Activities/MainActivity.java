@@ -155,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             setFragmentView(2);
 
+        } else if (id == R.id.aristocracy) {
+
+            startActivity(new Intent(MainActivity.this, AristocracyActivity.class));
+
         } else if (id == R.id.recharge) {
 
             startActivity(new Intent(MainActivity.this, RechargeActivity.class));

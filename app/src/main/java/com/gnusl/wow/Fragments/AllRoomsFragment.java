@@ -1,6 +1,5 @@
 package com.gnusl.wow.Fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -74,6 +73,13 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
         inflatedView.setOnClickListener(v -> {
 
             getActivity().startActivity(new Intent(getActivity(), CreateRoomActivity.class));
+        });
+
+        inflatedView.findViewById(R.id.cl_my_room).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // todo goto my room activity/fragment
+            }
         });
 
         return inflatedView;

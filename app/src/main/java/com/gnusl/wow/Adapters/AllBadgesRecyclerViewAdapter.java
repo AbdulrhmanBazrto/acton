@@ -1,6 +1,7 @@
 package com.gnusl.wow.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,12 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.androidnetworking.error.ANError;
+import com.gnusl.wow.Activities.RechargeActivity;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Badge;
 import com.gnusl.wow.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -97,6 +106,52 @@ public class AllBadgesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                                 }
                             });
             }
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (badge.isGranted()) {
+
+                    } else {
+                        APIConnectionNetwork.StoreBadge(badge.getId(), new ConnectionDelegate() {
+                            @Override
+                            public void onConnectionFailure() {
+
+                            }
+
+                            @Override
+                            public void onConnectionError(ANError anError) {
+                                JSONObject jsonObject;
+                                try {
+                                    jsonObject = new JSONObject(anError.getErrorBody());
+                                    if (jsonObject.has("payment_status")) {
+                                        if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
+                                            context.startActivity(new Intent(context, RechargeActivity.class));
+                                        }
+                                    }
+                                } catch (JSONException e) {
+
+                                }
+                            }
+
+                            @Override
+                            public void onConnectionSuccess(String response) {
+
+                            }
+
+                            @Override
+                            public void onConnectionSuccess(JSONObject jsonObject) {
+                                Toast.makeText(context, "done", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onConnectionSuccess(JSONArray jsonArray) {
+
+                            }
+                        });
+                    }
+                }
+            });
 
         }
 

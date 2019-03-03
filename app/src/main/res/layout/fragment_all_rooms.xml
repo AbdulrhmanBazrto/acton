@@ -31,6 +31,7 @@
         android:id="@+id/cl_my_room"
         android:layout_width="0dp"
         android:layout_height="70dp"
+        android:background="#f8f8f8"
         android:gravity="center"
         android:textColor="@color/active_color"
         android:textSize="20sp"
@@ -86,6 +87,18 @@
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/iv_my_rooms" />
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/background_circle_back"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_right_arrow" />
 
     </android.support.constraint.ConstraintLayout>
 

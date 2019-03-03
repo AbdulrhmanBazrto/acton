@@ -1,13 +1,9 @@
 package com.gnusl.wow.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,27 +15,24 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.DevelopRoomActivity;
+import com.gnusl.wow.Activities.RechargeActivity;
 import com.gnusl.wow.Activities.RoomBackgroundActivity;
 import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Activities.RoomLockSettingActivity;
@@ -1330,10 +1323,43 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         showUsersAttendancePopUp(user -> {
 
             // store gift
-            APIConnectionNetwork.StoreGift(activity.getRoom().getId(), user.getId(), gift.getId(), null);
+            APIConnectionNetwork.StoreGift(activity.getRoom().getId(), user.getId(), gift.getId(), new ConnectionDelegate() {
+                @Override
+                public void onConnectionFailure() {
 
-            // send on pubnup
-            ShareGiftOnPubnub(user, gift);
+                }
+
+                @Override
+                public void onConnectionError(ANError anError) {
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = new JSONObject(anError.getErrorBody());
+                        if (jsonObject.has("payment_status")) {
+                            if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
+                                startActivity(new Intent(getActivity(), RechargeActivity.class));
+                            }
+                        }
+                    } catch (JSONException e) {
+
+                    }
+                }
+
+                @Override
+                public void onConnectionSuccess(String response) {
+
+                }
+
+                @Override
+                public void onConnectionSuccess(JSONObject jsonObject) {
+                    // send on pubnup
+                    ShareGiftOnPubnub(user, gift);
+                }
+
+                @Override
+                public void onConnectionSuccess(JSONArray jsonArray) {
+
+                }
+            });
         });
     }
 

@@ -51,7 +51,13 @@ public enum APILinks {
 
     // Following
     Follow_Url(Base_API_Url.getLink() + "follow"),
-    Posts_By_Following(Follow_Url.getLink() + "/post");
+    Posts_By_Following(Follow_Url.getLink() + "/post"),
+
+    // aristocracy
+    Get_Aristocracy_Url(Base_API_Url.getLink()+"aristocracy"),
+
+    // payment
+    Store_Payment(Base_API_Url.getLink()+"payment");
 
     private String link;
 
