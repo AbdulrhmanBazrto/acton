@@ -57,7 +57,8 @@ public enum APILinks {
     Get_Aristocracy_Url(Base_API_Url.getLink()+"aristocracy"),
 
     // payment
-    Store_Payment(Base_API_Url.getLink()+"payment");
+    Store_Payment(Base_API_Url.getLink()+"payment"),
+    Get_Payment_Packages(Store_Payment.getLink()+"/packages");
 
     private String link;
 

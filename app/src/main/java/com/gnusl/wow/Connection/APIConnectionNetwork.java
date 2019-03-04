@@ -2637,12 +2637,11 @@ public class APIConnectionNetwork {
                 });
     }
 
-    public static void StorePayment(String value, ConnectionDelegate connectionDelegate) {
-        AndroidNetworking.post(APILinks.Store_Payment.getLink())
+    public static void StorePayment(String sku, ConnectionDelegate connectionDelegate) {
+        AndroidNetworking.post(APILinks.Get_Payment_Packages.getLink())
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
-                .addBodyParameter("payment", "100")
-                .addBodyParameter("description", "desc")
+                .addBodyParameter("sku", sku)
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
@@ -2677,6 +2676,34 @@ public class APIConnectionNetwork {
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d("Followers ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void GetPurchasesPackages(ConnectionDelegate connectionDelegate) {
+        AndroidNetworking.get(APILinks.Get_Payment_Packages.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
                         Log.d("Followers ", response.toString());
 
                         // handle parse user data
