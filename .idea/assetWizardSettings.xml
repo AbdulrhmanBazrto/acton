@@ -14,8 +14,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="icon_my_rooms" />
-                            <entry key="sourceFile" value="C:\Users\AbdelrahmanBaz\Pictures\acton\myroom.svg" />
+                            <entry key="height" value="230" />
+                            <entry key="outputName" value="icon_special_ids" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\AbdelrahmanBaz\Pictures\acton\icon-id.svg" />
+                            <entry key="width" value="264" />
                           </map>
                         </option>
                       </PersistentState>

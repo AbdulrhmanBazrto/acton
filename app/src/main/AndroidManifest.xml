@@ -192,6 +192,7 @@
         <activity android:name="com.gnusl.acton.billingActivity" />
         <activity android:name="com.gnusl.acton.BillingActivity" />
         <activity android:name=".Activities.AristocracyActivity"></activity>
+        <activity android:name=".Activities.StoreActivity" />
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Models.RegisterParams;
