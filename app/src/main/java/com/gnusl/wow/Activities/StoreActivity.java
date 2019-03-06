@@ -1,10 +1,12 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
@@ -40,7 +42,26 @@ public class StoreActivity extends AppCompatActivity {
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
 
 
+        findViewById(R.id.cv_lock_room).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StoreActivity.this, StoreLockRoomActivity.class));
+            }
+        });
+
+        findViewById(R.id.cv_pin_room).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StoreActivity.this, PinTopRoomActivity.class));
+            }
+        });
+
+        findViewById(R.id.cv_special_ids).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StoreActivity.this, SpecialIDRoomActivity.class));
+            }
+        });
     }
 
-    
 }

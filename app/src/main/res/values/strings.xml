@@ -85,4 +85,11 @@
     <string name="the_personal_info">المعلومات الشخصية</string>
     <string name="title_activity_earn_gold">EarnGoldActivity</string>
 
+
+    <string name="pin_desc">
+        1-  بطاقة التثبيت في الاعلى متاحة فقط لمالكي الغرف  \n
+        2-  تثبيت غرفتك في الاعلى سيتم تفعليه مباشرة بعد الشراء  \n
+        3-  قم بفحص الوقت المتبقي من هنا في الدائرة اعلاه  \n
+    </string>
+
 </resources>

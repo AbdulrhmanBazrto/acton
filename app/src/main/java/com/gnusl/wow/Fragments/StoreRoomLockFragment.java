@@ -19,6 +19,7 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.LockRoomPopUpDelegate;
 import com.gnusl.wow.Delegates.SelectLockTypeDelegate;
+import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.RoomLockType;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.Popups.LockRoomPopUp;
@@ -34,9 +35,8 @@ import static android.widget.Toast.LENGTH_LONG;
 public class StoreRoomLockFragment extends Fragment implements ConnectionDelegate, SelectLockTypeDelegate, LockRoomPopUpDelegate {
 
     private View inflatedView;
-    private RoomSettingsActivity activity;
-    private RoomLockSettingActivity activity1;
     private TextView roomNameTv;
+    Room room = new Room();
     private RoomLockTypeAdapter roomLockTypeAdapter;
 
     public StoreRoomLockFragment() {
@@ -94,11 +94,6 @@ public class StoreRoomLockFragment extends Fragment implements ConnectionDelegat
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof RoomSettingsActivity)
-            activity = (RoomSettingsActivity) context;
-        else if (context instanceof RoomLockSettingActivity)
-            activity1 = (RoomLockSettingActivity) context;
-
     }
 
     @Override
@@ -119,7 +114,7 @@ public class StoreRoomLockFragment extends Fragment implements ConnectionDelegat
 
     @Override
     public void onConnectionSuccess(String response) {
-
+        room.setId(Integer.parseInt(response));
     }
 
     @Override
@@ -146,10 +141,8 @@ public class StoreRoomLockFragment extends Fragment implements ConnectionDelegat
     public void onSelectRoomLockType(RoomLockType roomLockType) {
 
         // show popup
-        if (activity != null)
-            LockRoomPopUp.show(getActivity(), activity.getRoom(), roomLockType, this);
-        else if (activity1 != null)
-            LockRoomPopUp.show(getActivity(), activity1.getRoom(), roomLockType, this);
+        LockRoomPopUp.show(getActivity(), room, roomLockType, this);
+
     }
 
     @Override

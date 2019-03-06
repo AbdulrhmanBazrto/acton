@@ -21,6 +21,7 @@ public enum APILinks {
     Explore_Channels_Url(Channels_Url.getLink() + "/explore"),
     Explore_Gifts_Url(Explore_Channels_Url.getLink() + "/gift"),
     Follow_Channel_Url(Channels_Url.getLink() + "/follow"),
+    Get_Pin_Top_Url(Channels_Url.getLink() + "/priority"),
 
     // Gifts
     Gifts_Url(Base_API_Url.getLink() + "gift"),
@@ -54,11 +55,17 @@ public enum APILinks {
     Posts_By_Following(Follow_Url.getLink() + "/post"),
 
     // aristocracy
-    Get_Aristocracy_Url(Base_API_Url.getLink()+"aristocracy"),
+    Get_Aristocracy_Url(Base_API_Url.getLink() + "aristocracy"),
 
     // payment
-    Store_Payment(Base_API_Url.getLink()+"payment"),
-    Get_Payment_Packages(Store_Payment.getLink()+"/packages");
+    Store_Payment(Base_API_Url.getLink() + "payment"),
+    Get_Payment_Packages(Store_Payment.getLink() + "/packages"),
+
+    // specials
+    Get_Special_ids(Base_API_Url.getLink() + "special/ids"),
+
+    // daily login
+    Daily_Login_url(Base_API_Url.getLink() + "daily");
 
     private String link;
 

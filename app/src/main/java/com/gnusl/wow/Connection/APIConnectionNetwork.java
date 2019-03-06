@@ -1036,6 +1036,77 @@ public class APIConnectionNetwork {
 
     }
 
+
+    public static void ChangeRoomPriority(int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("priority", String.valueOf(1))
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void UpdateRoomID(String roomId, int channelId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addHeaders("Content-Type", "application/x-www-form-urlencoded")
+                .addBodyParameter("id", roomId)
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Change Name", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Change Name ", anError.getMessage());
+                        Log.d("Change Name ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void ChangeRoomType(int type, int channelId, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.put(APILinks.Channels_Url.getLink() + "?channel_id=" + String.valueOf(channelId))
@@ -1125,15 +1196,86 @@ public class APIConnectionNetwork {
 
                         // handle parse user data
                         if (connectionDelegate != null) {
-                            if (response.has("lock_types")) {
+                            if (response.has("lockTypes")) {
                                 try {
-                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("lock_types"));
+                                    connectionDelegate.onConnectionSuccess(response.getJSONArray("lockTypes"));
+                                    connectionDelegate.onConnectionSuccess(response.optString("channel_id"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     connectionDelegate.onConnectionFailure();
                                 }
                             } else
                                 connectionDelegate.onConnectionFailure();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Lock Type ", anError.getMessage());
+                        Log.d("Lock Type ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetDurationOfPintTop(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Get_Pin_Top_Url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Lock Type ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+
+                            connectionDelegate.onConnectionSuccess(response);
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Lock Type ", anError.getMessage());
+                        Log.d("Lock Type ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
+    public static void GetSpecialIds(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.Get_Special_ids.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Lock Type ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response.optJSONArray("special_ids"));
+                            connectionDelegate.onConnectionSuccess(response.optString("channel_id"));
+
                         }
                     }
 
@@ -2707,6 +2849,60 @@ public class APIConnectionNetwork {
                     public void onResponse(JSONArray response) {
                         Log.d("Followers ", response.toString());
 
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void GetDailyLogin(ConnectionDelegate connectionDelegate) {
+        AndroidNetworking.get(APILinks.Daily_Login_url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Followers ", response.toString());
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
+
+    public static void StoreDailyLogin(ConnectionDelegate connectionDelegate) {
+        AndroidNetworking.post(APILinks.Daily_Login_url.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Followers ", response.toString());
                         // handle parse user data
                         if (connectionDelegate != null)
                             connectionDelegate.onConnectionSuccess(response);

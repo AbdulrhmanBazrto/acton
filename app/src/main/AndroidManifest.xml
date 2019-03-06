@@ -193,6 +193,9 @@
         <activity android:name="com.gnusl.acton.BillingActivity" />
         <activity android:name=".Activities.AristocracyActivity"></activity>
         <activity android:name=".Activities.StoreActivity" />
+        <activity android:name=".Activities.StoreLockRoomActivity" />
+        <activity android:name=".Activities.PinTopRoomActivity" />
+        <activity android:name=".Activities.SpecialIDRoomActivity" />
     </application>
 
 </manifest>

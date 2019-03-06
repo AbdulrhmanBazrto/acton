@@ -12,6 +12,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.androidnetworking.error.ANError;
+import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
@@ -139,39 +142,81 @@ public class DialyLoginPopUp extends DialogFragment {
 
 
     private void initializeDailyLoginDialog() {
-        for (int i = 0; i <= loginJsonArray.length(); i++) {
-            switch (i) {
-                case 1: {
-                    dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
-                    break;
-                }
-                case 2: {
-                    dailyDialog.getIv_second_check().setVisibility(View.VISIBLE);
-                    break;
-                }
-                case 3: {
-                    dailyDialog.getIv_third_check().setVisibility(View.VISIBLE);
-                    break;
-                }
-                case 4: {
-                    dailyDialog.getIv_fourth_check().setVisibility(View.VISIBLE);
-                    break;
-                }
-                case 5: {
-                    dailyDialog.getIv_fifth_check().setVisibility(View.VISIBLE);
-                    break;
-                }
-                case 6: {
-                    dailyDialog.getIv_six_check().setVisibility(View.VISIBLE);
-                    break;
+
+        APIConnectionNetwork.GetDailyLogin(new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+                switch (jsonObject.optInt("daily")) {
+                    case 1: {
+                        dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
+                        break;
+                    }
+                    case 2: {
+                        dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_second_check().setVisibility(View.VISIBLE);
+                        break;
+                    }
+                    case 3: {
+                        dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_second_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_third_check().setVisibility(View.VISIBLE);
+                        break;
+                    }
+                    case 4: {
+                        dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_second_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_third_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_fourth_check().setVisibility(View.VISIBLE);
+                        break;
+                    }
+                    case 5: {
+                        dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_second_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_third_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_fourth_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_fifth_check().setVisibility(View.VISIBLE);
+                        break;
+                    }
+                    case 6: {
+                        dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_second_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_third_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_fourth_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_fifth_check().setVisibility(View.VISIBLE);
+                        dailyDialog.getIv_six_check().setVisibility(View.VISIBLE);
+                        break;
+                    }
                 }
             }
-        }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
+        });
+
+
         if (dailyDialog != null) {
             dailyDialog.getTv_login_count().setText(String.format(Locale.getDefault(), "لقد سجلت الدخول لمدة %d يوم", loginJsonArray.length()));
             dailyDialog.getBtn_login().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    APIConnectionNetwork.StoreDailyLogin(null);
                     int i = loginJsonArray.length();
                     switch (i) {
                         case 0: {
@@ -238,7 +283,7 @@ public class DialyLoginPopUp extends DialogFragment {
                         public void run() {
                             DialyLoginPopUp.dismissPopUp();
                         }
-                    }, 2000);
+                    }, 1000);
                 }
             });
         }
