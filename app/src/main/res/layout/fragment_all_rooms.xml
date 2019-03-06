@@ -17,6 +17,7 @@
     <TextView
         android:id="@+id/create_room"
         android:layout_width="0dp"
+        android:visibility="gone"
         android:layout_height="50dp"
         android:gravity="center"
         android:lines="1"
@@ -31,6 +32,7 @@
         android:id="@+id/cl_my_room"
         android:layout_width="0dp"
         android:layout_height="70dp"
+        android:visibility="gone"
         android:background="#f8f8f8"
         android:gravity="center"
         android:textColor="@color/active_color"

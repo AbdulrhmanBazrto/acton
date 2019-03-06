@@ -70,7 +70,7 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
         advertisementViewPager.setAdapter(advertisementPagerAdapter);
 
         // go to create room
-        inflatedView.setOnClickListener(v -> {
+        inflatedView.findViewById(R.id.create_room).setOnClickListener(v -> {
 
             getActivity().startActivity(new Intent(getActivity(), CreateRoomActivity.class));
         });
@@ -79,6 +79,39 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
             @Override
             public void onClick(View v) {
                 // todo goto my room activity/fragment
+            }
+        });
+
+        APIConnectionNetwork.GetUserChannelInfo(new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+                if (jsonObject.optJSONArray("user_channels").length() == 0) {
+                    inflatedView.findViewById(R.id.cl_my_room).setVisibility(View.GONE);
+                    inflatedView.findViewById(R.id.create_room).setVisibility(View.VISIBLE);
+                } else {
+                    inflatedView.findViewById(R.id.cl_my_room).setVisibility(View.VISIBLE);
+                    inflatedView.findViewById(R.id.create_room).setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
             }
         });
 

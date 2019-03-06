@@ -2919,4 +2919,30 @@ public class APIConnectionNetwork {
                     }
                 });
     }
+    public static void GetUserChannelInfo(ConnectionDelegate connectionDelegate) {
+        AndroidNetworking.get(APILinks.Get_Channel_info.getLink())
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Followers ", response.toString());
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Followers ", anError.getMessage());
+                        Log.d("Followers ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+    }
 }
