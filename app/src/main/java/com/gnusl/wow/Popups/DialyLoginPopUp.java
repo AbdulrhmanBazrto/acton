@@ -1,7 +1,6 @@
 package com.gnusl.wow.Popups;
 
 import android.app.Dialog;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -33,6 +32,7 @@ public class DialyLoginPopUp extends DialogFragment {
     private View iv_first_check, iv_second_check, iv_third_check, iv_fourth_check, iv_fifth_check, iv_six_check, iv_seven_check;
     private Button btn_login;
     private TextView tv_login_count;
+
 
     @NonNull
     @Override
@@ -67,6 +67,8 @@ public class DialyLoginPopUp extends DialogFragment {
 
         if (dailyDialog == null)
             dailyDialog = new DialyLoginPopUp();
+
+//        dailyDialog.show(fragmentActivity.getSupportFragmentManager(), "");
 
         try {
             String dailyLoginArrayStr = SharedPreferencesUtils.getDailyLoginArray();
@@ -288,5 +290,7 @@ public class DialyLoginPopUp extends DialogFragment {
             });
         }
     }
+
+
 }
 

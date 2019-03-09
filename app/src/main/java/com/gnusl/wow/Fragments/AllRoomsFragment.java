@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
-import com.gnusl.wow.Activities.CreateRoomActivity;
+import com.gnusl.wow.Activities.MyRoomsActivity;
 import com.gnusl.wow.Adapters.AdvertisementPagerAdapter;
 import com.gnusl.wow.Adapters.RoomsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
@@ -69,49 +69,11 @@ public class AllRoomsFragment extends Fragment implements ConnectionDelegate {
         advertisementPagerAdapter = new AdvertisementPagerAdapter(getContext(), new ArrayList<>());
         advertisementViewPager.setAdapter(advertisementPagerAdapter);
 
-        // go to create room
-        inflatedView.findViewById(R.id.create_room).setOnClickListener(v -> {
-
-            getActivity().startActivity(new Intent(getActivity(), CreateRoomActivity.class));
-        });
 
         inflatedView.findViewById(R.id.cl_my_room).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // todo goto my room activity/fragment
-            }
-        });
-
-        APIConnectionNetwork.GetUserChannelInfo(new ConnectionDelegate() {
-            @Override
-            public void onConnectionFailure() {
-
-            }
-
-            @Override
-            public void onConnectionError(ANError anError) {
-
-            }
-
-            @Override
-            public void onConnectionSuccess(String response) {
-
-            }
-
-            @Override
-            public void onConnectionSuccess(JSONObject jsonObject) {
-                if (jsonObject.optJSONArray("user_channels").length() == 0) {
-                    inflatedView.findViewById(R.id.cl_my_room).setVisibility(View.GONE);
-                    inflatedView.findViewById(R.id.create_room).setVisibility(View.VISIBLE);
-                } else {
-                    inflatedView.findViewById(R.id.cl_my_room).setVisibility(View.VISIBLE);
-                    inflatedView.findViewById(R.id.create_room).setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onConnectionSuccess(JSONArray jsonArray) {
-
+                startActivity(new Intent(getActivity(), MyRoomsActivity.class));
             }
         });
 

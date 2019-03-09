@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gnusl.wow.Activities.MyRoomsActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/settings_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/side_nav_bar">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="4dp"
+            android:rotation="180"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_action_back" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:lines="1"
+            android:text="الغرف"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/back_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_create_room"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:lines="1"
+        android:text="Create Room"
+        android:textColor="@color/active_color"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_bar" />
+
+
+    <TextView
+        android:id="@+id/tv_my_rooms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f8f8f8"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:text="My Rooms"
+        app:layout_constraintTop_toBottomOf="@+id/settings_bar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_my_rooms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_my_rooms" />
+
+    <TextView
+        android:id="@+id/tv_joined_rooms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#f8f8f8"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:text="Joined Rooms"
+        app:layout_constraintTop_toBottomOf="@+id/rv_my_rooms" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_joined_rooms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_joined_rooms" />
+
+</android.support.constraint.ConstraintLayout>

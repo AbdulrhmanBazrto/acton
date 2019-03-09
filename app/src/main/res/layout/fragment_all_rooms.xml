@@ -14,32 +14,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/create_room"
-        android:layout_width="0dp"
-        android:visibility="gone"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:lines="1"
-        android:text="Create Room"
-        android:textColor="@color/active_color"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ads_pager" />
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_my_room"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:visibility="gone"
         android:background="#f8f8f8"
         android:gravity="center"
         android:textColor="@color/active_color"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/create_room">
+        app:layout_constraintTop_toBottomOf="@id/ads_pager">
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline"

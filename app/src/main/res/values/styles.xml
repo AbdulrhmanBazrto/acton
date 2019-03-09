@@ -118,4 +118,9 @@
         <item name="android:windowExitAnimation">@anim/hide_popup</item>
     </style>
 
+    <style name="DialogStyle" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">97%</item>
+        <item name="android:windowMinWidthMinor">97%</item>
+    </style>
+
 </resources>

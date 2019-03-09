@@ -162,7 +162,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), this);
 
         // get messages
-        getAllMessagesRequest();
+//        getAllMessagesRequest();
 
         // get gifts
         APIConnectionNetwork.GetGifts(this);
