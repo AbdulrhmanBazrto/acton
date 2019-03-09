@@ -18,6 +18,7 @@ public class ChatMessage {
     private String userName;
     private String userImage;
     private String giftImagePath;
+    private String giftType;
     private String giftUserName;
 
     public ChatMessage(){}
@@ -162,5 +163,13 @@ public class ChatMessage {
 
     public void setGiftUserName(String giftUserName) {
         this.giftUserName = giftUserName;
+    }
+
+    public String getGiftType() {
+        return giftType;
+    }
+
+    public void setGiftType(String giftType) {
+        this.giftType = giftType;
     }
 }

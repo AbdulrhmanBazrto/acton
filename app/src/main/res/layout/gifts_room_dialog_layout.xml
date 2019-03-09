@@ -6,26 +6,38 @@
     android:alpha="0.9"
     android:background="@color/gifts_dialog_background_color">
 
-    <com.gnusl.wow.Views.FontedTextView
-        android:id="@+id/saveQuestionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:text="save_these_entries_as_a_draft"
-        android:gravity="center"
-        android:visibility="gone"
-        app:typefaceAsset="fonts/SFUIText-Bold.ttf"
-        android:textColor="@color/transparent"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gifts_recycler_view"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:clipToPadding="false"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:clipToPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_to"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:gravity="left|center_vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="Send to: "
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gifts_recycler_view" />
+
+    <Spinner
+        android:id="@+id/users_spinner"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/transparent"
+        app:layout_constraintLeft_toRightOf="@+id/tv_to"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gifts_recycler_view" />
 
 </android.support.constraint.ConstraintLayout>

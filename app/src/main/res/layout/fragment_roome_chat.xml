@@ -801,5 +801,12 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/iv_big_gift_animate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:visibility="gone"
+        />
 
 </android.support.constraint.ConstraintLayout>

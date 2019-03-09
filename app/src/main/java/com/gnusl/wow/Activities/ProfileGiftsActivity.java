@@ -1,19 +1,16 @@
 package com.gnusl.wow.Activities;
 
-import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
-import com.gnusl.wow.Adapters.FollowersRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.GiftsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Gift;
-import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 
@@ -43,7 +40,7 @@ public class ProfileGiftsActivity extends AppCompatActivity implements Connectio
         sendGiftsRequest();
     }
 
-    private void initializeAdapter(){
+    private void initializeAdapter() {
 
         RecyclerView recyclerView = findViewById(R.id.gifts_recycler_view);
 
@@ -51,7 +48,7 @@ public class ProfileGiftsActivity extends AppCompatActivity implements Connectio
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        giftsRecyclerViewAdapter = new GiftsRecyclerViewAdapter(this, new ArrayList<>(),null,null);
+        giftsRecyclerViewAdapter = new GiftsRecyclerViewAdapter(this, new ArrayList<>(), null, null, null, null);
         recyclerView.setAdapter(giftsRecyclerViewAdapter);
     }
 
@@ -96,7 +93,7 @@ public class ProfileGiftsActivity extends AppCompatActivity implements Connectio
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<Gift> gifts=Gift.parseJSONArray(jsonArray);
+        ArrayList<Gift> gifts = Gift.parseJSONArray(jsonArray);
 
         // notify
         giftsRecyclerViewAdapter.setGifts(gifts);

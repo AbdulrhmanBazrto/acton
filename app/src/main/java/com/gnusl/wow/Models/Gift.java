@@ -11,6 +11,7 @@ public class Gift {
     private int id;
     private String path;
     private int price;
+    private String type;
 
     public static Gift newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -22,6 +23,7 @@ public class Gift {
         gift.setId(jsonObject.optInt("id"));
         gift.setPath(jsonObject.optString("path"));
         gift.setPrice(jsonObject.optInt("price"));
+        gift.setType(jsonObject.optString("type"));
 
         return gift;
     }
@@ -31,8 +33,8 @@ public class Gift {
             return null;
         }
 
-        ArrayList<Gift> rooms=new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++) {
+        ArrayList<Gift> rooms = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 rooms.add(Gift.newInstance(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
@@ -64,5 +66,13 @@ public class Gift {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

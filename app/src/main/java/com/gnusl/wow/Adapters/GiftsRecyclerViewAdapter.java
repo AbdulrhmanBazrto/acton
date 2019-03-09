@@ -1,17 +1,17 @@
 package com.gnusl.wow.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,13 +19,14 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.gnusl.wow.Activities.GiftsActivity;
 import com.gnusl.wow.Delegates.GiftDelegate;
 import com.gnusl.wow.Models.Gift;
+import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.rey.material.app.BottomSheetDialog;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -34,16 +35,37 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private GiftDelegate giftDelegate;
     BottomSheetDialog optionsDialog;
     private int selectedPosition = -1;
+    private User toUser;
+    private List<User> toUsers;
 
-    public GiftsRecyclerViewAdapter(Context context, ArrayList<Gift> gifts, BottomSheetDialog optionsDialog, GiftDelegate giftDelegate) {
+    public GiftsRecyclerViewAdapter(Context context, ArrayList<Gift> gifts, BottomSheetDialog optionsDialog, GiftDelegate giftDelegate, Spinner spinner, List<User> users) {
         this.context = context;
         this.gifts = gifts;
         this.giftDelegate = giftDelegate;
         this.optionsDialog = optionsDialog;
+        if (spinner != null) {
+            this.toUsers = users;
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) {
+                        toUser = null;
+                        return;
+                    }
+                    toUser = toUsers.get(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
@@ -67,7 +89,7 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public class GiftViewHolder extends RecyclerView.ViewHolder {
 
         private View root_view;
-        private AppCompatImageView giftImage;
+        private AppCompatImageView giftImage, giftType;
         private TextView price;
         private ProgressBar progressBar;
 
@@ -76,6 +98,7 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
             root_view = itemView.findViewById(R.id.root_view);
             giftImage = itemView.findViewById(R.id.gift_image);
+            giftType = itemView.findViewById(R.id.gift_type);
             progressBar = itemView.findViewById(R.id.load_progress);
             price = itemView.findViewById(R.id.price);
         }
@@ -124,14 +147,28 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 selectedPosition = position;
                 notifyDataSetChanged();
 
-                // dismiss dialog
-                if (optionsDialog != null)
-                    optionsDialog.dismiss();
 
                 // send
-                if (giftDelegate != null)
-                    giftDelegate.onClickToSendGift(gift);
+                if (giftDelegate != null && toUser != null) {
+                    if (optionsDialog != null)
+                        optionsDialog.dismiss();
+                    giftDelegate.onClickToSendGift(gift, toUser);
+                }
             });
+
+            switch (gift.getType().toLowerCase()) {
+                case "small":
+                    giftType.setVisibility(View.GONE);
+                    break;
+                case "medium":
+                    giftType.setVisibility(View.VISIBLE);
+                    giftType.setImageResource(R.drawable.icon_medim_gift_type);
+                    break;
+                case "large":
+                    giftType.setVisibility(View.VISIBLE);
+                    giftType.setImageResource(R.drawable.icon_big_gift_type);
+                    break;
+            }
         }
 
     }

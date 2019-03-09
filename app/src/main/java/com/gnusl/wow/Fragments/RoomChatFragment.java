@@ -71,6 +71,8 @@ import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -282,8 +284,51 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         inflatedView.findViewById(R.id.gift_image).setOnClickListener(v -> {
 
-            if (gifts != null)
-                GiftsRoomDialog.show(getContext(), gifts, this);
+            APIConnectionNetwork.GetUserAttendance(activity.getRoom().getId(), new ConnectionDelegate() {
+                @Override
+                public void onConnectionFailure() {
+
+                    Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
+
+                    LoaderPopUp.dismissLoader();
+
+                }
+
+                @Override
+                public void onConnectionError(ANError anError) {
+
+                    Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
+
+                    LoaderPopUp.dismissLoader();
+
+                }
+
+                @Override
+                public void onConnectionSuccess(String response) {
+
+                }
+
+                @Override
+                public void onConnectionSuccess(JSONObject jsonObject) {
+
+                    if (jsonObject.has("users")) { // refresh scores in room
+
+                        try {
+                            ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
+                            if (gifts != null)
+                                GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onConnectionSuccess(JSONArray jsonArray) {
+
+                }
+            });
+
         });
 
         inflatedView.findViewById(R.id.gallery_btn).setOnClickListener(v -> {
@@ -730,6 +775,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     private boolean shouldGenerateCrazyWords = false;
 
+    // todo change gift animation as type sent
     private void PubnubImplementation() {
 
         PNConfiguration pnConfiguration = new PNConfiguration();
@@ -825,10 +871,12 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     } else { // gift case
 
                         String gift_path = message.getMessage().getAsJsonObject().get("gift_image").getAsString();
+                        String gift_type = message.getMessage().getAsJsonObject().get("gift_type").getAsString();
                         String userGiftName = message.getMessage().getAsJsonObject().get("user_gift_name").getAsString();
                         chatMessage = new ChatMessage();
                         chatMessage.setGiftImagePath(gift_path);
                         chatMessage.setGiftUserName(userGiftName);
+                        chatMessage.setGiftType(gift_type);
                         chatMessage.setUserName(userName);
                         chatMessage.setUserImage(userImage);
 
@@ -844,8 +892,37 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         chatRecyclerView.smoothScrollToPosition(chatRecyclerViewAdapter.getChatMessages().size() - 1);
 
                         // gift animation
-                        if (chatMessage.getGiftImagePath() != null)
-                            animateGiftInfo(chatMessage);
+                        if (chatMessage.getGiftImagePath() != null) {
+                            switch (chatMessage.getGiftType()) {
+                                case "small":
+                                case "medium": {
+                                    animateGiftInfo(chatMessage);
+                                    break;
+                                }
+                                case "large": {
+                                    ImageView imageBigGift = inflatedView.findViewById(R.id.iv_big_gift_animate);
+                                    Picasso.with(getActivity()).load(chatMessage.getGiftImagePath()).into(imageBigGift, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            imageBigGift.setVisibility(View.VISIBLE);
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    imageBigGift.setVisibility(View.GONE);
+                                                }
+                                            }, 1500);
+                                        }
+
+                                        @Override
+                                        public void onError() {
+
+                                        }
+                                    });
+                                    break;
+                                }
+                            }
+
+                        }
                     });
 
                     // check if should generate crazy words
@@ -942,6 +1019,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         // add gift image
         messageJsonObject.addProperty("gift_image", gift.getPath());
+        messageJsonObject.addProperty("gift_type", gift.getType());
         messageJsonObject.addProperty("user_gift_name", userGift.getName());
 
         // add user info
@@ -1316,50 +1394,48 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             getAllMessagesRequest();
     }
 
+    // todo shube3rfni
     @Override
-    public void onClickToSendGift(Gift gift) {
+    public void onClickToSendGift(Gift gift, User toUser) {
 
-        // show users
-        showUsersAttendancePopUp(user -> {
 
-            // store gift
-            APIConnectionNetwork.StoreGift(activity.getRoom().getId(), user.getId(), gift.getId(), new ConnectionDelegate() {
-                @Override
-                public void onConnectionFailure() {
+        // store gift
+        APIConnectionNetwork.StoreGift(activity.getRoom().getId(), toUser.getId(), gift.getId(), new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
 
-                }
+            }
 
-                @Override
-                public void onConnectionError(ANError anError) {
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = new JSONObject(anError.getErrorBody());
-                        if (jsonObject.has("payment_status")) {
-                            if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
-                                startActivity(new Intent(getActivity(), RechargeActivity.class));
-                            }
+            @Override
+            public void onConnectionError(ANError anError) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(anError.getErrorBody());
+                    if (jsonObject.has("payment_status")) {
+                        if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
+                            startActivity(new Intent(getActivity(), RechargeActivity.class));
                         }
-                    } catch (JSONException e) {
-
                     }
-                }
-
-                @Override
-                public void onConnectionSuccess(String response) {
+                } catch (JSONException e) {
 
                 }
+            }
 
-                @Override
-                public void onConnectionSuccess(JSONObject jsonObject) {
-                    // send on pubnup
-                    ShareGiftOnPubnub(user, gift);
-                }
+            @Override
+            public void onConnectionSuccess(String response) {
 
-                @Override
-                public void onConnectionSuccess(JSONArray jsonArray) {
+            }
 
-                }
-            });
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+                // send on pubnup
+                ShareGiftOnPubnub(toUser, gift);
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
         });
     }
 
