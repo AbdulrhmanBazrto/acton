@@ -79,8 +79,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -134,6 +134,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        channelName = "Channel_" + activity.getRoom().getId();
 
         // initialize views
         initializeViews();
@@ -946,8 +948,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
             }
         });
-
-        pubnub.subscribe().channels(Arrays.asList(channelName)).execute();
+        List<String> channels = new ArrayList<>();
+        channels.add(channelName);
+        channels.add("actonGiftChannel");
+        pubnub.subscribe().channels(channels).execute();
 
     }
 
@@ -1033,7 +1037,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             messageJsonObject.addProperty("user_image", user.getImage_url());
         }
 
-        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+        pubnub.publish().channel("actonGiftChannel").message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
             @Override
             public void onResponse(PNPublishResult result, PNStatus status) {
                 // Check whether request successfully completed or not.
