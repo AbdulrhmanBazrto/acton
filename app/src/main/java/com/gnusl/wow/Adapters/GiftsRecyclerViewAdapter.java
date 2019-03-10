@@ -43,24 +43,6 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         this.gifts = gifts;
         this.giftDelegate = giftDelegate;
         this.optionsDialog = optionsDialog;
-        if (spinner != null) {
-            this.toUsers = users;
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position == 0) {
-                        toUser = null;
-                        return;
-                    }
-                    toUser = toUsers.get(position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-        }
     }
 
     @NonNull
@@ -149,10 +131,10 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
 
                 // send
-                if (giftDelegate != null && toUser != null) {
+                if (giftDelegate != null) {
                     if (optionsDialog != null)
                         optionsDialog.dismiss();
-                    giftDelegate.onClickToSendGift(gift, toUser);
+                    giftDelegate.onClickToSendGift(gift, null);
                 }
             });
 

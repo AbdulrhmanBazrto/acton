@@ -43,10 +43,12 @@ import com.gnusl.wow.Adapters.ChatRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.MicUsersRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersScoreRoomRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
+import com.gnusl.wow.Delegates.ChooseUserDelegate;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.GiftDelegate;
 import com.gnusl.wow.Delegates.MicUserDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
+import com.gnusl.wow.Delegates.SendGiftClickDelegate;
 import com.gnusl.wow.Delegates.ShowHeartsClickListner;
 import com.gnusl.wow.Delegates.UserAttendanceDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
@@ -88,7 +90,7 @@ import java.util.TimerTask;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate, MicUserDelegate, ShowHeartsClickListner {
+public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate, MicUserDelegate, ShowHeartsClickListner, SendGiftClickDelegate,ChooseUserDelegate {
 
     private static final int PAGE_SIZE_ITEMS = 5;
     private Room room;
@@ -111,6 +113,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
 
     Button btnRoomFollow;
+    private Gift DesigerGift;
+    private User DesigerUser;
 
     public RoomChatFragment() {
     }
@@ -318,7 +322,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         try {
                             ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
                             if (gifts != null)
-                                GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this);
+                                GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -1036,13 +1040,28 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             // image
             messageJsonObject.addProperty("user_image", user.getImage_url());
         }
-
-        pubnub.publish().channel("actonGiftChannel").message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
-            @Override
-            public void onResponse(PNPublishResult result, PNStatus status) {
-                // Check whether request successfully completed or not.
+        switch (gift.getType()) {
+            case "small": {
+                pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+                    @Override
+                    public void onResponse(PNPublishResult result, PNStatus status) {
+                        // Check whether request successfully completed or not.
+                    }
+                });
+                break;
             }
-        });
+            case "medium":
+            case "large": {
+                pubnub.publish().channel("actonGiftChannel").message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+                    @Override
+                    public void onResponse(PNPublishResult result, PNStatus status) {
+                        // Check whether request successfully completed or not.
+                    }
+                });
+                break;
+            }
+
+        }
     }
 
     public void SendToRefreshMicUsersOnPubnub() {
@@ -1402,45 +1421,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onClickToSendGift(Gift gift, User toUser) {
 
+        this.DesigerGift = gift;
 
-        // store gift
-        APIConnectionNetwork.StoreGift(activity.getRoom().getId(), toUser.getId(), gift.getId(), new ConnectionDelegate() {
-            @Override
-            public void onConnectionFailure() {
-
-            }
-
-            @Override
-            public void onConnectionError(ANError anError) {
-                JSONObject jsonObject;
-                try {
-                    jsonObject = new JSONObject(anError.getErrorBody());
-                    if (jsonObject.has("payment_status")) {
-                        if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
-                            startActivity(new Intent(getActivity(), RechargeActivity.class));
-                        }
-                    }
-                } catch (JSONException e) {
-
-                }
-            }
-
-            @Override
-            public void onConnectionSuccess(String response) {
-
-            }
-
-            @Override
-            public void onConnectionSuccess(JSONObject jsonObject) {
-                // send on pubnup
-                ShareGiftOnPubnub(toUser, gift);
-            }
-
-            @Override
-            public void onConnectionSuccess(JSONArray jsonArray) {
-
-            }
-        });
     }
 
     @Override
@@ -1564,6 +1546,61 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         });
 
 
+    }
+
+    @Override
+    public void sendClick() {
+        if (DesigerGift == null) {
+            Toast.makeText(getActivity(), "select gift", LENGTH_SHORT).show();
+            return;
+        }
+        if (DesigerUser == null) {
+            Toast.makeText(getActivity(), "select gift", LENGTH_SHORT).show();
+            return;
+        }
+        // store gift
+        APIConnectionNetwork.StoreGift(activity.getRoom().getId(), DesigerUser.getId(), DesigerGift.getId(), new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(anError.getErrorBody());
+                    if (jsonObject.has("payment_status")) {
+                        if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
+                            startActivity(new Intent(getActivity(), RechargeActivity.class));
+                        }
+                    }
+                } catch (JSONException e) {
+
+                }
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+                // send on pubnup
+                ShareGiftOnPubnub(DesigerUser, DesigerGift);
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onSelectUser(User user) {
+        this.DesigerUser = user;
     }
 }
 
