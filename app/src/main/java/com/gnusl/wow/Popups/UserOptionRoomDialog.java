@@ -23,14 +23,14 @@ import com.rey.material.app.BottomSheetDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GiftsRoomDialog {
+public class UserOptionRoomDialog {
 
     public static boolean isOpened = false;
 
     public static void show(final Context context, ArrayList<Gift> gifts, List<User> users, GiftDelegate giftDelegate, ChooseUserDelegate chooseUserDelegate, SendGiftClickDelegate sendGiftClickDelegate) {
         if (isOpened) return;
         isOpened = true;
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.gifts_room_dialog_layout, null);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.user_options_dialog_layout, null);
 
         RecyclerView recyclerView = dialogView.findViewById(R.id.gifts_recycler_view);
         Spinner spinner = dialogView.findViewById(R.id.users_spinner);
@@ -56,8 +56,7 @@ public class GiftsRoomDialog {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (chooseUserDelegate != null)
-                    chooseUserDelegate.onSelectUser(users.get(position));
+                chooseUserDelegate.onSelectUser(users.get(position));
 
             }
 

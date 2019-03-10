@@ -789,7 +789,7 @@
             android:layout_marginBottom="5dp"
             android:background="@color/transparent"
             android:drawableStart="@drawable/icon_empty_heart"
-            android:drawablePadding="-50dp"
+            android:drawablePadding="-30dp"
             android:gravity="center"
             android:paddingStart="140dp"
             android:paddingEnd="90dp"

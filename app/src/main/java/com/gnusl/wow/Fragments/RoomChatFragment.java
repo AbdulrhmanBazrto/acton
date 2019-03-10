@@ -322,7 +322,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         try {
                             ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
                             if (gifts != null)
-                                GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this);
+                                GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this,null);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
