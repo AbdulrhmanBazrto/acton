@@ -2405,6 +2405,41 @@ public class APIConnectionNetwork {
 
     }
 
+    public static void SetMicForUserWithLock(int channelId, int micId, ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.post(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/speaker")
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .addBodyParameter("mic", String.valueOf(micId))
+                .addBodyParameter("type", "locked")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d("Set Mic ", response.toString());
+
+                        // handle parse user data
+                        if (connectionDelegate != null) {
+                            connectionDelegate.onConnectionSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Set Mic ", anError.getMessage());
+                        Log.d("Set Mic ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
     public static void GetChannelsByCountry(String country, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.get(APILinks.Channels_Url.getLink() + "/country/" + country + "?skip=0&take=50")
@@ -2919,6 +2954,7 @@ public class APIConnectionNetwork {
                     }
                 });
     }
+
     public static void GetUserChannelInfo(ConnectionDelegate connectionDelegate) {
         AndroidNetworking.get(APILinks.Get_Channel_info.getLink())
                 .addHeaders("Accept", "application/json")

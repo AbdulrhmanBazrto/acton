@@ -9,7 +9,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_room_info_bg"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="200dp"
         android:background="@color/black_100"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -35,6 +35,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_user_image" />
+
+    <ImageView
+        android:id="@+id/tv_mute_unMute"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_username"
+        app:srcCompat="@drawable/icon_unmute" />
+
+    <ImageView
+        android:id="@+id/tv_gift"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="75dp"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_username"
+        app:srcCompat="@drawable/icon_gift_box_big" />
 
 
     <android.support.constraint.Guideline
@@ -76,8 +104,11 @@
             app:layout_constraintGuide_percent=".25" />
 
         <ImageView
+            android:id="@+id/iv_kick_out"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:padding="8dp"
+            app:srcCompat="@drawable/icon_kick_out"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/first_gl"
@@ -92,12 +123,15 @@
 
 
         <ImageView
+            android:id="@+id/iv_block"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/first_gl"
             app:layout_constraintRight_toLeftOf="@+id/second_gl"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_block" />
 
         <android.support.constraint.Guideline
             android:id="@+id/third_gl"
@@ -107,20 +141,26 @@
             app:layout_constraintGuide_percent=".75" />
 
         <ImageView
+            android:id="@+id/iv_take_mic"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            app:srcCompat="@drawable/icon_take_mic"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/second_gl"
             app:layout_constraintRight_toLeftOf="@+id/third_gl"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/iv_give_mic"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/third_gl"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_give_mic" />
 
     </android.support.constraint.ConstraintLayout>
 

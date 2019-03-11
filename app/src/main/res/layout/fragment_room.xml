@@ -24,13 +24,13 @@
 
     <ImageView
         android:id="@+id/btn_showDailyLogin"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="150dp"
         android:background="@drawable/shape_bg_dialy"
-        android:padding="15sp"
+        android:padding="8sp"
         android:scaleType="centerCrop"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

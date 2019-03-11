@@ -8,17 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.gnusl.wow.Adapters.GiftsRecyclerViewAdapter;
 import com.gnusl.wow.Adapters.UsersSpinnerAdapter;
 import com.gnusl.wow.Delegates.ChooseUserDelegate;
 import com.gnusl.wow.Delegates.GiftDelegate;
 import com.gnusl.wow.Delegates.SendGiftClickDelegate;
+import com.gnusl.wow.Delegates.UserRoomActionsDelegate;
+import com.gnusl.wow.Enums.UserRoomActions;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.rey.material.app.BottomSheetDialog;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,47 +32,68 @@ public class UserOptionRoomDialog {
 
     public static boolean isOpened = false;
 
-    public static void show(final Context context, ArrayList<Gift> gifts, List<User> users, GiftDelegate giftDelegate, ChooseUserDelegate chooseUserDelegate, SendGiftClickDelegate sendGiftClickDelegate) {
+    public static void show(final Context context, User user, UserRoomActionsDelegate userRoomActionsDelegate) {
         if (isOpened) return;
         isOpened = true;
         View dialogView = LayoutInflater.from(context).inflate(R.layout.user_options_dialog_layout, null);
 
-        RecyclerView recyclerView = dialogView.findViewById(R.id.gifts_recycler_view);
-        Spinner spinner = dialogView.findViewById(R.id.users_spinner);
-        Button btnSend = dialogView.findViewById(R.id.btn_send);
+        TextView tvUsername = dialogView.findViewById(R.id.tv_username);
+        ImageView ivUserImage = dialogView.findViewById(R.id.iv_user_image);
+        ImageView ivKickOut = dialogView.findViewById(R.id.iv_kick_out);
+        ImageView ivBlock = dialogView.findViewById(R.id.iv_block);
+        ImageView ivTakeMic = dialogView.findViewById(R.id.iv_take_mic);
+        ImageView ivGiveMic = dialogView.findViewById(R.id.iv_give_mic);
+        ImageView tvMuteUnMute = dialogView.findViewById(R.id.tv_mute_unMute);
+        ImageView tvGift = dialogView.findViewById(R.id.tv_gift);
 
-        List<Object> objects = new ArrayList<>();
-        objects.add("select user");
-        objects.addAll(users);
-        UsersSpinnerAdapter usersSpinnerAdapter = new UsersSpinnerAdapter(context, R.layout.user_drop_down_item, objects);
-        spinner.setAdapter(usersSpinnerAdapter);
+        tvUsername.setText(user.getName());
+        Picasso.with(context).load(user.getImage_url()).into(ivUserImage);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
 
-        final BottomSheetDialog optionsDialog = new BottomSheetDialog(context, R.style.Material_App_BottomSheetDialog);
-
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        ivKickOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendGiftClickDelegate.sendClick();
+                userRoomActionsDelegate.onActionClick(UserRoomActions.KickOut, user);
             }
         });
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ivBlock.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                chooseUserDelegate.onSelectUser(users.get(position));
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onClick(View v) {
+                userRoomActionsDelegate.onActionClick(UserRoomActions.Block, user);
             }
         });
 
-        GiftsRecyclerViewAdapter giftsRecyclerViewAdapter = new GiftsRecyclerViewAdapter(context, gifts, optionsDialog, giftDelegate, spinner, users);
-        recyclerView.setAdapter(giftsRecyclerViewAdapter);
+        ivTakeMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userRoomActionsDelegate.onActionClick(UserRoomActions.TakeMic, user);
+            }
+        });
+
+        ivGiveMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userRoomActionsDelegate.onActionClick(UserRoomActions.GiveMic, user);
+            }
+        });
+
+        tvMuteUnMute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userRoomActionsDelegate.onActionClick(UserRoomActions.Mute, user);
+            }
+        });
+
+        tvGift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userRoomActionsDelegate.onActionClick(UserRoomActions.Gift, user);
+            }
+        });
+
+
+        final BottomSheetDialog optionsDialog = new BottomSheetDialog(context, R.style.Material_App_BottomSheetDialog);
 
         optionsDialog.contentView(dialogView)
                 .heightParam(ViewGroup.LayoutParams.WRAP_CONTENT)

@@ -10,6 +10,7 @@ public class MicUser {
 
     private int micId;
     private User user;
+    private String type;
 
     public static MicUser newInstance(JSONObject jsonObject) {
         if (jsonObject == null) {
@@ -18,9 +19,10 @@ public class MicUser {
 
         MicUser micUser = new MicUser();
         micUser.setMicId(jsonObject.optInt("mic"));
+        micUser.setType(jsonObject.optString("type"));
 
         // user
-        if(jsonObject.has("user")) {
+        if (jsonObject.has("user")) {
             try {
                 micUser.setUser(User.newInstance(jsonObject.getJSONObject("user")));
             } catch (JSONException e) {
@@ -37,8 +39,8 @@ public class MicUser {
             return null;
         }
 
-        ArrayList<MicUser> rooms=new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++) {
+        ArrayList<MicUser> rooms = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 rooms.add(MicUser.newInstance(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
@@ -62,5 +64,13 @@ public class MicUser {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -132,8 +132,6 @@ public class GiftsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
                 // send
                 if (giftDelegate != null) {
-                    if (optionsDialog != null)
-                        optionsDialog.dismiss();
                     giftDelegate.onClickToSendGift(gift, null);
                 }
             });

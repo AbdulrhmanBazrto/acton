@@ -27,7 +27,7 @@ public class GiftsRoomDialog {
 
     public static boolean isOpened = false;
 
-    public static void show(final Context context, ArrayList<Gift> gifts, List<User> users, GiftDelegate giftDelegate, ChooseUserDelegate chooseUserDelegate, SendGiftClickDelegate sendGiftClickDelegate) {
+    public static void show(final Context context, ArrayList<Gift> gifts, List<User> users, GiftDelegate giftDelegate, ChooseUserDelegate chooseUserDelegate, SendGiftClickDelegate sendGiftClickDelegate, User user) {
         if (isOpened) return;
         isOpened = true;
         View dialogView = LayoutInflater.from(context).inflate(R.layout.gifts_room_dialog_layout, null);
@@ -42,6 +42,16 @@ public class GiftsRoomDialog {
         UsersSpinnerAdapter usersSpinnerAdapter = new UsersSpinnerAdapter(context, R.layout.user_drop_down_item, objects);
         spinner.setAdapter(usersSpinnerAdapter);
 
+        int userSelected = 0;
+        if (user != null) {
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getId() == user.getId()) {
+                    userSelected = i;
+                    spinner.setSelection(userSelected + 1);
+                }
+            }
+        }
+
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
 
         final BottomSheetDialog optionsDialog = new BottomSheetDialog(context, R.style.Material_App_BottomSheetDialog);
@@ -50,6 +60,7 @@ public class GiftsRoomDialog {
             @Override
             public void onClick(View v) {
                 sendGiftClickDelegate.sendClick();
+                optionsDialog.dismiss();
             }
         });
 
@@ -57,7 +68,8 @@ public class GiftsRoomDialog {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (chooseUserDelegate != null)
-                    chooseUserDelegate.onSelectUser(users.get(position));
+                    if (position - 1 > 0 && position - 1 < users.size())
+                        chooseUserDelegate.onSelectUser(users.get(position - 1));
 
             }
 

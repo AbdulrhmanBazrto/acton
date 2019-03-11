@@ -495,6 +495,17 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         }
     }
 
+
+    public void muteUnMuteMic() {
+        AudioManager audioManager = ((AudioManager) getSystemService(AUDIO_SERVICE));
+        if (audioManager.isMicrophoneMute()) {
+            audioManager.setMicrophoneMute(false);
+        } else {
+            audioManager.setMicrophoneMute(true);
+        }
+
+    }
+
     @Override
     public void onRequestToHideKeyboard() {
 

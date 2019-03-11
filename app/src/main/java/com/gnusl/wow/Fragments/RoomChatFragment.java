@@ -51,7 +51,9 @@ import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Delegates.SendGiftClickDelegate;
 import com.gnusl.wow.Delegates.ShowHeartsClickListner;
 import com.gnusl.wow.Delegates.UserAttendanceDelegate;
+import com.gnusl.wow.Delegates.UserRoomActionsDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
+import com.gnusl.wow.Enums.UserRoomActions;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.MicUser;
@@ -59,6 +61,7 @@ import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.GiftsRoomDialog;
 import com.gnusl.wow.Popups.LoaderPopUp;
+import com.gnusl.wow.Popups.UserOptionRoomDialog;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Utils.ZigZagAnimation;
@@ -90,7 +93,7 @@ import java.util.TimerTask;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate, MicUserDelegate, ShowHeartsClickListner, SendGiftClickDelegate,ChooseUserDelegate {
+public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate, MicUserDelegate, ShowHeartsClickListner, SendGiftClickDelegate, ChooseUserDelegate {
 
     private static final int PAGE_SIZE_ITEMS = 5;
     private Room room;
@@ -290,50 +293,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         inflatedView.findViewById(R.id.gift_image).setOnClickListener(v -> {
 
-            APIConnectionNetwork.GetUserAttendance(activity.getRoom().getId(), new ConnectionDelegate() {
-                @Override
-                public void onConnectionFailure() {
-
-                    Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
-
-                    LoaderPopUp.dismissLoader();
-
-                }
-
-                @Override
-                public void onConnectionError(ANError anError) {
-
-                    Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
-
-                    LoaderPopUp.dismissLoader();
-
-                }
-
-                @Override
-                public void onConnectionSuccess(String response) {
-
-                }
-
-                @Override
-                public void onConnectionSuccess(JSONObject jsonObject) {
-
-                    if (jsonObject.has("users")) { // refresh scores in room
-
-                        try {
-                            ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
-                            if (gifts != null)
-                                GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this,null);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onConnectionSuccess(JSONArray jsonArray) {
-
-                }
-            });
+            showGiftsDialog(null);
 
         });
 
@@ -409,6 +369,54 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         inflatedView.findViewById(R.id.iv_follow_room).setOnClickListener(v -> {
             followUnfollowRoom();
         });
+    }
+
+    private void showGiftsDialog(User user) {
+        APIConnectionNetwork.GetUserAttendance(activity.getRoom().getId(), new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+                Toast.makeText(getContext(), " Connection Failure", LENGTH_SHORT).show();
+
+                LoaderPopUp.dismissLoader();
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+                Toast.makeText(getContext(), "Error Connection try again", LENGTH_SHORT).show();
+
+                LoaderPopUp.dismissLoader();
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+
+                if (jsonObject.has("users")) { // refresh scores in room
+
+                    try {
+                        ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
+                        if (gifts != null)
+                            GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this, RoomChatFragment.this, user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
+        });
+
     }
 
     private void showRoomNameDialog() {
@@ -850,8 +858,24 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 // extract desired parts of the payload, using Gson
 
 
+                if (message.getMessage().getAsJsonObject().has("MIC_MUTE_EVENT")) {
+                    if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
+                        if (getActivity() instanceof RoomChatActivity)
+                            ((RoomChatActivity) getActivity()).muteUnMuteMic();
+                    }
+                } else if (message.getMessage().getAsJsonObject().has("KICK_OUT_EVENT")) {
+                    if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
+                        activity.setShouldLogout(true);
+                        activity.onBackPressed();
+                    }
+                } else if (message.getMessage().getAsJsonObject().has("MIC_TAKE_EVENT")) {
+                    if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
+                        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
+                    }
+                }
+
                 // check services messages
-                if (message.getMessage().getAsJsonObject().has("Refresh_MIC_USERS")) {
+                else if (message.getMessage().getAsJsonObject().has("Refresh_MIC_USERS")) {
 
                     // get mic users
                     APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), RoomChatFragment.this);
@@ -1326,6 +1350,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         else if (jsonObject.has("mic_status")) {
 
             // should refresh
+            SendToRefreshMicUsersOnPubnub();
             APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), this);
 
             // shold send to all users using pubnup to refresh
@@ -1434,11 +1459,154 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         activity.checkPermissions();
 
         // send request
-        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micId, this);
+        boolean imOnMic = false;
+        if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId()) {
+            for (MicUser mu : micUsersRecyclerViewAdapter.getMicUsers()) {
+                if (mu.getUser() != null)
+                    if (mu.getUser().getId() == SharedPreferencesUtils.getUser().getId())
+                        imOnMic = true;
+            }
+
+            if (!imOnMic) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                CharSequence[] languages = new CharSequence[2];
+                languages[0] = "take mic";
+                languages[1] = "lock mic";
+
+                builder.setItems(languages, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0: // English
+                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micId, RoomChatFragment.this);
+                                break;
+                            case 1: // Arabic
+                                APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), micId, RoomChatFragment.this);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+                AlertDialog changeLangsDialog = builder.create();
+                changeLangsDialog.setCancelable(true);
+                changeLangsDialog.setCanceledOnTouchOutside(true);
+                changeLangsDialog.show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                CharSequence[] languages = new CharSequence[1];
+                languages[0] = "lock mic";
+
+                builder.setItems(languages, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0: // English
+                                APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), micId, RoomChatFragment.this);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+                AlertDialog changeLangsDialog = builder.create();
+                changeLangsDialog.setCancelable(true);
+                changeLangsDialog.setCanceledOnTouchOutside(true);
+                changeLangsDialog.show();
+            }
+        } else {
+            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micId, RoomChatFragment.this);
+        }
+
     }
 
     @Override
     public void onSelectUserOnMic(MicUser micUser) {
+        if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && micUser.getUser().getId() != SharedPreferencesUtils.getUser().getId()) {
+            UserOptionRoomDialog.show(getActivity(), micUser.getUser(), new UserRoomActionsDelegate() {
+                @Override
+                public void onActionClick(UserRoomActions userRoomActions, User user) {
+                    switch (userRoomActions) {
+                        case Mute:
+                            sendMuteUnMuteOnPubNub(user);
+                            break;
+
+                        case UnMute:
+                            sendMuteUnMuteOnPubNub(user);
+                            break;
+
+                        case Block:
+
+                            break;
+
+                        case Gift:
+                            showGiftsDialog(user);
+                            break;
+                        case GiveMic:
+//                            sendTakeGiveMicOnPubNub(user, micUser.getMicId());
+                            break;
+
+                        case KickOut:
+                            sendKickOutOnPubNub(user);
+                            break;
+
+                        case TakeMic:
+                            sendTakeGiveMicOnPubNub(user, micUser.getMicId());
+                            break;
+                    }
+                }
+            });
+        } else if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && micUser.getUser().getId() == SharedPreferencesUtils.getUser().getId()) {
+            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUser.getMicId(), RoomChatFragment.this);
+        }
+    }
+
+    private void sendTakeGiveMicOnPubNub(User user, int mic_id) {
+        JsonObject messageJsonObject = new JsonObject();
+
+        // add gift image
+        messageJsonObject.addProperty("MIC_TAKE_EVENT", true);
+        messageJsonObject.addProperty("USER_ID", user.getId());
+        messageJsonObject.addProperty("MIC_ID", mic_id);
+
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                // Check whether request successfully completed or not.
+            }
+        });
+    }
+
+    private void sendKickOutOnPubNub(User user) {
+        JsonObject messageJsonObject = new JsonObject();
+
+        // add gift image
+        messageJsonObject.addProperty("KICK_OUT_EVENT", true);
+        messageJsonObject.addProperty("USER_ID", user.getId());
+
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                // Check whether request successfully completed or not.
+            }
+        });
+    }
+
+    private void sendMuteUnMuteOnPubNub(User user) {
+        JsonObject messageJsonObject = new JsonObject();
+
+        // add gift image
+        messageJsonObject.addProperty("MIC_MUTE_EVENT", true);
+        messageJsonObject.addProperty("USER_ID", user.getId());
+
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                // Check whether request successfully completed or not.
+            }
+        });
 
     }
 

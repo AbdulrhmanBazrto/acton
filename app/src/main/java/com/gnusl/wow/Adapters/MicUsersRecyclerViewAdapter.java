@@ -114,8 +114,8 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     @Override
                     public void run() {
 
-                        if(context instanceof Activity)
-                            ((Activity)context).runOnUiThread(()->animateSpeakerBackground());
+                        if (context instanceof Activity)
+                            ((Activity) context).runOnUiThread(() -> animateSpeakerBackground());
                     }
                 }, 1000, 1500);
             }
@@ -124,7 +124,7 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         private void animateSpeakerBackground() {
 
-            if(context==null)
+            if (context == null)
                 return;
 
             userImageLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.speaker_animation));
@@ -140,7 +140,7 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
                     userImageLayout.setVisibility(View.VISIBLE);
 
-                    if(context==null)
+                    if (context == null)
                         return;
                     userImageLayout.startAnimation(AnimationUtils.loadAnimation(context, R.anim.speaker_animation));
                 }
@@ -156,12 +156,21 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class MicViewHolder extends RecyclerView.ViewHolder {
 
+        ImageView lockImage;
+
         public MicViewHolder(View itemView) {
             super(itemView);
-
+            lockImage = itemView.findViewById(R.id.lock_image);
         }
 
         public void bind(final MicUser micUser, final int position) {
+
+
+            if (micUser.getType().equalsIgnoreCase("locked"))
+                lockImage.setVisibility(View.VISIBLE);
+            else
+                lockImage.setVisibility(View.GONE);
+
 
             itemView.setOnClickListener(v -> {
 

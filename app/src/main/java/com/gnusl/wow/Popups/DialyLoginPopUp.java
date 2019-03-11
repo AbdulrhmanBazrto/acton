@@ -33,6 +33,8 @@ public class DialyLoginPopUp extends DialogFragment {
     private Button btn_login;
     private TextView tv_login_count;
 
+    int daysCount=0;
+
 
     @NonNull
     @Override
@@ -163,6 +165,8 @@ public class DialyLoginPopUp extends DialogFragment {
 
             @Override
             public void onConnectionSuccess(JSONObject jsonObject) {
+                daysCount =jsonObject.optInt("daily");
+                dailyDialog.getTv_login_count().setText(String.format(Locale.getDefault(), "لقد سجلت الدخول لمدة %d يوم", daysCount));
                 switch (jsonObject.optInt("daily")) {
                     case 1: {
                         dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
@@ -204,6 +208,7 @@ public class DialyLoginPopUp extends DialogFragment {
                         break;
                     }
                 }
+
             }
 
             @Override
@@ -214,7 +219,6 @@ public class DialyLoginPopUp extends DialogFragment {
 
 
         if (dailyDialog != null) {
-            dailyDialog.getTv_login_count().setText(String.format(Locale.getDefault(), "لقد سجلت الدخول لمدة %d يوم", loginJsonArray.length()));
             dailyDialog.getBtn_login().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
