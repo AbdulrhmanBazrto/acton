@@ -175,7 +175,7 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             itemView.setOnClickListener(v -> {
 
                 if (micUserDelegate != null)
-                    micUserDelegate.onTakeMic(micUser.getMicId());
+                    micUserDelegate.onTakeMic(micUser);
             });
         }
 

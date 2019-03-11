@@ -4,7 +4,7 @@ import com.gnusl.wow.Models.MicUser;
 
 public interface MicUserDelegate {
 
-    public void onTakeMic(int micId);
+    public void onTakeMic(MicUser micId);
 
     public void onSelectUserOnMic(MicUser micUser);
 }

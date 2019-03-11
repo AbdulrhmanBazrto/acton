@@ -1451,7 +1451,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     }
 
     @Override
-    public void onTakeMic(int micId) {
+    public void onTakeMic(MicUser mic) {
 
         // TODO: should show popup
 
@@ -1471,7 +1471,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 CharSequence[] languages = new CharSequence[2];
                 languages[0] = "take mic";
-                languages[1] = "lock mic";
+                if (mic.getType().equalsIgnoreCase("locked"))
+                    languages[1] = "lock mic";
+                else
+                    languages[1] = "unlock mic";
 
                 builder.setItems(languages, new DialogInterface.OnClickListener() {
 
@@ -1479,10 +1482,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0: // English
-                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micId, RoomChatFragment.this);
+                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
                                 break;
                             case 1: // Arabic
-                                APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), micId, RoomChatFragment.this);
+                                APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
                                 break;
                             default:
                                 break;
@@ -1496,7 +1499,11 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 CharSequence[] languages = new CharSequence[1];
-                languages[0] = "lock mic";
+                if (mic.getType().equalsIgnoreCase("locked"))
+                    languages[0] = "lock mic";
+                else
+                    languages[0] = "unlock mic";
+
 
                 builder.setItems(languages, new DialogInterface.OnClickListener() {
 
@@ -1504,7 +1511,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0: // English
-                                APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), micId, RoomChatFragment.this);
+                                APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
                                 break;
                             default:
                                 break;
@@ -1517,7 +1524,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 changeLangsDialog.show();
             }
         } else {
-            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micId, RoomChatFragment.this);
+            if (mic.getType().equalsIgnoreCase("locked"))
+                Toast.makeText(getActivity(), "mick is locked", LENGTH_SHORT).show();
+            else
+                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
         }
 
     }
