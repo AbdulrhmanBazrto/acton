@@ -22,11 +22,12 @@ public class RoomTypesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     private Context context;
     private ArrayList<RoomType> roomTypes;
     private SelectRoomTypeDelegate selectRoomTypeDelegate;
+    private int selectedPosition;
 
     public RoomTypesRecyclerViewAdapter(Context context, ArrayList<RoomType> roomTypes, SelectRoomTypeDelegate selectRoomTypeDelegate) {
         this.context = context;
         this.roomTypes = roomTypes;
-        this.selectRoomTypeDelegate=selectRoomTypeDelegate;
+        this.selectRoomTypeDelegate = selectRoomTypeDelegate;
     }
 
     @Override
@@ -36,13 +37,13 @@ public class RoomTypesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         View view;
 
         view = inflater.inflate(R.layout.room_type_view_holder, parent, false);
-        return new RoomTypeViewHolder (view);
+        return new RoomTypeViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((RoomTypeViewHolder)holder).bind(getRoomTypes().get(position), position);
+        ((RoomTypeViewHolder) holder).bind(getRoomTypes().get(position), position);
 
     }
 
@@ -55,12 +56,14 @@ public class RoomTypesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
         private AppCompatImageView roomImage;
         private TextView roomName;
+        private View rootView;
 
-        public RoomTypeViewHolder (View itemView) {
+        public RoomTypeViewHolder(View itemView) {
             super(itemView);
 
-            roomImage= itemView.findViewById(R.id.room_image);
-            roomName= itemView.findViewById(R.id.room_name);
+            roomImage = itemView.findViewById(R.id.room_image);
+            roomName = itemView.findViewById(R.id.room_name);
+            rootView = itemView.findViewById(R.id.root_view);
 
         }
 
@@ -76,7 +79,18 @@ public class RoomTypesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                         .into(roomImage);
 
             // call delegate
-            itemView.setOnClickListener(v->selectRoomTypeDelegate.onSelectedRoomType(roomType));
+            itemView.setOnClickListener(v -> {
+                selectedPosition = position;
+                selectRoomTypeDelegate.onSelectedRoomType(roomType);
+                notifyDataSetChanged();
+            });
+
+            if (position == selectedPosition) {
+                rootView.setBackgroundColor(context.getResources().getColor(R.color.status_bar_room_chat_color));
+            } else
+                rootView.setBackgroundColor(context.getResources().
+
+                        getColor(R.color.transparent));
 
         }
 

@@ -1471,7 +1471,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 CharSequence[] languages = new CharSequence[2];
                 languages[0] = "take mic";
-                if (mic.getType().equalsIgnoreCase("locked"))
+                if (!mic.getType().equalsIgnoreCase("locked"))
                     languages[1] = "lock mic";
                 else
                     languages[1] = "unlock mic";
@@ -1499,7 +1499,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 CharSequence[] languages = new CharSequence[1];
-                if (mic.getType().equalsIgnoreCase("locked"))
+                if (!mic.getType().equalsIgnoreCase("locked"))
                     languages[0] = "lock mic";
                 else
                     languages[0] = "unlock mic";
@@ -1714,6 +1714,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             public void onConnectionSuccess(JSONObject jsonObject) {
                 if (jsonObject.has("background_url") && getActivity() != null)
                     activity.changeBackGround(jsonObject.optString("background_url"));
+                if (jsonObject.has("background_id") && getActivity() != null)
+                    activity.getRoom().setBackgroundId(jsonObject.optInt("background_id"));
 
             }
 

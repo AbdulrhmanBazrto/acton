@@ -3,6 +3,7 @@ package com.gnusl.wow.Adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,14 @@ import com.bumptech.glide.Glide;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Models.Visit;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.TimeAgo;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class VisitorsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -77,7 +82,15 @@ public class VisitorsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                             .load(user.getImage_url())
                             .into(profile_image);
 
-                date.setText(user.getDate());
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+                try {
+                    Date parse = simpleDateFormat.parse(user.getDate());
+                    date.setText(TimeAgo.getTimeAgo(parse.getTime()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
 
             }
         }

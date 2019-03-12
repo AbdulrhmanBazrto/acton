@@ -34,7 +34,7 @@ public class MyRoomsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_rooms);
-
+        findViewById(R.id.back_button).setOnClickListener(v -> onBackPressed());
         rvJoinedRooms = findViewById(R.id.rv_joined_rooms);
         rvMyRooms = findViewById(R.id.rv_my_rooms);
 

@@ -113,48 +113,44 @@ public class ThemesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (background.isSold()) {
-                        currentBackGround = background;
-                        notifyDataSetChanged();
-                        APIConnectionNetwork.ChangeRoomBackgroundId(currentBackGround.getId(), room.getId(), new ConnectionDelegate() {
-                            @Override
-                            public void onConnectionFailure() {
+                    APIConnectionNetwork.ChangeRoomBackgroundId(background.getId(), room.getId(), new ConnectionDelegate() {
+                        @Override
+                        public void onConnectionFailure() {
 
-                            }
+                        }
 
-                            @Override
-                            public void onConnectionError(ANError anError) {
-                                JSONObject jsonObject;
-                                try {
-                                    jsonObject = new JSONObject(anError.getErrorBody());
-                                    if (jsonObject.has("payment_status")) {
-                                        if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
-                                            context.startActivity(new Intent(context, RechargeActivity.class));
-                                        }
+                        @Override
+                        public void onConnectionError(ANError anError) {
+                            JSONObject jsonObject;
+                            try {
+                                jsonObject = new JSONObject(anError.getErrorBody());
+                                if (jsonObject.has("payment_status")) {
+                                    if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
+                                        context.startActivity(new Intent(context, RechargeActivity.class));
                                     }
-                                } catch (JSONException e) {
-
                                 }
-                            }
-
-                            @Override
-                            public void onConnectionSuccess(String response) {
+                            } catch (JSONException e) {
 
                             }
+                        }
 
-                            @Override
-                            public void onConnectionSuccess(JSONObject jsonObject) {
+                        @Override
+                        public void onConnectionSuccess(String response) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onConnectionSuccess(JSONArray jsonArray) {
+                        @Override
+                        public void onConnectionSuccess(JSONObject jsonObject) {
+                            currentBackGround = background;
+                            notifyDataSetChanged();
+                        }
 
-                            }
-                        });
-                    } else {
-                        Toast.makeText(context, "you should buy it first", Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onConnectionSuccess(JSONArray jsonArray) {
+
+                        }
+                    });
+
                 }
             });
 

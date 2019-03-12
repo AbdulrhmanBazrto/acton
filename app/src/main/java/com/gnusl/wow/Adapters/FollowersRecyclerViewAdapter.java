@@ -1,6 +1,7 @@
 package com.gnusl.wow.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Activities.ProfileActivity;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
@@ -53,7 +55,7 @@ public class FollowersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         private CircularImageView profile_image;
         private AutoFitFontedTextView user_name;
 
-        public UserViewHolder (View itemView) {
+        public UserViewHolder(View itemView) {
             super(itemView);
 
             profile_image = itemView.findViewById(R.id.profile_image);
@@ -75,20 +77,20 @@ public class FollowersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                             .into(profile_image);
 
 
-                // go to Chat User
-               /* itemView.setOnClickListener(v -> {
+//                 go to User
+                itemView.setOnClickListener(v -> {
 
-                    goToRoomChannel(giftUserRank);
-                });*/
+                    goToRoomChannel(user);
+                });
 
             }
         }
 
-        private void goToRoomChannel(User giftUserRank){
+        private void goToRoomChannel(User user) {
 
-           /* Intent intent=new Intent(context, RoomChatActivity.class);
-            intent.putExtra(RoomChatActivity.CHANNEL_KEY,giftUserRank);
-            context.startActivity(intent);*/
+            Intent intent = new Intent(context, ProfileActivity.class);
+            intent.putExtra(ProfileActivity.USER_ID, user.getId());
+            context.startActivity(intent);
         }
     }
 
