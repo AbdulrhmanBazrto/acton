@@ -46,7 +46,7 @@ public class RoomBackgroundActivity extends AppCompatActivity {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         rvThemes.setLayoutManager(gridLayoutManager);
-        themesRecyclerViewAdapter = new ThemesRecyclerViewAdapter(this, new ArrayList<>(),getRoom());
+        themesRecyclerViewAdapter = new ThemesRecyclerViewAdapter(this, new ArrayList<>(), getRoom());
         rvThemes.setAdapter(themesRecyclerViewAdapter);
 
         APIConnectionNetwork.GetRoomBackgrouns(new ConnectionDelegate() {

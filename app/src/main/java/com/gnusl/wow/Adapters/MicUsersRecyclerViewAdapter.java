@@ -77,6 +77,14 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         return micUsers.size();
     }
 
+    public int getFirstEmptyMicId() {
+        for (MicUser m : micUsers)
+            if (m.getUser() == null)
+                return m.getMicId();
+
+        return 0;
+    }
+
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView userImage;

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gnusl.wow.Delegates.UserAttendenceDelegate;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 
@@ -17,12 +18,14 @@ import java.util.ArrayList;
 
 public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private UserAttendenceDelegate userAttendenceDelegate;
     private Context context;
     private ArrayList<User> users;
 
-    public UsersScoreRoomRecyclerViewAdapter(Context context, ArrayList<User> users) {
+    public UsersScoreRoomRecyclerViewAdapter(Context context, ArrayList<User> users, UserAttendenceDelegate userAttendenceDelegate) {
         this.context = context;
         this.users = users;
+        this.userAttendenceDelegate = userAttendenceDelegate;
     }
 
     @Override
@@ -71,6 +74,14 @@ public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recy
             else
                 userImage.setImageResource(R.drawable.user);
 
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (userAttendenceDelegate != null)
+                        userAttendenceDelegate.onUserClick(user);
+                }
+            });
         }
 
     }

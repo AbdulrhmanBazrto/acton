@@ -51,6 +51,7 @@ import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Delegates.SendGiftClickDelegate;
 import com.gnusl.wow.Delegates.ShowHeartsClickListner;
 import com.gnusl.wow.Delegates.UserAttendanceDelegate;
+import com.gnusl.wow.Delegates.UserAttendenceDelegate;
 import com.gnusl.wow.Delegates.UserRoomActionsDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Enums.UserRoomActions;
@@ -93,7 +94,9 @@ import java.util.TimerTask;
 import static android.widget.Toast.LENGTH_SHORT;
 
 
-public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate, MicUserDelegate, ShowHeartsClickListner, SendGiftClickDelegate, ChooseUserDelegate {
+public class RoomChatFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, GiftDelegate,
+        MicUserDelegate, ShowHeartsClickListner, SendGiftClickDelegate,
+        ChooseUserDelegate, UserAttendenceDelegate {
 
     private static final int PAGE_SIZE_ITEMS = 5;
     private Room room;
@@ -870,7 +873,34 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     }
                 } else if (message.getMessage().getAsJsonObject().has("MIC_TAKE_EVENT")) {
                     if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
-                        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
+                        boolean imOnMic = false;
+                        for (MicUser mu : micUsersRecyclerViewAdapter.getMicUsers()) {
+                            if (mu.getUser() != null)
+                                if (mu.getUser().getId() == SharedPreferencesUtils.getUser().getId())
+                                    imOnMic = true;
+                        }
+                        if (!imOnMic) {
+                            AlertDialog alert = null;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            AlertDialog finalAlert = alert;
+                            builder.setMessage("لقد تمت دعوتك لاستخدام المكرفون. موافق؟")
+                                    .setCancelable(false)
+                                    .setPositiveButton("نعم", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
+                                            finalAlert.hide();
+                                        }
+                                    })
+                                    .setNegativeButton("لا", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            finalAlert.hide();
+                                        }
+                                    });
+                            alert = builder.create();
+                            alert.show();
+                        } else {
+                            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
+                        }
                     }
                 }
 
@@ -1138,7 +1168,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        usersScoreRoomRecyclerViewAdapter = new UsersScoreRoomRecyclerViewAdapter(getContext(), new ArrayList<>());
+        usersScoreRoomRecyclerViewAdapter = new UsersScoreRoomRecyclerViewAdapter(getContext(), new ArrayList<>(), this);
         recyclerView.setAdapter(usersScoreRoomRecyclerViewAdapter);
 
 
@@ -1781,6 +1811,53 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onSelectUser(User user) {
         this.DesigerUser = user;
+    }
+
+    @Override
+    public void onUserClick(User user) {
+        if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && user.getId() != SharedPreferencesUtils.getUser().getId()) {
+            UserOptionRoomDialog.show(getActivity(), user, new UserRoomActionsDelegate() {
+                @Override
+                public void onActionClick(UserRoomActions userRoomActions, User user) {
+                    switch (userRoomActions) {
+                        case Mute:
+                            sendMuteUnMuteOnPubNub(user);
+                            break;
+
+                        case UnMute:
+                            sendMuteUnMuteOnPubNub(user);
+                            break;
+
+                        case Block:
+
+                            break;
+
+                        case Gift:
+                            showGiftsDialog(user);
+                            break;
+                        case GiveMic:
+                            if (micUsersRecyclerViewAdapter.getFirstEmptyMicId() != 0) {
+                                sendTakeGiveMicOnPubNub(user, micUsersRecyclerViewAdapter.getFirstEmptyMicId());
+                            } else {
+                                Toast.makeText(getActivity(), "no empty mics", LENGTH_SHORT).show();
+                            }
+                            break;
+
+                        case KickOut:
+                            sendKickOutOnPubNub(user);
+                            break;
+
+                        case TakeMic:
+                            if (micUsersRecyclerViewAdapter.getFirstEmptyMicId() != 0) {
+                                sendTakeGiveMicOnPubNub(user, micUsersRecyclerViewAdapter.getFirstEmptyMicId());
+                            } else {
+                                Toast.makeText(getActivity(), "no empty mics", LENGTH_SHORT).show();
+                            }
+                            break;
+                    }
+                }
+            });
+        }
     }
 }
 
