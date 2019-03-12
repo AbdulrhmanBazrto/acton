@@ -1498,34 +1498,55 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             }
 
             if (!imOnMic) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                CharSequence[] languages = new CharSequence[2];
-                languages[0] = "take mic";
-                if (!mic.getType().equalsIgnoreCase("locked"))
+                if (!mic.getType().equalsIgnoreCase("locked")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    CharSequence[] languages = new CharSequence[2];
+                    languages[0] = "take mic";
                     languages[1] = "lock mic";
-                else
-                    languages[1] = "unlock mic";
 
-                builder.setItems(languages, new DialogInterface.OnClickListener() {
+                    builder.setItems(languages, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0: // English
-                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
-                                break;
-                            case 1: // Arabic
-                                APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
-                                break;
-                            default:
-                                break;
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0: // English
+                                    APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
+                                    break;
+                                case 1: // Arabic
+                                    APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                });
-                AlertDialog changeLangsDialog = builder.create();
-                changeLangsDialog.setCancelable(true);
-                changeLangsDialog.setCanceledOnTouchOutside(true);
-                changeLangsDialog.show();
+                    });
+                    AlertDialog changeLangsDialog = builder.create();
+                    changeLangsDialog.setCancelable(true);
+                    changeLangsDialog.setCanceledOnTouchOutside(true);
+                    changeLangsDialog.show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    CharSequence[] languages = new CharSequence[1];
+                    languages[0] = "unlock mic";
+
+                    builder.setItems(languages, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0: // Arabic
+                                    APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                    AlertDialog changeLangsDialog = builder.create();
+                    changeLangsDialog.setCancelable(true);
+                    changeLangsDialog.setCanceledOnTouchOutside(true);
+                    changeLangsDialog.show();
+                }
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 CharSequence[] languages = new CharSequence[1];
