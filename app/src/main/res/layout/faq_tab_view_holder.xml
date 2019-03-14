@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_gravity="center_horizontal">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_faq_image"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--<com.gnusl.wow.Views.FontedTextView-->
+    <!--android:id="@+id/tv_faq_title"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/badge_image"-->
+    <!--android:gravity="center"-->
+    <!--android:lines="2"-->
+    <!--android:textColor="@color/no_moments_label_text_color"-->
+    <!--android:textSize="13sp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toLeftOf="@+id/iv_faq_image"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/badge_image"-->
+    <!--app:typefaceAsset="fonts/SFUIText-Regular.ttf" />-->
+
+</android.support.constraint.ConstraintLayout>

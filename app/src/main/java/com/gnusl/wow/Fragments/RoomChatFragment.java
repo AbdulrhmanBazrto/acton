@@ -408,8 +408,12 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
                     try {
                         ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
-                        if (gifts != null)
-                            GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this, RoomChatFragment.this, user);
+                        if (gifts != null) {
+                            if (users.size() == 0) {
+                                Toast.makeText(getActivity(), "no users to send gift to", LENGTH_SHORT).show();
+                            } else
+                                GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this, RoomChatFragment.this, user);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -925,7 +929,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     }
 
                     case "ENTER_ROOM": {
-                        // get mic users
+
+                        if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId())
+                            return;
                         User user = new User();
                         user.setId(message.getMessage().getAsJsonObject().get("USER_ID").getAsInt());
                         user.setName(message.getMessage().getAsJsonObject().get("user_name").getAsString());
@@ -1493,6 +1499,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     public void onStop() {
         super.onStop();
 
+//        if (micUsersRecyclerViewAdapter.getCurrentUserMicId() != -1)
+//            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUsersRecyclerViewAdapter.getCurrentUserMicId(), null);
         // set attendance
         APIConnectionNetwork.SetUserAttendance(UserAttendanceType.LEAVE, activity.getRoom().getId(), this);
 
@@ -1515,8 +1523,6 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     @Override
     public void onTakeMic(MicUser mic) {
-
-        // TODO: should show popup
 
         // permission
         activity.checkPermissions();
@@ -1610,8 +1616,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         } else {
             if (mic.getType().equalsIgnoreCase("locked"))
                 Toast.makeText(getActivity(), "mick is locked", LENGTH_SHORT).show();
-            else
-                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
+            else {
+                if (micUsersRecyclerViewAdapter.getCurrentUserMicId() == -1 || micUsersRecyclerViewAdapter.getCurrentUserMicId() == mic.getMicId())
+                    APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
+            }
         }
 
     }
@@ -1653,6 +1661,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 }
             });
         } else if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && micUser.getUser().getId() == SharedPreferencesUtils.getUser().getId()) {
+            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUser.getMicId(), RoomChatFragment.this);
+        } else if (micUsersRecyclerViewAdapter.getCurrentUserMicId() == micUser.getMicId()) {
             APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUser.getMicId(), RoomChatFragment.this);
         }
     }
@@ -1818,6 +1828,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onResume() {
         super.onResume();
+
+        setUpUserAttendanceRecycler();
+
         APIConnectionNetwork.GetRoomInfo(room.getId(), new ConnectionDelegate() {
             @Override
             public void onConnectionFailure() {
@@ -1859,7 +1872,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             return;
         }
         if (DesigerUser == null) {
-            Toast.makeText(getActivity(), "select gift", LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "select user", LENGTH_SHORT).show();
             return;
         }
         // store gift

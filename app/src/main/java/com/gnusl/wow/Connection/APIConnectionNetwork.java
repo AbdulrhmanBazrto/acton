@@ -2981,4 +2981,35 @@ public class APIConnectionNetwork {
                     }
                 });
     }
+
+    public static void GetFAQ(ConnectionDelegate connectionDelegate) {
+
+        AndroidNetworking.get(APILinks.FAQ_url.getLink())
+
+                .addHeaders("Accept", "application/json")
+                .addHeaders("Authorization", APIUtils.getAuthorization())
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        // handle parse user data
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Log.d("Get Attendance ", anError.getMessage());
+                        Log.d("Get Attendance ", anError.getErrorDetail());
+
+                        if (connectionDelegate != null)
+                            connectionDelegate.onConnectionError(anError);
+                    }
+                });
+
+    }
+
 }

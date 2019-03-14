@@ -23,9 +23,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- WebRTC Dependencies -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- WebRTC Dependencies -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature
@@ -37,9 +35,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- PubNub Dependencies -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- PubNub Dependencies -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
@@ -57,6 +53,8 @@
         android:roundIcon="@drawable/ic_launcher_acton"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.FAQAnswerActivity"></activity>
+        <activity android:name=".Activities.FAQActivity" />
         <activity
             android:name=".Activities.SplashActivity"
             android:launchMode="singleTop"
@@ -196,7 +194,7 @@
         <activity android:name=".Activities.StoreLockRoomActivity" />
         <activity android:name=".Activities.PinTopRoomActivity" />
         <activity android:name=".Activities.SpecialIDRoomActivity" />
-        <activity android:name=".Activities.MyRoomsActivity"></activity>
+        <activity android:name=".Activities.MyRoomsActivity" />
     </application>
 
 </manifest>

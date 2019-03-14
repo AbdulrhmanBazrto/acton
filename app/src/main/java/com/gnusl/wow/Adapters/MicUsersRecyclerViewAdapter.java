@@ -17,6 +17,7 @@ import com.gnusl.wow.Delegates.MicUserDelegate;
 import com.gnusl.wow.Models.MicUser;
 import com.gnusl.wow.Models.MicUser;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -201,4 +202,16 @@ public class MicUsersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 
     // endregion
+
+
+    public int getCurrentUserMicId() {
+        for (MicUser micUser : micUsers) {
+            if (micUser.getUser() != null) {
+                if (SharedPreferencesUtils.getUser().getId() == micUser.getUser().getId())
+                    return micUser.getMicId();
+            }
+        }
+
+        return -1;
+    }
 }

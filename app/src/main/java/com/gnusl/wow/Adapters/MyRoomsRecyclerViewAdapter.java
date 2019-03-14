@@ -100,7 +100,7 @@ public class MyRoomsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     content.setText(room.getDescription());
 
                 // room image
-                if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty())
+                if (room.getThumbnailUrl() != null && !room.getThumbnailUrl().isEmpty())
                     Glide.with(context)
                             .load(room.getThumbnailUrl())
                             .into(room_image);

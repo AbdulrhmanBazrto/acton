@@ -92,13 +92,17 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
             else
                 loginJsonArray = new JSONArray(dailyLoginArrayStr);
 
-            JSONObject lastLogin = loginJsonArray.getJSONObject(loginJsonArray.length() - 1);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.add(Calendar.DAY_OF_YEAR, -1);
+            if (loginJsonArray.length() != 0) {
+                JSONObject lastLogin = loginJsonArray.getJSONObject(loginJsonArray.length() - 1);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.DAY_OF_YEAR, -1);
 
-            if (lastLogin != null && lastLogin.optLong("timestamp") > calendar.getTimeInMillis()) {
-                inflatedView.findViewById(R.id.btn_showDailyLogin).setVisibility(View.GONE);
+                if (lastLogin != null && lastLogin.optLong("timestamp") > calendar.getTimeInMillis()) {
+                    inflatedView.findViewById(R.id.btn_showDailyLogin).setVisibility(View.GONE);
+                } else {
+                    inflatedView.findViewById(R.id.btn_showDailyLogin).setVisibility(View.VISIBLE);
+                }
             } else {
                 inflatedView.findViewById(R.id.btn_showDailyLogin).setVisibility(View.VISIBLE);
             }

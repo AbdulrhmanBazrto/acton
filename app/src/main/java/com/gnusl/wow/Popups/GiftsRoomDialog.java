@@ -18,6 +18,7 @@ import com.gnusl.wow.Delegates.SendGiftClickDelegate;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.rey.material.app.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -30,7 +31,13 @@ public class GiftsRoomDialog {
     public static void show(final Context context, ArrayList<Gift> gifts, List<User> users, GiftDelegate giftDelegate, ChooseUserDelegate chooseUserDelegate, SendGiftClickDelegate sendGiftClickDelegate, User user) {
         if (isOpened) return;
         isOpened = true;
+
         View dialogView = LayoutInflater.from(context).inflate(R.layout.gifts_room_dialog_layout, null);
+
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getId() == SharedPreferencesUtils.getUser().getId())
+                users.remove(i);
+        }
 
         RecyclerView recyclerView = dialogView.findViewById(R.id.gifts_recycler_view);
         Spinner spinner = dialogView.findViewById(R.id.users_spinner);
@@ -64,11 +71,12 @@ public class GiftsRoomDialog {
             }
         });
 
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (chooseUserDelegate != null)
-                    if (position - 1 > 0 && position - 1 < users.size())
+                    if (position - 1 >= 0 && position - 1 < users.size())
                         chooseUserDelegate.onSelectUser(users.get(position - 1));
 
             }

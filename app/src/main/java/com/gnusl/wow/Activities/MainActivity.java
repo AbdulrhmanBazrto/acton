@@ -174,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.settings) {
 
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        } else if (id == R.id.faq) {
+
+            startActivity(new Intent(MainActivity.this, FAQActivity.class));
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

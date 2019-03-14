@@ -68,7 +68,10 @@ public enum APILinks {
     Get_Channel_info(Base_API_Url.getLink() + "channel/user/info"),
 
     // daily login
-    Daily_Login_url(Base_API_Url.getLink() + "daily");
+    Daily_Login_url(Base_API_Url.getLink() + "daily"),
+
+    // faq
+    FAQ_url(Base_API_Url.getLink() + "faq");
 
     private String link;
 
