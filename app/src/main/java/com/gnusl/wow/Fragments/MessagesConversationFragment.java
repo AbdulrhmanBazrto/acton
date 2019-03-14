@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -27,22 +28,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
+import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Adapters.MessagesConversationRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.MessageImageDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
+import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Message;
+import com.gnusl.wow.Models.MicUser;
+import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Utils.NetworkUtils;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Views.FontedEditText;
 import com.gnusl.wow.Views.FontedTextView;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.pubnub.api.PNConfiguration;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.models.consumer.PNPublishResult;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -52,7 +72,10 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -71,16 +94,23 @@ public class MessagesConversationFragment extends Fragment implements Connection
     private FontedEditText message_edit_text;
     private FontedTextView state_label;
     private AppCompatImageView send_button, photo_button, bigImage;
-    private int offset = 0;
-    private int buffOffset = 0;
-    private boolean isNotMoreMessages = false;
-    private boolean isLockToRefresh = true;
+
     private int user_id;
+
+    private PubNub pubnub;
+    String channelName = "awesomeChannel";
+    private User toUser;
 
     @SuppressLint("ValidFragment")
     public MessagesConversationFragment(int user_id) {
 
         this.user_id = user_id;
+
+        if (user_id > SharedPreferencesUtils.getUser().getId()) {
+            channelName = "Channel_" + SharedPreferencesUtils.getUser().getId() + "_" + user_id;
+        } else {
+            channelName = "Channel_" + user_id + "_" + SharedPreferencesUtils.getUser().getId();
+        }
     }
 
     public static MessagesConversationFragment newInstance(int user_id) {
@@ -94,7 +124,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         inflatedView = inflater.inflate(R.layout.fragment_messages_conversation_layout, container, false);
@@ -116,22 +146,46 @@ public class MessagesConversationFragment extends Fragment implements Connection
 
         sendMessagesRequest();
 
+        APIConnectionNetwork.GetUserDetails(user_id, new ConnectionDelegate() {
+            @Override
+            public void onConnectionFailure() {
+
+            }
+
+            @Override
+            public void onConnectionError(ANError anError) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(String response) {
+
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONObject jsonObject) {
+                if (jsonObject.has("user")) {
+
+                    try {
+                        toUser = User.newInstance(jsonObject.getJSONObject("user"));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onConnectionSuccess(JSONArray jsonArray) {
+
+            }
+        });
+
+        PubnubImplementation();
+
         return inflatedView;
     }
 
-    private void handleClickSendPhoto() {
-      /*  if (checkCameraPermissions(getActivity())) {
-
-            showProfilePictureChooserDialog(getActivity());
-
-        } else {
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                    CAMERA_PERMISSIONS_REQUEST);
-
-        }*/
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setUpRecyclerView() {
@@ -148,17 +202,11 @@ public class MessagesConversationFragment extends Fragment implements Connection
             state_label.setVisibility(View.VISIBLE);
         }
 
-        messagesConversationAdapter = new MessagesConversationRecyclerViewAdapter(getContext(), new ArrayList<>(), recyclerView, this);
+        messagesConversationAdapter = new MessagesConversationRecyclerViewAdapter(getContext(), new ArrayList<>(), this);
         messagesConversationAdapter.setDelegate(this);
 
         recyclerView.setAdapter(messagesConversationAdapter);
-        increaseOffset();
 
-           /* try {
-                recyclerView.smoothScrollToPosition(messagesConversationAdapter.getItemCount() - 1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
     }
 
     private void sendMessagesRequest() {
@@ -166,101 +214,24 @@ public class MessagesConversationFragment extends Fragment implements Connection
         // make progress dialog
         LoaderPopUp.show(getActivity());
 
-        isLockToRefresh = true;
-
         // send request
-        APIConnectionNetwork.GetMessagesByUser(user_id, this);
+        APIConnectionNetwork.GetMessagesByUser(user_id, 0, this);
     }
 
-    private void increaseOffset() {
-
-        offset += buffOffset;
-    }
-
-    private void refreshMessages() {
-
-        if (messagesConversationAdapter != null) {
-
-            messagesConversationAdapter.setLoading(true);
-
-            if (isNotMoreMessages) {
-
-                if (getContext() != null)
-                    Toast.makeText(getContext(), "no messages more..", LENGTH_LONG).show();
-
-                new Handler().postDelayed(() -> {
-                    // stop loading
-                    messagesConversationAdapter.setLoading(false);
-                }, 2000);
-
-                return;
-
-            } else
-                new Handler().postDelayed(() -> {
-                    // stop loading
-                    updateMessagesAdapter();
-                }, 1000);
-
-        }
-    }
-
-    private void updateAdapterWithError() {
-
-        if (messagesConversationAdapter != null)
-            // stop loading
-            messagesConversationAdapter.setLoading(false);
-    }
-
-    private void updateMessagesAdapter() {
-
-        // stop loading
-        messagesConversationAdapter.setLoading(false);
-
-        try {
-            recyclerView.smoothScrollToPosition(messagesConversationAdapter.getItemCount() - 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        increaseOffset();
-
-    }
 
     private void handleClickSendMessage() {
 
         if (!message_edit_text.getText().toString().isEmpty()) {
-
-            message_edit_text.setText("");
-            isLockToRefresh = true;
-
             APIConnectionNetwork.SendMessageToUser(message_edit_text.getText().toString(), user_id, this);
+            ShareMessageOnPubnub(message_edit_text.getText().toString());
+            message_edit_text.setText("");
+
         }
 
     }
 
-    private void updateStatusAfterSendMessage() {
-
-        if (getContext() != null)
-            Toast.makeText(getContext(), "send message successfuly", LENGTH_LONG).show();
-
-        // clear message text
-        message_edit_text.setText("");
-
-        // send request
-        isLockToRefresh = true;
-        APIConnectionNetwork.GetMessagesByUser(user_id, this);
-    }
-
     @Override
     public void onConnectionFailure() {
-
-        isNotMoreMessages = true;
-        updateAdapterWithError();
-
-        isLockToRefresh = false;
-
-        if (getContext() != null)
-            Toast.makeText(getContext(), "no messages more..", LENGTH_LONG).show();
 
         LoaderPopUp.dismissLoader();
 
@@ -270,42 +241,19 @@ public class MessagesConversationFragment extends Fragment implements Connection
     @Override
     public void onConnectionError(ANError anError) {
 
-        if (getContext() != null)
-            Toast.makeText(getContext(), "Error Connection try again", LENGTH_LONG).show();
-
-        isLockToRefresh = false;
-
         LoaderPopUp.dismissLoader();
-
-        updateAdapterWithError();
     }
 
     @Override
     public void onConnectionSuccess(String response) {
 
-        // send message response
         LoaderPopUp.dismissLoader();
-
-
-        isLockToRefresh = false;
-
-        // send message
-        if (response.equalsIgnoreCase("true"))
-            updateStatusAfterSendMessage();
 
     }
 
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
-        // sync messages
-        if (jsonObject.has("status")) {
-            try {
-                if (jsonObject.getString("status").equalsIgnoreCase("success"))
-                    APIConnectionNetwork.GetMessagesByUser(user_id, this);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+
     }
 
     @Override
@@ -314,27 +262,149 @@ public class MessagesConversationFragment extends Fragment implements Connection
         // sync messages
         LoaderPopUp.dismissLoader();
 
-        isLockToRefresh = false;
-
-        // handle offset
-        buffOffset = jsonArray.length();
-
-        // update posts adapter
-        //updateMessagesAdapter();
-
         // parsing
         ArrayList<Message> messages = Message.parseJSONArray(jsonArray);
+        Collections.reverse(messages);
 
-        messagesConversationAdapter.setMessages(messages);
+        if (messagesConversationAdapter.getItemCount() == 0)
+            messagesConversationAdapter.setMessages(messages);
+        else
+            messagesConversationAdapter.addMessages(messages);
+
         messagesConversationAdapter.notifyDataSetChanged();
+        if (messages.size() != 0)
+            recyclerView.smoothScrollToPosition(messagesConversationAdapter.getItemCount() - 1);
 
     }
 
     @Override
     public void onLoadMore() {
+        APIConnectionNetwork.GetMessagesByUser(user_id, messagesConversationAdapter.getItemCount(), this);
+    }
 
-        if (!isLockToRefresh)
-            refreshMessages();
+
+    public void ShareMessageOnPubnub(String message) {
+
+        // create message payload using Gson
+        JsonObject messageJsonObject = new JsonObject();
+
+        User currentUser = SharedPreferencesUtils.getUser();
+
+        messageJsonObject.addProperty("user_id_from", currentUser.getId());
+        messageJsonObject.addProperty("user_id_to", toUser.getId());
+        messageJsonObject.addProperty("msg_type", "text");
+        messageJsonObject.addProperty("msg", message);
+        messageJsonObject.addProperty("date", new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date()));
+
+
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+
+
+            }
+        });
+
+    }
+
+    private void PubnubImplementation() {
+
+        PNConfiguration pnConfiguration = new PNConfiguration();
+        pnConfiguration.setSubscribeKey("sub-c-aa20a392-451f-11e9-8dbe-225b5c64e997");
+        pnConfiguration.setPublishKey("pub-c-a723de90-86f2-4612-b578-af68a7037dba");
+
+        this.pubnub = new PubNub(pnConfiguration);
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+
+                if (status.getCategory() == PNStatusCategory.PNUnexpectedDisconnectCategory) {
+                    // This event happens when radio / connectivity is lost
+                } else if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+
+                    // Connect event. You can do stuff like publish, and know you'll get it.
+                    // Or just use the connected event to confirm you are subscribed for
+                    // UI / internal notifications, etc
+
+                    if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                       /* pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+                            @Override
+                            public void onResponse(PNPublishResult result, PNStatus status) {
+                                // Check whether request successfully completed or not.
+                                if (!status.isError()) {
+
+                                    // MessageSection successfully published to specified channel.
+                                }
+                                // Request processing failed.
+                                else {
+
+                                    // Handle message publish error. Check 'category' property to find out possible issue
+                                    // because of which request did fail.
+                                    //
+                                    // Request can be resent using: [status retry];
+                                }
+                            }
+                        });*/
+                    }
+                } else if (status.getCategory() == PNStatusCategory.PNReconnectedCategory) {
+
+                    // Happens as part of our regular operation. This event happens when
+                    // radio / connectivity is lost, then regained.
+                } else if (status.getCategory() == PNStatusCategory.PNDecryptionErrorCategory) {
+
+                    // Handle messsage decryption error. Probably client configured to
+                    // encrypt messages and on live data feed it received plain text.
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+
+
+                Message chatMessage = new Message();
+                String msg = message.getMessage().getAsJsonObject().get("msg").getAsString();
+                chatMessage.setMessage(msg);
+
+                if (message.getMessage().getAsJsonObject().get("user_id_from").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
+                    chatMessage.setUserTo(toUser);
+                    chatMessage.setUser_id_to(toUser.getId());
+                    chatMessage.setUserFrom(SharedPreferencesUtils.getUser());
+                    chatMessage.setUser_id_from(SharedPreferencesUtils.getUser().getId());
+
+                } else {
+
+                    chatMessage.setUserFrom(toUser);
+                    chatMessage.setUser_id_from(toUser.getId());
+                    chatMessage.setUserTo(SharedPreferencesUtils.getUser());
+                    chatMessage.setUser_id_to(SharedPreferencesUtils.getUser().getId());
+
+
+                }
+
+                chatMessage.setCreated_at(message.getMessage().getAsJsonObject().get("date").getAsString());
+
+                getActivity().runOnUiThread(() -> {
+                    messagesConversationAdapter.getMessages().add(chatMessage);
+                    messagesConversationAdapter.notifyDataSetChanged();
+
+                    // smooth scroll
+                    recyclerView.smoothScrollToPosition(messagesConversationAdapter.getMessages().size() - 1);
+                });
+
+
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+
+            }
+        });
+        List<String> channels = new ArrayList<>();
+        channels.add(channelName);
+        pubnub.subscribe().channels(channels).execute();
+
     }
 
     @Override

@@ -2,8 +2,10 @@ package com.gnusl.wow.Adapters;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatImageView;
@@ -21,6 +23,7 @@ import com.gnusl.wow.Delegates.OnLoadMoreListener;
 import com.gnusl.wow.Models.Message;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
 import com.klinker.android.sliding.TouchlessScrollView;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -37,97 +40,26 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
     private List<Message> messages;
 
     private OnLoadMoreListener loadMoreListener;
-    private boolean isLoading = false;
-    private int updatedPosition;
 
     private static int MESSAGE_HOLDER_LTR = 0;
     private static int MESSAGE_HOLDER_RTL = 1;
     private static int MESSAGE_IMAGE_HOLDER_LTR = 3;
     private static int MESSAGE_IMAGR_HOLDER_RTL = 4;
-    private static int LOAD_MORE_HOLDER = 2;
+
 
     MessageImageDelegate messageImageDelegate;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public MessagesConversationRecyclerViewAdapter(Context context, List<Message> messages, ViewGroup scrollView, OnLoadMoreListener delegate) {
+    public MessagesConversationRecyclerViewAdapter(Context context, List<Message> messages, OnLoadMoreListener delegate) {
         this.context = context;
         this.messages = messages;
         this.loadMoreListener = delegate;
 
-        // setup recycler listener
-        if (scrollView != null) {
-            if (scrollView instanceof RecyclerView)
-                ((RecyclerView) scrollView).addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-
-                        if (!recyclerView.canScrollVertically(-1)) {
-                            Log.d("TOP ", true + "");
-                            onScrollToBottomToLoadMore();
-                        } else if (!isLoading && !recyclerView.canScrollVertically(1)) {
-                            Log.d("BOTTOM ", true + "");
-
-                            //  onScrollToBottomToLoadMore();
-                        }
-
-                    }
-                });
-
-            else if (scrollView instanceof NestedScrollView)
-                ((NestedScrollView) scrollView).setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-                    @Override
-                    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                        if (scrollY > oldScrollY) {
-                            Log.i("NESTED SCROLL ", "Scroll DOWN");
-                        }
-                        if (scrollY < oldScrollY) {
-                            Log.i("NESTED SCROLL ", "Scroll UP");
-                        }
-
-                        if (scrollY == 0) {
-                            Log.i("NESTED SCROLL ", "TOP SCROLL");
-
-                        }
-
-                        if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                            Log.i("NESTED SCROLL ", "BOTTOM SCROLL");
-                            onScrollToBottomToLoadMore();
-                        }
-                    }
-                });
-
-            else if (scrollView instanceof TouchlessScrollView)
-                scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-                    @Override
-                    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                        // We take the last son in the scrollview
-                        View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
-                        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()));
-
-                        // if diff is zero, then the bottom has been reached
-                        if (diff == 0) {
-                            // do stuff
-                            Log.i("SCROLL VIEW ", "BOTTOM SCROLL");
-                            onScrollToBottomToLoadMore();
-                        }
-                    }
-                });
-        }
-
     }
 
-    private void onScrollToBottomToLoadMore() {
-
-        if (loadMoreListener != null)
-            loadMoreListener.onLoadMore();
-    }
-
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
@@ -154,38 +86,25 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         if (holder instanceof MessegeViewHolder)
-            ((MessegeViewHolder) holder).bind(messages.get(updatedPosition), updatedPosition);
+            ((MessegeViewHolder) holder).bind(messages.get(position), position);
         else if (holder instanceof MessegeImageViewHolder)
-
-            ((MessegeImageViewHolder) holder).bind(messages.get(updatedPosition), updatedPosition);
+            ((MessegeImageViewHolder) holder).bind(messages.get(position), position);
         else
             ((LoadingViewHolder) holder).bind();
     }
 
     @Override
     public int getItemCount() {
-        return isLoading ? messages.size() + 1 : messages.size();
+        return messages.size();
     }
 
     @Override
     public int getItemViewType(int position) {
 
-        if (isLoading)
-            updatedPosition = position - 1; // see with position -1 is not used for message
+        if (messages.get(position).getUser_id_from() == SharedPreferencesUtils.getUser().getId())
+            return MESSAGE_HOLDER_LTR;
         else
-            updatedPosition = position;
-
-        if (isLoading && position == 0)
-            return LOAD_MORE_HOLDER;
-
-        // return position % 2 == 0 ? MESSAGE_HOLDER_LTR: MESSAGE_HOLDER_RTL;
-
-       /* if (messages.get(updatedPosition).getMessage().contains(".png")|| messages.get(updatedPosition).getMessage().contains(".jpg"))
-            return User.isFromUser(messages.get(updatedPosition)) ? MESSAGE_IMAGR_HOLDER_RTL : MESSAGE_IMAGE_HOLDER_LTR;
-        else
-            return User.isFromUser(messages.get(updatedPosition)) ? MESSAGE_HOLDER_RTL : MESSAGE_HOLDER_LTR;*/
-
-        return MESSAGE_HOLDER_LTR;
+            return MESSAGE_HOLDER_RTL;
     }
 
 
@@ -221,8 +140,10 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
         public void bind(final Message message, final int position) {
 
-            // change orintation
-            //itemView.setLayoutDirection(position % 2 == 0 ? View.LAYOUT_DIRECTION_LTR : View.LAYOUT_DIRECTION_RTL);
+            if (position == 3) {
+                if (loadMoreListener != null)
+                    loadMoreListener.onLoadMore();
+            }
 
             // handle from user meesage
             if (message.getUserFrom() != null) {
@@ -312,19 +233,10 @@ public class MessagesConversationRecyclerViewAdapter extends RecyclerView.Adapte
         this.messages = messages;
     }
 
-    public boolean isLoading() {
-        return isLoading;
+    public void addMessages(List<Message> messages) {
+        this.messages.addAll(0, messages);
     }
 
-    public void setLoading(boolean loading) {
-        isLoading = loading;
-
-        notifyDataSetChanged();
-    }
-
-    public void clearList() {
-        messages.clear();
-    }
 
     public void setDelegate(MessageImageDelegate messageImageDelegate) {
         this.messageImageDelegate = messageImageDelegate;

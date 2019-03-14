@@ -1490,11 +1490,11 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void GetMessagesByUser(int userId, ConnectionDelegate connectionDelegate) {
+    public static void GetMessagesByUser(int userId, int skip, ConnectionDelegate connectionDelegate) {
 
         Log.d("Messages From User ID ", String.valueOf(userId));
 
-        AndroidNetworking.get(APILinks.Message_Url.getLink() + "?user_id=" + String.valueOf(userId) + "&take=10&skip=0")
+        AndroidNetworking.get(APILinks.Message_Url.getLink() + "?user_id=" + String.valueOf(userId) + "&take=10&skip=" + skip)
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())

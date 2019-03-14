@@ -796,8 +796,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     private void PubnubImplementation() {
 
         PNConfiguration pnConfiguration = new PNConfiguration();
-        pnConfiguration.setSubscribeKey("demo");
-        pnConfiguration.setPublishKey("demo");
+        pnConfiguration.setSubscribeKey("sub-c-aa20a392-451f-11e9-8dbe-225b5c64e997");
+        pnConfiguration.setPublishKey("pub-c-a723de90-86f2-4612-b578-af68a7037dba");
 
         this.pubnub = new PubNub(pnConfiguration);
 
@@ -860,96 +860,106 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 System.out.println("Received message content: " + receivedMessageObject.toString());
                 // extract desired parts of the payload, using Gson
 
-
-                if (message.getMessage().getAsJsonObject().has("MIC_MUTE_EVENT")) {
-                    if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
-                        if (getActivity() instanceof RoomChatActivity)
-                            ((RoomChatActivity) getActivity()).muteUnMuteMic();
-                    }
-                } else if (message.getMessage().getAsJsonObject().has("KICK_OUT_EVENT")) {
-                    if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
-                        activity.setShouldLogout(true);
-                        activity.onBackPressed();
-                    }
-                } else if (message.getMessage().getAsJsonObject().has("MIC_TAKE_EVENT")) {
-                    if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
-                        boolean imOnMic = false;
-                        for (MicUser mu : micUsersRecyclerViewAdapter.getMicUsers()) {
-                            if (mu.getUser() != null)
-                                if (mu.getUser().getId() == SharedPreferencesUtils.getUser().getId())
-                                    imOnMic = true;
+                switch (message.getMessage().getAsJsonObject().get("EventType").getAsString()) {
+                    case "MIC_MUTE_EVENT": {
+                        if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
+                            if (getActivity() instanceof RoomChatActivity)
+                                ((RoomChatActivity) getActivity()).muteUnMuteMic();
                         }
-                        if (!imOnMic) {
-                            AlertDialog alert = null;
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            AlertDialog finalAlert = alert;
-                            builder.setMessage("لقد تمت دعوتك لاستخدام المكرفون. موافق؟")
-                                    .setCancelable(false)
-                                    .setPositiveButton("نعم", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
-                                            finalAlert.hide();
-                                        }
-                                    })
-                                    .setNegativeButton("لا", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            finalAlert.hide();
-                                        }
-                                    });
-                            alert = builder.create();
-                            alert.show();
-                        } else {
-                            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
-                        }
+
+                        break;
                     }
-                }
 
-                // check services messages
-                else if (message.getMessage().getAsJsonObject().has("Refresh_MIC_USERS")) {
+                    case "KICK_OUT_EVENT": {
+                        if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
+                            activity.setShouldLogout(true);
+                            activity.onBackPressed();
+                        }
 
-                    // get mic users
-                    APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), RoomChatFragment.this);
+                        break;
+                    }
+                    case "MIC_TAKE_EVENT": {
+                        if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId()) {
+                            boolean imOnMic = false;
+                            for (MicUser mu : micUsersRecyclerViewAdapter.getMicUsers()) {
+                                if (mu.getUser() != null)
+                                    if (mu.getUser().getId() == SharedPreferencesUtils.getUser().getId())
+                                        imOnMic = true;
+                            }
+                            if (!imOnMic) {
+                                AlertDialog alert = null;
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                AlertDialog finalAlert = alert;
+                                builder.setMessage("لقد تمت دعوتك لاستخدام المكرفون. موافق؟")
+                                        .setCancelable(false)
+                                        .setPositiveButton("نعم", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
+                                                finalAlert.hide();
+                                            }
+                                        })
+                                        .setNegativeButton("لا", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                finalAlert.hide();
+                                            }
+                                        });
+                                alert = builder.create();
+                                alert.show();
+                            } else {
+                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
+                            }
+                        }
 
-                } else {
+                        break;
+                    }
 
-                    // get user name
-                    String userName = message.getMessage().getAsJsonObject().get("user_name").getAsString();
+                    case "Refresh_MIC_USERS": {
+                        // get mic users
+                        APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), RoomChatFragment.this);
 
-                    // get user image
-                    String userImage = message.getMessage().getAsJsonObject().get("user_image").getAsString();
+                        break;
+                    }
 
-                    // create model
-                    ChatMessage chatMessage;
+                    case "MESSAGE": {
 
-                    // check message
-                    if (message.getMessage().getAsJsonObject().has("msg")) {
+                        // get user name
+                        String userName = message.getMessage().getAsJsonObject().get("user_name").getAsString();
+
+                        // get user image
+                        String userImage = message.getMessage().getAsJsonObject().get("user_image").getAsString();
+
+                        // create model
+                        ChatMessage chatMessage;
+
+                        // check message
                         String msg = message.getMessage().getAsJsonObject().get("msg").getAsString();
-                        System.out.println("msg content: " + msg);
 
                         chatMessage = new ChatMessage(msg, userName, userImage);
 
-                    } else { // gift case
+                        activity.runOnUiThread(() -> {
+                            chatRecyclerViewAdapter.getChatMessages().add(chatMessage);
+                            chatRecyclerViewAdapter.notifyDataSetChanged();
 
+                            // smooth scroll
+                            chatRecyclerView.smoothScrollToPosition(chatRecyclerViewAdapter.getChatMessages().size() - 1);
+                        });
+
+                        break;
+                    }
+
+                    case "GIFT": {
+
+                        String userName = message.getMessage().getAsJsonObject().get("user_name").getAsString();
+                        String userImage = message.getMessage().getAsJsonObject().get("user_image").getAsString();
                         String gift_path = message.getMessage().getAsJsonObject().get("gift_image").getAsString();
                         String gift_type = message.getMessage().getAsJsonObject().get("gift_type").getAsString();
                         String userGiftName = message.getMessage().getAsJsonObject().get("user_gift_name").getAsString();
-                        chatMessage = new ChatMessage();
+                        ChatMessage chatMessage = new ChatMessage();
                         chatMessage.setGiftImagePath(gift_path);
                         chatMessage.setGiftUserName(userGiftName);
                         chatMessage.setGiftType(gift_type);
                         chatMessage.setUserName(userName);
                         chatMessage.setUserImage(userImage);
-
-                    }
-
-                    // show message
-                    activity.runOnUiThread(() -> {
-
-                        chatRecyclerViewAdapter.getChatMessages().add(chatMessage);
-                        chatRecyclerViewAdapter.notifyDataSetChanged();
-
-                        // smooth scroll
-                        chatRecyclerView.smoothScrollToPosition(chatRecyclerViewAdapter.getChatMessages().size() - 1);
 
                         // gift animation
                         if (chatMessage.getGiftImagePath() != null) {
@@ -983,22 +993,20 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                             }
 
                         }
-                    });
 
-                    // check if should generate crazy words
-                    if (message.getMessage().getAsJsonObject().has("crazy_word_for_user_id")) {
-
-                        // check if for this user
-                        if (message.getMessage().getAsJsonObject().get("crazy_word_for_user_id").getAsInt() == SharedPreferencesUtils.getUser().getId())
-                            shouldGenerateCrazyWords = true;
                     }
+                    break;
                 }
-            /*
-                log the following items with your favorite logger
-                    - message.getMessage()
-                    - message.getSubscription()
-                    - message.getTimetoken()
-            */
+
+                // check if should generate crazy words
+                if (message.getMessage().getAsJsonObject().has("crazy_word_for_user_id")) {
+
+                    // check if for this user
+                    if (message.getMessage().getAsJsonObject().get("crazy_word_for_user_id").getAsInt() == SharedPreferencesUtils.getUser().getId())
+                        shouldGenerateCrazyWords = true;
+                }
+
+
             }
 
             @Override
@@ -1024,8 +1032,16 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         if (shouldGenerateCrazyWords) {
             generateCrazyWordsIndex++;
             messageJsonObject.addProperty("msg", generateRandomWords());
-        } else
+        } else {
+
+            messageJsonObject.addProperty("EventType", "MESSAGE");
+            if (message.contains(".png") || message.contains(".jpg") || message.contains(".jpeg"))
+                messageJsonObject.addProperty("msg_type", "image");
+            else
+                messageJsonObject.addProperty("msg_type", "text");
+
             messageJsonObject.addProperty("msg", message);
+        }
 
         // add user info
         User user = SharedPreferencesUtils.getUser();
@@ -1080,6 +1096,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         JsonObject messageJsonObject = new JsonObject();
 
         // add gift image
+        messageJsonObject.addProperty("EventType", "GIFT");
         messageJsonObject.addProperty("gift_image", gift.getPath());
         messageJsonObject.addProperty("gift_type", gift.getType());
         messageJsonObject.addProperty("user_gift_name", userGift.getName());
@@ -1124,7 +1141,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         JsonObject messageJsonObject = new JsonObject();
 
         // add gift image
-        messageJsonObject.addProperty("Refresh_MIC_USERS", "");
+        messageJsonObject.addProperty("EventType", "Refresh_MIC_USERS");
 
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
             @Override
@@ -1472,7 +1489,6 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             getAllMessagesRequest();
     }
 
-    // todo shube3rfni
     @Override
     public void onClickToSendGift(Gift gift, User toUser) {
 
@@ -1628,7 +1644,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         JsonObject messageJsonObject = new JsonObject();
 
         // add gift image
-        messageJsonObject.addProperty("MIC_TAKE_EVENT", true);
+        messageJsonObject.addProperty("EventType", "MIC_TAKE_EVENT");
+        messageJsonObject.addProperty("MIC_TAKE_VALUE", true);
         messageJsonObject.addProperty("USER_ID", user.getId());
         messageJsonObject.addProperty("MIC_ID", mic_id);
 
@@ -1644,7 +1661,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         JsonObject messageJsonObject = new JsonObject();
 
         // add gift image
-        messageJsonObject.addProperty("KICK_OUT_EVENT", true);
+        messageJsonObject.addProperty("EventType", "KICK_OUT_EVENT");
         messageJsonObject.addProperty("USER_ID", user.getId());
 
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
@@ -1659,7 +1676,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         JsonObject messageJsonObject = new JsonObject();
 
         // add gift image
-        messageJsonObject.addProperty("MIC_MUTE_EVENT", true);
+        messageJsonObject.addProperty("EventType", "MIC_MUTE_EVENT");
+        messageJsonObject.addProperty("MIC_MUTE_VALUE", true);
         messageJsonObject.addProperty("USER_ID", user.getId());
 
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
