@@ -182,7 +182,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         APIConnectionNetwork.GetGifts(this);
 
         // animate entrance
-        animateEntranceUser();
+        animateEntranceUser(SharedPreferencesUtils.getUser());
 
         // animate news
         Timer timer = new Timer();
@@ -327,6 +327,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
             activity.setShouldLogout(true);
             activity.onBackPressed();
+
+            shareExitOnPubNub();
 
         });
 
@@ -559,13 +561,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         });
     }
 
-    private void animateEntranceUser() {
+    private void animateEntranceUser(User user) {
 
         if (getContext() == null)
             return;
 
         // fill info
-        ((TextView) inflatedView.findViewById(R.id.entrance_user_name)).setText(SharedPreferencesUtils.getUser().getName());
+        ((TextView) inflatedView.findViewById(R.id.entrance_user_name)).setText(user.getName());
         inflatedView.findViewById(R.id.entrance_layout_animation).setVisibility(View.VISIBLE);
 
         new Handler().postDelayed(() -> {
@@ -593,6 +595,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             });
 
         }, 2000);
+
+        shareEnterenceOnPubNub();
     }
 
     private void animateNewsLayout() {
@@ -916,6 +920,19 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                     case "Refresh_MIC_USERS": {
                         // get mic users
                         APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), RoomChatFragment.this);
+
+                        break;
+                    }
+
+                    case "ENTER_ROOM": {
+                        // get mic users
+                        User user = new User();
+                        user.setId(message.getMessage().getAsJsonObject().get("USER_ID").getAsInt());
+                        user.setName(message.getMessage().getAsJsonObject().get("user_name").getAsString());
+                        user.setImage_url(message.getMessage().getAsJsonObject().get("user_image").getAsString());
+                        user.setLevel(message.getMessage().getAsJsonObject().get("user_level").getAsInt());
+
+                        animateEntranceUser(user);
 
                         break;
                     }
@@ -1663,6 +1680,44 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         // add gift image
         messageJsonObject.addProperty("EventType", "KICK_OUT_EVENT");
         messageJsonObject.addProperty("USER_ID", user.getId());
+
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                // Check whether request successfully completed or not.
+            }
+        });
+    }
+
+
+    private void shareEnterenceOnPubNub() {
+        JsonObject messageJsonObject = new JsonObject();
+
+        User currentUser = SharedPreferencesUtils.getUser();
+
+        // add gift image
+        messageJsonObject.addProperty("EventType", "ENTER_ROOM");
+        messageJsonObject.addProperty("USER_ID", currentUser.getId());
+        messageJsonObject.addProperty("user_name", currentUser.getId());
+        messageJsonObject.addProperty("user_image", currentUser.getImage_url());
+        messageJsonObject.addProperty("user_level", currentUser.getLevel());
+
+        pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                // Check whether request successfully completed or not.
+            }
+        });
+    }
+
+    private void shareExitOnPubNub() {
+        JsonObject messageJsonObject = new JsonObject();
+
+        User currentUser = SharedPreferencesUtils.getUser();
+
+        // add gift image
+        messageJsonObject.addProperty("EventType", "OUT_ROOM");
+        messageJsonObject.addProperty("USER_ID", currentUser.getId());
 
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
             @Override
