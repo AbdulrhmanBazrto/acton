@@ -21,6 +21,8 @@ import com.gnusl.wow.Delegates.ShowHeartsClickListner;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.logging.Handler;
@@ -158,6 +160,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private ImageView userImage;
         private TextView userName;
         private ImageView imageMessage;
+        private ProgressBar progressBar;
 
         public ImageMessageViewHolder(View itemView) {
             super(itemView);
@@ -165,6 +168,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             userImage = itemView.findViewById(R.id.user_image);
             userName = itemView.findViewById(R.id.user_name);
             imageMessage = itemView.findViewById(R.id.image_msg);
+            progressBar = itemView.findViewById(R.id.progressBar);
 
         }
 
@@ -176,15 +180,35 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             // image message
             if (chatMessage.getMessage() != null && !chatMessage.getMessage().isEmpty())
-                Glide.with(context)
+                Picasso.with(context)
                         .load(chatMessage.getMessage())
-                        .into(imageMessage);
+                        .into(imageMessage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
 
             // gift image message
             if (chatMessage.getGiftImagePath() != null && !chatMessage.getGiftImagePath().isEmpty())
-                Glide.with(context)
+                Picasso.with(context)
                         .load(chatMessage.getGiftImagePath())
-                        .into(imageMessage);
+                        .into(imageMessage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
 
             // user image
             if (chatMessage.getUserImage() != null && !chatMessage.getUserImage().isEmpty())

@@ -10,6 +10,7 @@
         android:id="@+id/backround_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/bg_room_default"
         android:scaleType="fitXY"
         android:src="@drawable/room_chat_backround"
         app:layout_constraintBottom_toBottomOf="parent"

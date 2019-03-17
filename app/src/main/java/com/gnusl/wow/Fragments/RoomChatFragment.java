@@ -21,8 +21,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -1796,14 +1800,12 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(rootView);
 
-//        constraintSet.connect(heartAnimation.getId(), ConstraintSet.TOP, rootView.getId(), ConstraintSet.TOP);
-        constraintSet.connect(heartAnimation.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM);
+        constraintSet.connect(heartAnimation.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM, 150);
         constraintSet.connect(heartAnimation.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT, 60);
 
 
         constraintSet.applyTo(rootView);
 
-//        heartAnimation.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.show_heart));
         heartAnimation.startAnimation(new ZigZagAnimation());
 
         heartAnimation.getAnimation().setAnimationListener(new Animation.AnimationListener() {
@@ -1814,8 +1816,21 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
-                rootView.removeView(heartAnimation);
+                if (animation.getDuration() == 2000) {
+                    Animation fadeOut = new AlphaAnimation(1, 0);
+                    fadeOut.setDuration(1000);
+                    heartAnimation.startAnimation(fadeOut);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            heartAnimation.setVisibility(View.GONE);
+                            rootView.removeView(heartAnimation);
+                        }
+                    }, 1000);
+                } else {
+                    heartAnimation.setVisibility(View.GONE);
+                    rootView.removeView(heartAnimation);
+                }
             }
 
             @Override

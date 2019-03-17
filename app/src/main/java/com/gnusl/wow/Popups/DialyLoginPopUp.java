@@ -29,11 +29,11 @@ public class DialyLoginPopUp extends DialogFragment {
 
     private static DialyLoginPopUp dailyDialog;
 
-    private View iv_first_check, iv_second_check, iv_third_check, iv_fourth_check, iv_fifth_check, iv_six_check, iv_seven_check;
+    private View iv_first_check, iv_second_check, iv_third_check, iv_fourth_check, iv_fifth_check, iv_six_check, iv_seven_check, clBalance, clAttenedance;
     private Button btn_login;
-    private TextView tv_login_count;
+    private TextView tv_login_count, tvBalance;
 
-    int daysCount=0;
+    int daysCount = 0;
 
 
     @NonNull
@@ -53,6 +53,12 @@ public class DialyLoginPopUp extends DialogFragment {
         iv_fifth_check = view.findViewById(R.id.iv_fifth_check);
         iv_six_check = view.findViewById(R.id.iv_six_check);
         iv_seven_check = view.findViewById(R.id.iv_seven_check);
+
+        tvBalance = view.findViewById(R.id.tv_balance);
+
+        clBalance = view.findViewById(R.id.cl_balance);
+
+        clAttenedance = view.findViewById(R.id.cl_attenedance);
 
         btn_login = view.findViewById(R.id.btn_login);
 
@@ -165,7 +171,7 @@ public class DialyLoginPopUp extends DialogFragment {
 
             @Override
             public void onConnectionSuccess(JSONObject jsonObject) {
-                daysCount =jsonObject.optInt("daily");
+                daysCount = jsonObject.optInt("daily");
                 dailyDialog.getTv_login_count().setText(String.format(Locale.getDefault(), "لقد سجلت الدخول لمدة %d يوم", daysCount));
                 switch (jsonObject.optInt("daily")) {
                     case 1: {
@@ -222,7 +228,66 @@ public class DialyLoginPopUp extends DialogFragment {
             dailyDialog.getBtn_login().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    APIConnectionNetwork.StoreDailyLogin(null);
+                    APIConnectionNetwork.StoreDailyLogin(new ConnectionDelegate() {
+                        @Override
+                        public void onConnectionFailure() {
+
+                        }
+
+                        @Override
+                        public void onConnectionError(ANError anError) {
+
+                        }
+
+                        @Override
+                        public void onConnectionSuccess(String response) {
+
+                        }
+
+                        @Override
+                        public void onConnectionSuccess(JSONObject jsonObject) {
+                            APIConnectionNetwork.GetUserDetails(SharedPreferencesUtils.getUser().getId(), new ConnectionDelegate() {
+                                        @Override
+                                        public void onConnectionFailure() {
+
+                                        }
+
+                                        @Override
+                                        public void onConnectionError(ANError anError) {
+
+                                        }
+
+                                        @Override
+                                        public void onConnectionSuccess(String response) {
+
+                                        }
+
+                                        @Override
+                                        public void onConnectionSuccess(JSONObject jsonObject) {
+                                            clAttenedance.setVisibility(View.GONE);
+                                            clBalance.setVisibility(View.VISIBLE);
+                                            tvBalance.setText(String.format("رصيدك الأن %s ليرة ذهبية", jsonObject.optJSONObject("user").optString("balance")));
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    DialyLoginPopUp.dismissPopUp();
+                                                }
+                                            }, 1500);
+                                        }
+
+                                        @Override
+                                        public void onConnectionSuccess(JSONArray jsonArray) {
+
+                                        }
+                                    }
+                            );
+                        }
+
+                        @Override
+                        public void onConnectionSuccess(JSONArray jsonArray) {
+
+                        }
+                    });
                     int i = loginJsonArray.length();
                     switch (i) {
                         case 0: {
@@ -284,12 +349,7 @@ public class DialyLoginPopUp extends DialogFragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            DialyLoginPopUp.dismissPopUp();
-                        }
-                    }, 1000);
+
                 }
             });
         }

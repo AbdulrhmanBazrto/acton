@@ -15,8 +15,8 @@ android {
         applicationId 'com.gnusl.acton'
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1 // 5 on store
-        versionName "0.9" // 1.2.2 on store
+        versionCode 2 // 5 on store
+        versionName "1" // 1.2.2 on store
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         lintOptions {

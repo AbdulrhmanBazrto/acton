@@ -518,6 +518,12 @@ public class APIConnectionNetwork {
                 .addMultipartFile("file", imageFile)
                 .setPriority(Priority.MEDIUM)
                 .build()
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+
+                    }
+                })
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {

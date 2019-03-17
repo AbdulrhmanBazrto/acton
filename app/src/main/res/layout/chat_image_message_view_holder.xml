@@ -2,12 +2,14 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.9"
         android:background="@drawable/chat_message_backround_shape"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,10 +21,10 @@
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:civ_border_color="@color/white"
-            app:civ_border_width="1dp"
             android:gravity="center"
-            android:src="@drawable/img1" />
+            android:src="@drawable/ic_friends"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="1dp" />
 
 
         <TextView
@@ -30,26 +32,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@id/user_image"
             android:lines="1"
             android:text="الدوسري الأصيل"
-            android:textColor="@color/room_item_title_text_color"
-            android:textSize="13sp"
-            android:layout_toEndOf="@id/user_image"/>
+            android:textColor="@color/white"
+            android:textSize="13sp" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/image_msg"
-            android:layout_width="150dp"
-            android:layout_height="225dp"
-            android:scaleType="fitXY"
-            android:layout_marginTop="8dp"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:layout_below="@id/user_name"
             android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="10dp"
-            android:gravity="right|center_vertical"
             android:layout_toEndOf="@id/user_image"
-            android:layout_below="@id/user_name" />
+            android:gravity="right|center_vertical"
+            android:scaleType="fitXY" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@id/user_image"
+            android:gravity="center"
+            android:scaleType="fitXY" />
 
     </RelativeLayout>
 

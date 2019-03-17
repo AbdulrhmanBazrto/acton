@@ -14,8 +14,8 @@
             android:id="@+id/iv_loader"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/loader"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:src="@drawable/loader1" />
 
     </FrameLayout>
 

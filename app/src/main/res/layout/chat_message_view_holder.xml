@@ -8,7 +8,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/chat_message_backround_shape"
+        android:alpha="0.9"
+        android:background="@color/gifts_dialog_background_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -17,12 +18,12 @@
             android:id="@+id/user_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/white"
             android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
             android:gravity="center"
-            android:src="@drawable/img1" />
+            android:src="@drawable/ic_friends"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="1dp" />
 
 
         <TextView
@@ -30,27 +31,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@id/user_image"
             android:lines="1"
             android:text="الدوسري الأصيل"
-            android:textColor="@color/room_item_title_text_color"
-            android:textSize="13sp"
-            android:layout_toEndOf="@id/user_image"/>
+            android:textColor="@color/white"
+            android:textSize="13sp" />
 
 
         <TextView
             android:id="@+id/message_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/user_name"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="8dp"
+            android:layout_toEndOf="@id/user_image"
             android:text="kadlsmklamcaskmxsaklxmsal;xmsal;xsa,l;xsa,lx;s,axl;sa,xl;sa,xl;sa,xl;sx,ls;x,sla;,x"
             android:textColor="@color/room_item_content_text_color"
-            android:textSize="11sp"
-            android:layout_toEndOf="@id/user_image"
-            android:layout_below="@id/user_name" />
+            android:textSize="11sp" />
 
 
     </RelativeLayout>

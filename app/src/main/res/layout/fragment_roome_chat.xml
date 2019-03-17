@@ -22,6 +22,7 @@
             android:background="@drawable/user_backround_shape_room_top_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:alpha="0.9"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.mikhaellopez.circularimageview.CircularImageView
@@ -53,12 +54,13 @@
                     android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
                     android:layout_marginEnd="0dp"
                     android:lines="1"
                     android:text="DR.Ahmed Dosary"
-                    android:textColor="@color/room_item_title_text_color"
+                    android:textColor="@color/white"
                     android:textSize="13sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintStart_toEndOf="@id/start_guideline" />
 
                 <TextView

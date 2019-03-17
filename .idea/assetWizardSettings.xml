@@ -28,10 +28,13 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="888888" />
-                            <entry key="outputName" value="icon_locked" />
+                            <entry key="height" value="512" />
+                            <entry key="outputName" value="ic_friends" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\AbdelrahmanBaz\Pictures\acton\Archive (1)\mute.svg" />
+                            <entry key="sourceFile" value="C:\Users\AbdelrahmanBaz\Pictures\acton\friends.svg\friends.svg" />
+                            <entry key="width" value="512" />
                           </map>
                         </option>
                       </PersistentState>

@@ -1,6 +1,7 @@
 package com.gnusl.wow.ViewHolders;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,11 +25,10 @@ public class TopGiftsExploreViewHolder extends SectionedViewHolder {
         recyclerView = itemView.findViewById(R.id.gifts_recycler_view);
     }
 
-    public void onBind(Context context,ExploreSection section) {
+    public void onBind(Context context, ExploreSection section) {
 
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        GridLayoutManager linearLayoutManager = new GridLayoutManager(context, 3);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         TopGiftsExplorerRecyclerViewAdapter topGiftsExplorerRecyclerViewAdapter = new TopGiftsExplorerRecyclerViewAdapter(context, section.getTopGiftExplorers());

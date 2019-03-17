@@ -6,6 +6,6 @@
         android:radius="20dp"/>
 
     <solid
-        android:color="@color/white"/>
+        android:color="@color/gifts_dialog_background_color"/>
 
 </shape>
