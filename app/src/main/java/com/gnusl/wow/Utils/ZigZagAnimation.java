@@ -1,13 +1,13 @@
 package com.gnusl.wow.Utils;
 
+import android.content.Context;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
+import android.view.Display;
+import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 
 import java.util.Random;
@@ -16,7 +16,7 @@ public class ZigZagAnimation extends Animation {
     private PathMeasure pm;
     float[] pos = new float[2];
 
-    public ZigZagAnimation() {
+    public ZigZagAnimation(Context context) {
 
         Random rander = new Random();
         int Max = 4;
@@ -25,50 +25,43 @@ public class ZigZagAnimation extends Animation {
         Log.d("postion", String.valueOf(i));
         Path p = new Path();
 
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int height = metrics.heightPixels;
+
         switch (i) {
             case 1: {
                 p.moveTo(0f, 0f);
                 p.lineTo(12f, -5f);
                 p.lineTo(12f, -50f);
-//                p.lineTo(12f, -75f);
-//                p.lineTo(10f, -150f);
-//                p.lineTo(10f, -200f);
-//                p.lineTo(10f, -250f);
-//                p.lineTo(25f, -300f);
                 p.lineTo(45f, -350f);
                 p.lineTo(45f, -400f);
                 p.lineTo(10f, -450f);
-                p.lineTo(10f, -1400f);
+                float f = ((height / 5f) * 2);
+                p.lineTo(10f, -f + 100);
                 break;
             }
             case 2: {
                 p.moveTo(0f, 0f);
-//                p.lineTo(30f, -5f);
-//                p.lineTo(30f, -50f);
-//                p.lineTo(30f, -75f);
-//                p.lineTo(15f, -150f);
                 p.lineTo(15f, -200f);
                 p.lineTo(15f, -250f);
                 p.lineTo(45f, -300f);
-//                p.lineTo(25f, -350f);
-//                p.lineTo(25f, -400f);
-                p.lineTo(10f, -850f);
-                p.lineTo(10f, -1100f);
+                p.lineTo(10f, -750f);
+                float f = ((height / 5f) * 2);
+                p.lineTo(10f, -f);
                 break;
             }
             case 3: {
                 p.moveTo(0f, 0f);
                 p.lineTo(25f, -5f);
-//                p.lineTo(25f, -50f);
-//                p.lineTo(25f, -75f);
-//                p.lineTo(17f, -150f);
                 p.lineTo(17f, -200f);
                 p.lineTo(13f, -250f);
-//                p.lineTo(28f, -300f);
-//                p.lineTo(28f, -350f);
-//                p.lineTo(28f, -400f);
                 p.lineTo(5f, -650f);
-                p.lineTo(5f, -1200f);
+                p.lineTo(5f, -900f);
+                float f = ((height / 5f) * 2);
+                p.lineTo(10f, -f - 100);
                 break;
             }
             default: {
@@ -82,8 +75,10 @@ public class ZigZagAnimation extends Animation {
                 p.lineTo(27f, -300f);
                 p.lineTo(29f, -370f);
                 p.lineTo(27f, -400f);
-                p.lineTo(15f, -750f);
-                p.lineTo(15f, -1500f);
+                p.lineTo(15f, -650f);
+                float f = ((height / 5f) * 2);
+                p.lineTo(10f, -f - 200);
+//                p.lineTo(15f, -1500f);
                 break;
             }
         }

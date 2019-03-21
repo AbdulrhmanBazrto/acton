@@ -103,7 +103,7 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
     private void filterRequest() {
 
         if (searchEdittext.getText().toString().isEmpty())
-            Toast.makeText(this, "you must have something to filter", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.something_to_filter), Toast.LENGTH_SHORT).show();
 
         else if (viewPager.getCurrentItem() == 1) {
 

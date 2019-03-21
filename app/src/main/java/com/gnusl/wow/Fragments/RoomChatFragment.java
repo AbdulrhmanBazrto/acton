@@ -12,6 +12,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,12 +22,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -414,7 +412,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         ArrayList<User> users = User.parseJSONArray(jsonObject.getJSONArray("users"));
                         if (gifts != null) {
                             if (users.size() == 0) {
-                                Toast.makeText(getActivity(), "no users to send gift to", LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getString(R.string.no_users_to_send_to), LENGTH_SHORT).show();
                             } else
                                 GiftsRoomDialog.show(getContext(), gifts, users, RoomChatFragment.this, RoomChatFragment.this, RoomChatFragment.this, user);
                         }
@@ -481,13 +479,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 }
             });
 
-            tvRoomId.setText("| ID: " + room.getId());
+            tvRoomId.setText(String.format("%s %d", getString(R.string.id_view), room.getId()));
 
             Glide.with(getActivity())
                     .load(room.getCountryCodeUrl())
                     .into(ivRoomLocation);
 
-            tvRoomMembersCount.setText("| users: " + room.getNumUsers());
+            tvRoomMembersCount.setText(String.format("%s %d", getString(R.string.users_view), room.getNumUsers()));
 
             APIConnectionNetwork.GetRoomInfo(room.getId(), new ConnectionDelegate() {
                 @Override
@@ -512,7 +510,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                                 .load(jsonObject.optString("thumbnail_url"))
                                 .into(roomImage);
 
-                    tvRoomLevel.setText("LV. " + jsonObject.optString("level"));
+                    tvRoomLevel.setText(getString(R.string.room_level) + jsonObject.optString("level"));
                     if (jsonObject.optString("language").equalsIgnoreCase("en"))
                         tvLanguage.setText("english");
                     else if (jsonObject.optString("language").equalsIgnoreCase("ar"))
@@ -551,11 +549,11 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             public void onConnectionSuccess(JSONObject jsonObject) {
                 if (jsonObject.has("status")) {
                     if (jsonObject.optString("status").equalsIgnoreCase("follow")) {
-                        btnRoomFollow.setText("following");
+                        btnRoomFollow.setText(getString(R.string.following_));
                         btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_full_heart), null, null, null);
                         ((ImageView) inflatedView.findViewById(R.id.iv_follow_room)).setImageResource(R.drawable.icon_full_heart);
                     } else if (jsonObject.optString("status").equalsIgnoreCase("unfollow")) {
-                        btnRoomFollow.setText("follow");
+                        btnRoomFollow.setText(getString(R.string.follow__));
                         btnRoomFollow.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.icon_empty_heart), null, null, null);
                         ((ImageView) inflatedView.findViewById(R.id.iv_follow_room)).setImageResource(R.drawable.icon_empty_heart);
                     }
@@ -746,8 +744,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         RecyclerView recyclerView = inflatedView.findViewById(R.id.users_recycler_view);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        GridLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 5);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         micUsersRecyclerViewAdapter = new MicUsersRecyclerViewAdapter(getContext(), new ArrayList<>(), this);
@@ -898,28 +895,34 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                                     if (mu.getUser().getId() == SharedPreferencesUtils.getUser().getId())
                                         imOnMic = true;
                             }
-                            if (!imOnMic) {
-                                AlertDialog alert = null;
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                AlertDialog finalAlert = alert;
-                                builder.setMessage("لقد تمت دعوتك لاستخدام المكرفون. موافق؟")
-                                        .setCancelable(false)
-                                        .setPositiveButton("نعم", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
-                                                finalAlert.hide();
-                                            }
-                                        })
-                                        .setNegativeButton("لا", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                finalAlert.hide();
-                                            }
-                                        });
-                                alert = builder.create();
-                                alert.show();
-                            } else {
-                                APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), RoomChatFragment.this);
-                            }
+                            boolean finalImOnMic = imOnMic;
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!finalImOnMic) {
+                                        AlertDialog alert = null;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        AlertDialog finalAlert = alert;
+                                        builder.setMessage(R.string.invite_to_mic)
+                                                .setCancelable(false)
+                                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), false, RoomChatFragment.this);
+                                                        finalAlert.hide();
+                                                    }
+                                                })
+                                                .setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        finalAlert.hide();
+                                                    }
+                                                });
+                                        alert = builder.create();
+                                        alert.show();
+                                    } else {
+                                        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), message.getMessage().getAsJsonObject().get("MIC_ID").getAsInt(), false, RoomChatFragment.this);
+                                    }
+                                }
+                            });
                         }
 
                         break;
@@ -942,7 +945,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         user.setImage_url(message.getMessage().getAsJsonObject().get("user_image").getAsString());
                         user.setLevel(message.getMessage().getAsJsonObject().get("user_level").getAsInt());
 
-                        animateEntranceUser(user);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                animateEntranceUser(user);
+                            }
+                        });
+
 
                         break;
                     }
@@ -988,39 +997,45 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         chatMessage.setUserName(userName);
                         chatMessage.setUserImage(userImage);
 
-                        // gift animation
-                        if (chatMessage.getGiftImagePath() != null) {
-                            switch (chatMessage.getGiftType()) {
-                                case "small":
-                                case "medium": {
-                                    animateGiftInfo(chatMessage);
-                                    break;
-                                }
-                                case "large": {
-                                    ImageView imageBigGift = inflatedView.findViewById(R.id.iv_big_gift_animate);
-                                    Picasso.with(getActivity()).load(chatMessage.getGiftImagePath()).into(imageBigGift, new Callback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            imageBigGift.setVisibility(View.VISIBLE);
-                                            new Handler().postDelayed(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+
+                                // gift animation
+                                if (chatMessage.getGiftImagePath() != null) {
+                                    switch (chatMessage.getGiftType()) {
+                                        case "small":
+                                        case "medium": {
+                                            animateGiftInfo(chatMessage);
+                                            break;
+                                        }
+                                        case "large": {
+                                            ImageView imageBigGift = inflatedView.findViewById(R.id.iv_big_gift_animate);
+                                            Picasso.with(getActivity()).load(chatMessage.getGiftImagePath()).into(imageBigGift, new Callback() {
                                                 @Override
-                                                public void run() {
-                                                    imageBigGift.setVisibility(View.GONE);
+                                                public void onSuccess() {
+                                                    imageBigGift.setVisibility(View.VISIBLE);
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            imageBigGift.setVisibility(View.GONE);
+                                                        }
+                                                    }, 1500);
                                                 }
-                                            }, 1500);
-                                        }
 
-                                        @Override
-                                        public void onError() {
+                                                @Override
+                                                public void onError() {
 
+                                                }
+                                            });
+                                            break;
                                         }
-                                    });
-                                    break;
+                                    }
+
                                 }
                             }
-
-                        }
-
+                        });
                     }
                     break;
                 }
@@ -1382,6 +1397,18 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         LoaderPopUp.dismissLoader();
 
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(anError.getErrorBody());
+            if (jsonObject.has("payment_status")) {
+                if (jsonObject.optString("payment_status").equalsIgnoreCase("error")) {
+                    startActivity(new Intent(getActivity(), RechargeActivity.class));
+                }
+            }
+        } catch (JSONException e) {
+
+        }
+
     }
 
     @Override
@@ -1525,6 +1552,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
     }
 
+    AlertDialog alert1 = null;
+
     @Override
     public void onTakeMic(MicUser mic) {
 
@@ -1552,10 +1581,10 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
-                                case 0: // English
-                                    APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
+                                case 0:
+                                    APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), false, RoomChatFragment.this);
                                     break;
-                                case 1: // Arabic
+                                case 1:
                                     APIConnectionNetwork.SetMicForUserWithLock(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
                                     break;
                                 default:
@@ -1621,8 +1650,32 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
             if (mic.getType().equalsIgnoreCase("locked"))
                 Toast.makeText(getActivity(), "mick is locked", LENGTH_SHORT).show();
             else {
-                if (micUsersRecyclerViewAdapter.getCurrentUserMicId() == -1 || micUsersRecyclerViewAdapter.getCurrentUserMicId() == mic.getMicId())
-                    APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), RoomChatFragment.this);
+                if (micUsersRecyclerViewAdapter.getCurrentUserMicId() == -1 || micUsersRecyclerViewAdapter.getCurrentUserMicId() == mic.getMicId()) {
+                    if (activity.getRoom() != null && activity.getRoom().getSubscriptionPrice() > 0) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("سيتم خصم   " + activity.getRoom().getSubscriptionPrice() + "  ليرة ذهبية. موافق؟")
+                                .setCancelable(false)
+                                .setPositiveButton("نعم", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), true, RoomChatFragment.this);
+                                        if (alert1 != null)
+                                            alert1.hide();
+                                    }
+                                })
+                                .setNegativeButton("لا", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (alert1 != null)
+                                            alert1.hide();
+                                    }
+                                });
+                        alert1 = builder.create();
+                        alert1.show();
+                    } else {
+                        APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), mic.getMicId(), false, RoomChatFragment.this);
+                    }
+
+                }
             }
         }
 
@@ -1665,9 +1718,9 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 }
             });
         } else if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && micUser.getUser().getId() == SharedPreferencesUtils.getUser().getId()) {
-            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUser.getMicId(), RoomChatFragment.this);
+            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUser.getMicId(), false, RoomChatFragment.this);
         } else if (micUsersRecyclerViewAdapter.getCurrentUserMicId() == micUser.getMicId()) {
-            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUser.getMicId(), RoomChatFragment.this);
+            APIConnectionNetwork.SetMicForUser(activity.getRoom().getId(), micUser.getMicId(), false, RoomChatFragment.this);
         }
     }
 
@@ -1806,7 +1859,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         constraintSet.applyTo(rootView);
 
-        heartAnimation.startAnimation(new ZigZagAnimation());
+        heartAnimation.startAnimation(new ZigZagAnimation(activity));
 
         heartAnimation.getAnimation().setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -1961,7 +2014,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                             if (micUsersRecyclerViewAdapter.getFirstEmptyMicId() != 0) {
                                 sendTakeGiveMicOnPubNub(user, micUsersRecyclerViewAdapter.getFirstEmptyMicId());
                             } else {
-                                Toast.makeText(getActivity(), "no empty mics", LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getString(R.string.no_empty_mics), LENGTH_SHORT).show();
                             }
                             break;
 
@@ -1973,7 +2026,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                             if (micUsersRecyclerViewAdapter.getFirstEmptyMicId() != 0) {
                                 sendTakeGiveMicOnPubNub(user, micUsersRecyclerViewAdapter.getFirstEmptyMicId());
                             } else {
-                                Toast.makeText(getActivity(), "no empty mics", LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(),  getString(R.string.no_empty_mics), LENGTH_SHORT).show();
                             }
                             break;
                     }

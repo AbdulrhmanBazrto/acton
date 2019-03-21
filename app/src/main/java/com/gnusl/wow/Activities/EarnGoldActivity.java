@@ -96,7 +96,7 @@ public class EarnGoldActivity extends AppCompatActivity implements ConnectionDel
 
         // parsing
         EarnGoldSection earnGoldSection = new EarnGoldSection();
-        earnGoldSection.setHeaderTitle("المهمات اليومية");
+        earnGoldSection.setHeaderTitle(getString(R.string.daily_missions));
         earnGoldSection.setEarnGoldTasks(EarnGoldTask.parseJSONArray(jsonArray));
 
         ArrayList<EarnGoldSection> earnGoldSections = new ArrayList<>();

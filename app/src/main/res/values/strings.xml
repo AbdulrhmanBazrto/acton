@@ -27,7 +27,6 @@
     <string name="follow">Follow</string>
     <string name="no_moments">No Moments</string>
 
-    <string name="feature_post_content">Moments are usually defined with respect to a fixed reference point, they deal with physical quantities as measured at some distance from that referance point. For example, the moment of force acting on an object, often called torque,is the product of the force and the distance from a reference point</string>
     <string name="settings">Settings</string>
     <string name="account">Account</string>
     <string name="block_list">Block list</string>
@@ -62,34 +61,148 @@
     <string name="room_capacity_content">Max %1$s users in the room at the same time \n(Room Owner not includes)</string>
     <string name="room_admins_content">Max 7 admins</string>
     <string name="room_members_content">Max %1$s room members</string>
-    <string name="room_level_content">Room upgrade rate increases to %1$s time</string>
-    <string name="Settings">الإعدادات</string>
-    <string name="members">الأعضاء</string>
-    <string name="backround">الخلفية</string>
-    <string name="room_lock">قفل الغرفة</string>
+    <string name="room_level_content">Room upgrade rate increases to %1$ s time</string>
+    <string name="Settings">Settings</string>
+    <string name="members">Members</string>
+    <string name="backround">Background</string>
+    <string name="room_lock">Lock Room</string>
 
-    <string name="room_gifts">هدايا الغرفة</string>
-    <string name="sent_gifts">الهدايا المرسلة</string>
-    <string name="recieved_gifts">الهدايا المستلمة</string>
+    <string name="room_gifts">Room Gifts</string>
+    <string name="sent_gifts">Sent Gifts</string>
+    <string name="recieved_gifts">Received Gifts</string>
 
-    <string name="month">الشهر</string>
-    <string name="week">الأسبوع</string>
-    <string name="day">اليوم</string>
+    <string name="month">Month</string>
+    <string name="week">Week</string>
+    <string name="day">Day</string>
 
     <array name="sex_array">
         <item>Male</item>
         <item>Female</item>
     </array>
 
-    <string name="the_path">المسار</string>
-    <string name="the_personal_info">المعلومات الشخصية</string>
+    <string name="the_path">Path</string>
+    <string name="the_personal_info">Personal Info</string>
     <string name="title_activity_earn_gold">EarnGoldActivity</string>
 
 
     <string name="pin_desc">
-        1-  بطاقة التثبيت في الاعلى متاحة فقط لمالكي الغرف  \n
-        2-  تثبيت غرفتك في الاعلى سيتم تفعليه مباشرة بعد الشراء  \n
-        3-  قم بفحص الوقت المتبقي من هنا في الدائرة اعلاه  \n
+        1-  pin to top cards is available for room owners only  \n
+        2-  pin to top feature will be activated after buying immediately  \n
+        3-  check remaining time from the circle above  \n
     </string>
+    <string name="not_aris_yet">you are not Aristocracy yet</string>
+    <string name="achiv_badges">Achievement badges</string>
+    <string name="honer_badges">Honor badges</string>
+    <string name="updating_comment">update your comment..</string>
+    <string name="create_post_hint">you must have something to share it</string>
+    <string name="success_share">success share..</string>
+    <string name="success_updating">success updating..</string>
+    <string name="room_type_hint">you must choose room type</string>
+    <string name="update_channel_success">update channel success</string>
+    <string name="daily_missions">Daily Missions</string>
+    <string name="days_">%s days</string>
+    <string name="something_to_filter">you must have something to filter</string>
+    <string name="Ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="room_gifts_sent">Room Gifts Sent</string>
+    <string name="gifts_sent">Gifts Sent</string>
+    <string name="gifts_received">Gifts Received</string>
+    <string name="just_met_you">Just Met You</string>
+    <string name="recommended_rooms">Recommended Rooms</string>
+    <string name="countries">Countries</string>
+    <string name="no_users_to_send_to">no users to send gift to</string>
+    <string name="users_view">| users:</string>
+    <string name="id_view">| ID:</string>
+    <string name="room_level">LV.</string>
+    <string name="following_">following</string>
+    <string name="follow__">follow</string>
+    <string name="invite_to_mic">You have been invited to mic. accept?</string>
+    <string name="yes">yes</string>
+    <string name="No">no</string>
+    <string name="no_empty_mics">no empty mics</string>
+    <string name="enter_room_name">enter room name</string>
+    <string name="enter_public_notification">enter room subject</string>
+    <string name="enter_entrence_fee">enter membership fees</string>
+    <string name="do_you_want_to_logout">do you want to logout?</string>
+    <string name="daily_record">you logged in for %d days</string>
+    <string name="your_balance">your balance now is %s gold</string>
+    <string name="incorrect_password">password isn\'t correct</string>
+    <string name="password_is_required">password is required</string>
+    <string name="please_confirm_your_password">please confirm your password</string>
+    <string name="your_confirm_not_match">your confirm isn\'t match</string>
+    <string name="Aristocracy__">Aristocracy</string>
+    <string name="title_price_">price for this title is:</string>
+    <string name="activite">activate</string>
+    <string name="badges">badges</string>
+    <string name="create_room__">Create Room</string>
+    <string name="room_capacity">Room Capacity</string>
+    <string name="room_admin">Room Admin</string>
+    <string name="room_member">Room Member</string>
+    <string name="room_level__">Room Level</string>
+    <string name="free">FREE</string>
+    <string name="create__">Create</string>
+    <string name="update_room__">Update Room</string>
+    <string name="update__">Update</string>
+    <string name="earn_gold">Earn Gold</string>
+    <string name="faq">FAQ</string>
+    <string name="followers">followers</string>
+    <string name="following__">following</string>
+    <string name="gifts__">Gifts</string>
+    <string name="join_us_with">Join us with</string>
+    <string name="my_moments">My Moments</string>
+    <string name="rooms__">Rooms</string>
+    <string name="my_rooms_">My Rooms</string>
+    <string name="joined_rooms">Joined Rooms</string>
+    <string name="pin_to_top_">Pin to top</string>
+    <string name="valid_to">Valid to </string>
+    <string name="feature_price">price for this feature</string>
+    <string name="follow___">follow</string>
+    <string name="messages__">messages</string>
+    <string name="in_room">in room</string>
+    <string name="badge__">badge</string>
+    <string name="rechrage">ReCharge</string>
+    <string name="details">Details</string>
+    <string name="register__">Register</string>
+    <string name="themes__">Themes</string>
+    <string name="chating">Chatting</string>
+    <string name="lock_setting">Lock Settings</string>
+    <string name="special_id">Special ID</string>
+    <string name="store">Store</string>
+    <string name="image__">Room image</string>
+    <string name="name__">name</string>
+    <string name="birthdate">Birthday</string>
+    <string name="gender">Gender</string>
+    <string name="country">Country</string>
+    <string name="visitors">Visitors</string>
+    <string name="daily_attendence">Daily Attendance</string>
+    <string name="login_seven_days">login for 7 days to get rewards</string>
+    <string name="login">login</string>
+    <string name="phone">Phone</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="google">Google</string>
+    <string name="instagram">Instagram</string>
+    <string name="my_room_joined">My Room, Joined</string>
+    <string name="language">language</string>
+    <string name="country_code">country code</string>
+    <string name="public_noti">public subject</string>
+    <string name="category">category</string>
+    <string name="member_fee">membership fees</string>
+    <string name="room_name">Room name</string>
+    <string name="log_out">Log out</string>
+    <string name="chat_notification">Chat Notification</string>
+    <string name="or">Or</string>
+    <string name="there_is_no_messages">there is no messages</string>
+    <string name="send_to">Send to:</string>
+    <string name="send">Send</string>
+    <string name="chose_category">choose room category</string>
+    <string name="save">Save</string>
+    <string name="enter_password">enter password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="type_password">Type password</string>
+    <string name="develop">Develop</string>
+    <string name="lock">Lock</string>
+    <string name="mute">Mute</string>
+    <string name="mute_voice">Mute</string>
 
 </resources>

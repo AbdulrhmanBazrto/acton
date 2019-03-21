@@ -101,14 +101,14 @@ public class SpecialIDRoomActivity extends AppCompatActivity implements SpecialI
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("تأكيد العملية؟")
                 .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.Ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         APIConnectionNetwork.UpdateRoomID(specialID.getTxtId(), currentId, null);
                         if (alert != null)
                             alert.hide();
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (alert != null)

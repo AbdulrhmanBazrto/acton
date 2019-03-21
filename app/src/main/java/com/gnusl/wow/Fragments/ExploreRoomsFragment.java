@@ -99,9 +99,9 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
 
         // set topGiftExplorers
         ArrayList<TopGiftExplorer> topGiftExplorers = new ArrayList<>();
-        topGiftExplorers.add(new TopGiftExplorer(R.drawable.orange, R.drawable.rg, "Room Gifts Sent", people));
-        topGiftExplorers.add(new TopGiftExplorer(R.drawable.green, R.drawable.gs, "Gifts Sent", people));
-        topGiftExplorers.add(new TopGiftExplorer(R.drawable.blue, R.drawable.gr, "Gifts Received", people));
+        topGiftExplorers.add(new TopGiftExplorer(R.drawable.orange, R.drawable.rg, getString(R.string.room_gifts_sent), people));
+        topGiftExplorers.add(new TopGiftExplorer(R.drawable.green, R.drawable.gs, getString(R.string.gifts_sent), people));
+        topGiftExplorers.add(new TopGiftExplorer(R.drawable.blue, R.drawable.gr, getString(R.string.gifts_received), people));
 
         exploreSection.setTopGiftExplorers(topGiftExplorers);
 
@@ -182,7 +182,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
 
         // parsing countries
         ExploreSection countiesExploreSection = new ExploreSection();
-        countiesExploreSection .setHeaderTitle("Countries");
+        countiesExploreSection .setHeaderTitle(getString(R.string.countries));
         if (jsonObject.has("country_codes")) {
             try {
                 countiesExploreSection .setCountries(Country.parseJSONArray(jsonObject.getJSONArray("country_codes")));
@@ -213,7 +213,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
             try {
                 ArrayList<Room> room=Room.parseJSONArray(jsonObject.getJSONArray("recomended"));
                 ExploreSection recommendedExploreSection=new ExploreSection();
-                recommendedExploreSection.setHeaderTitle("Recommended Rooms");
+                recommendedExploreSection.setHeaderTitle(getString(R.string.recommended_rooms));
                 recommendedExploreSection.setRooms(room);
 
                 exploreSections.add(recommendedExploreSection);
@@ -229,7 +229,7 @@ public class ExploreRoomsFragment extends Fragment implements ConnectionDelegate
             try {
                 ArrayList<Room> room=Room.parseJSONArray(jsonObject.getJSONArray("for_you"));
                 ExploreSection forYouExploreSection=new ExploreSection();
-                forYouExploreSection.setHeaderTitle("Just Met You");
+                forYouExploreSection.setHeaderTitle(getString(R.string.just_met_you));
                 forYouExploreSection.setRooms(room);
 
                 exploreSections.add(forYouExploreSection);

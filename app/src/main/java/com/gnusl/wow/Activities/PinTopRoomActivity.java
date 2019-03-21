@@ -132,7 +132,7 @@ public class PinTopRoomActivity extends AppCompatActivity {
             @Override
             public void onConnectionSuccess(JSONObject jsonObject) {
                 LoaderPopUp.dismissLoader();
-                tbMonthValue.setText(jsonObject.optString("duration") + " days");
+                tbMonthValue.setText(String.format(getString(R.string.days_), jsonObject.optString("duration")));
                 tvSubPrice.setText(jsonObject.optString("price"));
                 currentId = jsonObject.optInt("channel_id");
             }

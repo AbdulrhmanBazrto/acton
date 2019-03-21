@@ -16,25 +16,25 @@
     <item
         android:id="@+id/action_themes"
         android:orderInCategory="100"
-        android:title="الموضوعات"
+        android:title="@string/themes__"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_develop"
         android:orderInCategory="100"
-        android:title="تطوير"
+        android:title="@string/develop"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_lock"
         android:orderInCategory="100"
-        android:title="قفل"
+        android:title="@string/lock"
         app:showAsAction="never" />
     <item
 
         android:id="@+id/action_mute"
         android:orderInCategory="100"
-        android:title="كتم"
+        android:title="@string/mute"
         app:showAsAction="never" />
 
 </menu>

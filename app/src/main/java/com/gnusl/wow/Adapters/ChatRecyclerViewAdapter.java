@@ -160,7 +160,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private ImageView userImage;
         private TextView userName;
         private ImageView imageMessage;
-        private ProgressBar progressBar;
+        private View progressBar;
 
         public ImageMessageViewHolder(View itemView) {
             super(itemView);

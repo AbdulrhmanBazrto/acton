@@ -11,7 +11,7 @@
     <item
         android:id="@+id/action_mute"
         android:orderInCategory="100"
-        android:title="كتم الصوت"
+        android:title="@string/mute_voice"
         app:showAsAction="never" />
 
 </menu>

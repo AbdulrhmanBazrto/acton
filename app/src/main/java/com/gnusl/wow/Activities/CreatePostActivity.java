@@ -161,7 +161,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
     private void shareYourPost() {
 
         if (text.getText().toString().isEmpty())
-            Toast.makeText(this, "you must have something to share it", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.create_post_hint), Toast.LENGTH_SHORT).show();
 
         else {
 
@@ -300,13 +300,13 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         LoaderPopUp.dismissLoader();
 
         if (jsonObject.has("post_id")) {
-            Toast.makeText(this, "success share..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.success_share), Toast.LENGTH_SHORT).show();
             mustBeRefreshPosts = true;
             finish();
 
         }else if(jsonObject.has("success")) { // update post
 
-            Toast.makeText(this, "success updating..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.success_updating), Toast.LENGTH_SHORT).show();
             mustBeRefreshPosts = true;
             finish();
 

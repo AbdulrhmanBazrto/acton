@@ -1,44 +1,37 @@
 package com.gnusl.wow.Fragments;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Activities.SearchActivity;
 import com.gnusl.wow.Adapters.RoomFragmentPagerAdapter;
+import com.gnusl.wow.Delegates.HideDialyButton;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.DialyLoginPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Yehia on 9/23/2018.
@@ -184,5 +177,21 @@ public class RoomFragment extends Fragment implements SmartTabLayout.TabProvider
         }
     }
 
+    @Subscribe
+    public void onLogin(HideDialyButton hideDialyButton) {
+        inflatedView.findViewById(R.id.btn_showDailyLogin).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
 }
 

@@ -84,7 +84,7 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
     private void createRoomRequest() {
 
         if (roomType == null)
-            Toast.makeText(this, "you must choose room type", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.room_type_hint), Toast.LENGTH_SHORT).show();
 
         else {
 

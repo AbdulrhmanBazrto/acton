@@ -106,7 +106,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
             // show popup
             new MaterialDialog.Builder(getContext())
                     .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("أدخل اسم الغرفة", activity.getRoom().getName(), new MaterialDialog.InputCallback() {
+                    .input(getString(R.string.enter_room_name), activity.getRoom().getName(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
 
@@ -127,7 +127,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
             // show popup
             new MaterialDialog.Builder(getContext())
                     .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("ادخل الاشعار العام", activity.getRoom().getDescription(), new MaterialDialog.InputCallback() {
+                    .input(getString(R.string.enter_public_notification), activity.getRoom().getDescription(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
 
@@ -145,7 +145,7 @@ public class RoomSettingsFragment extends Fragment implements ConnectionDelegate
             // show popup
             new MaterialDialog.Builder(getContext())
                     .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("ادخل رسم العضوية", activity.getRoom().isFree() ? "0" : String.valueOf(activity.getRoom().getSubscriptionPrice()), new MaterialDialog.InputCallback() {
+                    .input(getString(R.string.enter_entrence_fee), activity.getRoom().isFree() ? "0" : String.valueOf(activity.getRoom().getSubscriptionPrice()), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
 

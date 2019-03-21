@@ -72,7 +72,7 @@ public class EnterPassWordRoomPopUp extends DialogFragment {
     private void clickSave() {
 
         if (!password.getText().toString().equalsIgnoreCase(getRoom().getPassword()))
-            password.setError("password isn't correct");
+            password.setError(getString(R.string.incorrect_password));
         else
             dismiss();
 

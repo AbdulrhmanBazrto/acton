@@ -128,6 +128,8 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
         if (getRoom() != null && getRoom().isHasPassword())
             EnterPassWordRoomPopUp.show(this, getRoom());
 
+
+
     }
 
     private void initViews() {
@@ -200,7 +202,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
 
             @Override
             public void onPermissionDeny(String[] permissions) {
-                Toast.makeText(RoomChatActivity.this, "Please grant required permissions.", Toast.LENGTH_LONG).show();
+                Toast.makeText(RoomChatActivity.this, getString(R.string.grant_equired_permissions_please), Toast.LENGTH_LONG).show();
             }
         });
     }

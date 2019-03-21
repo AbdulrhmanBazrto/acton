@@ -19,7 +19,7 @@
         android:id="@+id/message_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="there is no messages"
+        android:text="@string/there_is_no_messages"
         android:textColor="@color/charcoal_grey"
         android:textSize="20sp"
         app:typefaceAsset="fonts/SFUIText-Regular.ttf"

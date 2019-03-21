@@ -118,7 +118,7 @@
             android:fontFamily="sans-serif-thin"
             android:gravity="center"
             android:stateListAnimator="@null"
-            android:text="Login"
+            android:text="@string/login"
             android:textColor="@drawable/signup_button_text_color"
             android:textSize="18sp"
             android:textStyle="bold"

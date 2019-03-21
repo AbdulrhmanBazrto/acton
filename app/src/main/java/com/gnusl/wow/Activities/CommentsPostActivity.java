@@ -3,11 +3,9 @@ package com.gnusl.wow.Activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,26 +22,21 @@ import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.CommentActionsDelegate;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Comment;
-import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.R;
 import com.gnusl.wow.SlidingPopUp.PopupActivity;
-import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Views.FontedEditText;
-import com.klinker.android.sliding.MultiShrinkScroller;
-import com.klinker.android.sliding.SlidingActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class CommentsPostActivity extends PopupActivity implements ConnectionDelegate, CommentActionsDelegate {
 
-    public static String POST_ID="post_id";
+    public static String POST_ID = "post_id";
 
     private RecyclerView comments_recycler_view;
     private NestedScrollView nestedScrollView;
@@ -66,8 +59,8 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
         // initialize comments adapter
         CommentsRecyclerView();
 
-        if(getIntent().hasExtra(POST_ID))
-            postId=getIntent().getIntExtra(POST_ID,0);
+        if (getIntent().hasExtra(POST_ID))
+            postId = getIntent().getIntExtra(POST_ID, 0);
         else
             return;
 
@@ -80,19 +73,19 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
 
     }
 
-    private void findViews(){
+    private void findViews() {
 
-        comments_recycler_view= findViewById(R.id.recycler_view_comments);
-        progressBar= findViewById(R.id.progressBar);
+        comments_recycler_view = findViewById(R.id.recycler_view_comments);
+        progressBar = findViewById(R.id.progressBar);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
 
-        send_button= findViewById(R.id.send_button);
-        message_edit_text= findViewById(R.id.message_edit_text);
+        send_button = findViewById(R.id.send_button);
+        message_edit_text = findViewById(R.id.message_edit_text);
         message_edit_text.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-        send_button.setOnClickListener(v->clickSendComment());
+        send_button.setOnClickListener(v -> clickSendComment());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -105,11 +98,11 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
 
         comments_recycler_view.setNestedScrollingEnabled(true);
 
-        commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter(this, new ArrayList<>(),this);
+        commentsRecyclerViewAdapter = new CommentsRecyclerViewAdapter(this, new ArrayList<>(), this);
         comments_recycler_view.setAdapter(commentsRecyclerViewAdapter);
     }
 
-    private void sendCommentsRequest(){
+    private void sendCommentsRequest() {
 
         // show progress
         progressBar.setVisibility(View.VISIBLE);
@@ -117,18 +110,18 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
         comments_recycler_view.setVisibility(View.GONE);
 
         // send request
-        APIConnectionNetwork.GetAllComments(postId,this);
+        APIConnectionNetwork.GetAllComments(postId, this);
     }
 
-    private void clickSendComment(){
+    private void clickSendComment() {
 
-        if(message_edit_text.getText().toString().isEmpty())
-            Toast.makeText(this,"you must have message",Toast.LENGTH_SHORT).show();
+        if (message_edit_text.getText().toString().isEmpty())
+            Toast.makeText(this, "you must have message", Toast.LENGTH_SHORT).show();
 
         else {
 
             // add comment
-            APIConnectionNetwork.AddNewComment(message_edit_text.getText().toString(),postId,this);
+            APIConnectionNetwork.AddNewComment(message_edit_text.getText().toString(), postId, this);
 
             // clear message
             message_edit_text.setText("");
@@ -146,7 +139,7 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
             comments_recycler_view.setVisibility(View.VISIBLE);
         }
 
-        if(progressDialog!=null)
+        if (progressDialog != null)
             progressDialog.dismiss();
     }
 
@@ -160,7 +153,7 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
             comments_recycler_view.setVisibility(View.VISIBLE);
         }
 
-        if(progressDialog!=null)
+        if (progressDialog != null)
             progressDialog.dismiss();
     }
 
@@ -172,7 +165,7 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
     @Override
     public void onConnectionSuccess(JSONObject jsonObject) {
 
-        if(progressDialog!=null)
+        if (progressDialog != null)
             progressDialog.dismiss();
 
         if (progressBar != null) {
@@ -181,14 +174,14 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
         }
 
         // refresh comments
-        APIConnectionNetwork.GetAllComments(postId,this);
+        APIConnectionNetwork.GetAllComments(postId, this);
     }
 
     @Override
     public void onConnectionSuccess(JSONArray jsonArray) {
 
         // parsing
-        ArrayList<Comment> comments=Comment.parseJSONArray(jsonArray);
+        ArrayList<Comment> comments = Comment.parseJSONArray(jsonArray);
 
         // notify
         commentsRecyclerViewAdapter.setComments(comments);
@@ -200,7 +193,7 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
             comments_recycler_view.setVisibility(View.VISIBLE);
         }
 
-        if(progressDialog!=null)
+        if (progressDialog != null)
             progressDialog.dismiss();
     }
 
@@ -216,10 +209,10 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
                     public void onInput(MaterialDialog dialog, CharSequence input) {
                         // Do something
 
-                        progressDialog = ProgressDialog.show(CommentsPostActivity.this, "", "update your comment..");
+                        progressDialog = ProgressDialog.show(CommentsPostActivity.this, "", getString(R.string.updating_comment));
 
                         // send request
-                        APIConnectionNetwork.UpdateComment(comment.getId(),input.toString(),CommentsPostActivity.this);
+                        APIConnectionNetwork.UpdateComment(comment.getId(), input.toString(), CommentsPostActivity.this);
                     }
                 }).show();
     }
@@ -228,7 +221,7 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
     public void onDeleteComment(Comment comment) {
 
         // send delete request
-        APIConnectionNetwork.DeleteComment(comment.getId(),this);
+        APIConnectionNetwork.DeleteComment(comment.getId(), this);
 
         // show progress
         progressBar.setVisibility(View.VISIBLE);

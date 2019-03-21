@@ -55,8 +55,8 @@ public class BadgesActivity extends AppCompatActivity {
 
 
         badgeTabLayout = findViewById(R.id.tl_badges_type);
-        badgeTabLayout.addTab(badgeTabLayout.newTab().setContentDescription("bb").setText("شارات الانجازات"));
-        badgeTabLayout.addTab(badgeTabLayout.newTab().setContentDescription("aa").setText("شارات الشرف"));
+        badgeTabLayout.addTab(badgeTabLayout.newTab().setContentDescription("bb").setText(R.string.achiv_badges));
+        badgeTabLayout.addTab(badgeTabLayout.newTab().setContentDescription("aa").setText(R.string.honer_badges));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         rvAllBadges.setLayoutManager(gridLayoutManager);

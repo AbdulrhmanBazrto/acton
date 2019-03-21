@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:lines="1"
-            android:text="اللحظات"
+            android:text="@string/moments"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

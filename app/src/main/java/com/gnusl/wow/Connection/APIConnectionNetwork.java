@@ -2377,13 +2377,14 @@ public class APIConnectionNetwork {
 
     }
 
-    public static void SetMicForUser(int channelId, int micId, ConnectionDelegate connectionDelegate) {
+    public static void SetMicForUser(int channelId, int micId, boolean isPaid, ConnectionDelegate connectionDelegate) {
 
         AndroidNetworking.post(APILinks.Channels_Url.getLink() + "/" + String.valueOf(channelId) + "/speaker")
 
                 .addHeaders("Accept", "application/json")
                 .addHeaders("Authorization", APIUtils.getAuthorization())
                 .addBodyParameter("mic", String.valueOf(micId))
+                .addBodyParameter("paid", String.valueOf(isPaid))
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

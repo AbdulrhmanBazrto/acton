@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"
-            android:text="Update Room"
+            android:text="@string/update_room__"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -108,7 +108,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:lines="1"
-                            android:text="Room Capacity"
+                            android:text="@string/room_capacity"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             app:layout_constraintStart_toEndOf="@id/capacity_icon"
@@ -147,7 +147,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:lines="1"
-                            android:text="Room Admin"
+                            android:text="@string/room_admin"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             app:layout_constraintStart_toEndOf="@id/admin_icon"
@@ -186,7 +186,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:lines="1"
-                            android:text="Room Member"
+                            android:text="@string/room_member"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             app:layout_constraintStart_toEndOf="@id/members_icon"
@@ -225,7 +225,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:lines="1"
-                            android:text="Room Level"
+                            android:text="@string/room_level__"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             app:layout_constraintStart_toEndOf="@id/level_icon"
@@ -259,7 +259,7 @@
                     android:fontFamily="sans-serif-thin"
                     android:gravity="center"
                     android:stateListAnimator="@null"
-                    android:text="FREE"
+                    android:text="@string/free"
                     android:textColor="@color/active_color"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -303,7 +303,7 @@
                     android:fontFamily="sans-serif-thin"
                     android:gravity="center"
                     android:stateListAnimator="@null"
-                    android:text="Update"
+                    android:text="@string/update__"
                     android:textAllCaps="false"
                     android:textColor="@drawable/signup_button_text_color"
                     android:textSize="12sp"
@@ -316,7 +316,7 @@
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
-        >
+
 
         <View
             android:id="@+id/guidline"

@@ -76,13 +76,13 @@ public class LockRoomPopUp extends DialogFragment implements ConnectionDelegate 
     private void clickSave() {
 
         if (password.getText() == null || password.getText().toString().isEmpty())
-            password.setError("password is required");
+            password.setError(getString(R.string.password_is_required));
 
         else if (confirm_password.getText() == null || confirm_password.getText().toString().isEmpty())
-            confirm_password.setError("please confirm your password");
+            confirm_password.setError(getString(R.string.please_confirm_your_password));
 
         else if (!password.getText().toString().equals(confirm_password.getText().toString()))
-            confirm_password.setError("your confirm isn't match");
+            confirm_password.setError(getString(R.string.your_confirm_not_match));
 
         else
             sendRoomPassword();

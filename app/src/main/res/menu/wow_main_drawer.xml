@@ -10,11 +10,11 @@
         <item
             android:id="@+id/moment"
             android:icon="@drawable/ic_action_icon3"
-            android:title="Moment" />
+            android:title="@string/moments" />
         <item
             android:id="@+id/messageSection"
             android:icon="@drawable/ic_action_icon4"
-            android:title="Message" />
+            android:title="@string/message" />
 
     </group>
 
@@ -25,22 +25,22 @@
         <item
             android:id="@+id/aristocracy"
             android:icon="@drawable/ic_action_icon5"
-            android:title="Aristocracy" />
+            android:title="@string/Aristocracy__" />
 
         <item
             android:id="@+id/recharge"
             android:icon="@drawable/ic_action_icon6"
-            android:title="Recharge" />
+            android:title="@string/rechrage" />
 
         <item
             android:id="@+id/store"
             android:icon="@drawable/ic_action_icon7"
-            android:title="Store" />
+            android:title="@string/store" />
 
         <item
             android:id="@+id/earn_gold"
             android:icon="@drawable/ic_action_icon8"
-            android:title="Earn Gold" />
+            android:title="@string/earn_gold" />
 
     </group>
 
@@ -51,12 +51,12 @@
         <item
             android:id="@+id/faq"
             android:icon="@drawable/ic_action_icon5"
-            android:title="FAQ" />
+            android:title="@string/faq" />
 
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_action_icon9"
-            android:title="Settings" />
+            android:title="@string/settings" />
     </group>
 
 </menu>

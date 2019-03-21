@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:lines="1"
-            android:text="قفل الغرفة"
+            android:text="@string/room_lock"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

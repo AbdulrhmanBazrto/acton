@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:lines="1"
-            android:text="الغرف"
+            android:text="@string/rooms__"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -64,7 +64,7 @@
         android:paddingTop="5dp"
         android:paddingEnd="10dp"
         android:paddingBottom="5dp"
-        android:text="My Rooms"
+        android:text="@string/my_rooms_"
         app:layout_constraintTop_toBottomOf="@+id/settings_bar" />
 
     <android.support.v7.widget.RecyclerView
@@ -83,7 +83,7 @@
         android:paddingTop="5dp"
         android:paddingEnd="10dp"
         android:paddingBottom="5dp"
-        android:text="Joined Rooms"
+        android:text="@string/joined_rooms"
         app:layout_constraintTop_toBottomOf="@+id/rv_my_rooms" />
 
     <android.support.v7.widget.RecyclerView

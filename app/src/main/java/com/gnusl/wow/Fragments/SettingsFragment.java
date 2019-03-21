@@ -45,7 +45,7 @@ public class SettingsFragment extends Fragment {
         inflatedView.findViewById(R.id.logout_button).setOnClickListener(v->{
 
             AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-            alertDialog.setMessage("do you want to logout?");
+            alertDialog.setMessage(getString(R.string.do_you_want_to_logout));
 
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok",
                     (dialog, which) -> {

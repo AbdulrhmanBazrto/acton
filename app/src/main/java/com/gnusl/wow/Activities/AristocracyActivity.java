@@ -181,7 +181,7 @@ public class AristocracyActivity extends AppCompatActivity {
                 if (Aristocracy.currentAristocracy != null) {
                     tvUserArst.setText(Aristocracy.currentAristocracy.getName());
                 } else {
-                    tvUserArst.setText("انت لست ارستقراطي بعد!");
+                    tvUserArst.setText(getString(R.string.not_aris_yet));
                 }
             }
         });

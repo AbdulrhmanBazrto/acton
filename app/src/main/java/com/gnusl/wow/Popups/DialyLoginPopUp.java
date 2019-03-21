@@ -14,9 +14,11 @@ import android.widget.TextView;
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
+import com.gnusl.wow.Delegates.HideDialyButton;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,7 +174,7 @@ public class DialyLoginPopUp extends DialogFragment {
             @Override
             public void onConnectionSuccess(JSONObject jsonObject) {
                 daysCount = jsonObject.optInt("daily");
-                dailyDialog.getTv_login_count().setText(String.format(Locale.getDefault(), "لقد سجلت الدخول لمدة %d يوم", daysCount));
+                dailyDialog.getTv_login_count().setText(String.format(Locale.getDefault(), getString(R.string.daily_record), daysCount));
                 switch (jsonObject.optInt("daily")) {
                     case 1: {
                         dailyDialog.getIv_first_check().setVisibility(View.VISIBLE);
@@ -228,6 +230,7 @@ public class DialyLoginPopUp extends DialogFragment {
             dailyDialog.getBtn_login().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventBus.getDefault().post(new HideDialyButton());
                     APIConnectionNetwork.StoreDailyLogin(new ConnectionDelegate() {
                         @Override
                         public void onConnectionFailure() {
@@ -266,7 +269,7 @@ public class DialyLoginPopUp extends DialogFragment {
                                         public void onConnectionSuccess(JSONObject jsonObject) {
                                             clAttenedance.setVisibility(View.GONE);
                                             clBalance.setVisibility(View.VISIBLE);
-                                            tvBalance.setText(String.format("رصيدك الأن %s ليرة ذهبية", jsonObject.optJSONObject("user").optString("balance")));
+                                            tvBalance.setText(String.format(getString(R.string.your_balance), jsonObject.optJSONObject("user").optString("balance")));
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
