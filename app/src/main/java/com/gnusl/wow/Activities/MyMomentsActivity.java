@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.gnusl.wow.Fragments.MyMomentsFragment;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
 import org.json.JSONArray;
@@ -25,6 +27,11 @@ import java.util.ArrayList;
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class MyMomentsActivity extends AppCompatActivity {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

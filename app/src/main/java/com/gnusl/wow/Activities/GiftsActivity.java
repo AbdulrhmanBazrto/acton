@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -22,6 +23,7 @@ import com.gnusl.wow.Models.GiftUserRank;
 import com.gnusl.wow.Models.RefreshGiftsDelegate;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Views.FontedTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -56,6 +58,10 @@ public class GiftsActivity extends AppCompatActivity implements PagerDelegate, S
     private ArrayList<GiftRoomRank> weekRoomRanks;
     private ArrayList<GiftRoomRank> monthRoomRanks;
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

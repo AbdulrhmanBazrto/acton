@@ -1,16 +1,23 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.gnusl.wow.Fragments.MessagesConversationFragment;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 
 public class MessagesConversationActivity extends AppCompatActivity {
 
     public static final String USER_ID="user_id";
     private MessagesConversationFragment messagesConversationFragment;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

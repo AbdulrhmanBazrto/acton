@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,10 +9,16 @@ import android.widget.TextView;
 import com.gnusl.wow.Models.FAQ;
 import com.gnusl.wow.Models.FAQDetails;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 
 import java.io.Serializable;
 
 public class FAQAnswerActivity extends AppCompatActivity {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

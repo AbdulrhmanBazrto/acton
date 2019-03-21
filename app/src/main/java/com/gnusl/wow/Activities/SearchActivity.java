@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -20,6 +21,7 @@ import com.gnusl.wow.Delegates.SearchDelegate;
 import com.gnusl.wow.Fragments.SearchRoomFragment;
 import com.gnusl.wow.Fragments.SearchUsersFragment;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 public class SearchActivity extends AppCompatActivity implements SmartTabLayout.TabProvider, PagerDelegate {
@@ -33,6 +35,12 @@ public class SearchActivity extends AppCompatActivity implements SmartTabLayout.
     private SearchDelegate searchUsersDelegate;
 
     SearchFragmentPagerAdapter searchFragmentPagerAdapter;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

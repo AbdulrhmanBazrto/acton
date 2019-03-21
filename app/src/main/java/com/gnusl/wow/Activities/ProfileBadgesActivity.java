@@ -2,6 +2,7 @@ package com.gnusl.wow.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Badge;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
@@ -32,6 +34,11 @@ public class ProfileBadgesActivity extends AppCompatActivity implements Connecti
     public final static String USER_ID = "user_id";
 
     private BadgesRecyclerViewAdapter badgesRecyclerViewAdapter;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

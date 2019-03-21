@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ import com.gnusl.wow.Models.RegisterParams;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.APIUtils;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Views.FontedButton;
 import com.google.android.gms.auth.api.Auth;
@@ -78,6 +80,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionDelega
 
     // twitter
     private TwitterAuthClient mTwitterAuthClient;
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

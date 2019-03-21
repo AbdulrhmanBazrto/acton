@@ -17,6 +17,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,6 +32,11 @@ public class RoomByCountryActivity extends AppCompatActivity implements Connecti
 
     private RoomsRecyclerViewAdapter roomsRecyclerViewAdapter;
     private String tag;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

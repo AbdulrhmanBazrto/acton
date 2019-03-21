@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.ReChargeDelegate;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
 import org.json.JSONArray;
@@ -35,6 +37,11 @@ public class RechargeActivity extends AppCompatActivity implements PurchasesUpda
 
     BillingClient billingClient;
     List<String> skuDetails;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

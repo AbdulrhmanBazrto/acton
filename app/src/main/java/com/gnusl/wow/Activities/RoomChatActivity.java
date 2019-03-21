@@ -36,6 +36,7 @@ import com.gnusl.wow.Popups.EnterPassWordRoomPopUp;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.KeyboardUtils;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.WebRtcClient.CallDelegate;
 import com.gnusl.wow.WebRtcClient.PeerConnectionParameters;
 import com.gnusl.wow.WebRtcClient.PermissionChecker;
@@ -98,6 +99,11 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
     private EditText messageEditText;
     private boolean isUploadingForBackground = false;
     private boolean isShouldLogout = false;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -24,6 +24,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Comment;
 import com.gnusl.wow.R;
 import com.gnusl.wow.SlidingPopUp.PopupActivity;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Views.FontedEditText;
 
 import org.json.JSONArray;
@@ -46,6 +47,11 @@ public class CommentsPostActivity extends PopupActivity implements ConnectionDel
     private AppCompatImageView send_button;
     private FontedEditText message_edit_text;
     ProgressDialog progressDialog;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override

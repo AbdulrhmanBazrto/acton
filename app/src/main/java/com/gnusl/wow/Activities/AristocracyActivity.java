@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -18,6 +19,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.Aristocracy;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +43,11 @@ public class AristocracyActivity extends AppCompatActivity {
     Button btnSub;
 
     Aristocracy currentSelectedAristocracy = null;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

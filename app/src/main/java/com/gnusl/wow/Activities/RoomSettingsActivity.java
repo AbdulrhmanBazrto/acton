@@ -27,6 +27,7 @@ import com.gnusl.wow.Fragments.SettingsFragment;
 import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.learnncode.mediachooser.MediaChooser;
 import com.learnncode.mediachooser.activity.HomeScreenMediaChooser;
 
@@ -46,6 +47,11 @@ public class RoomSettingsActivity extends AppCompatActivity {
 
     TextView titleTv;
     Fragment currentFragment;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
 
     @Override

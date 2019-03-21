@@ -1,5 +1,6 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +12,17 @@ import com.gnusl.wow.Fragments.AccountFragment;
 import com.gnusl.wow.Fragments.BlockListFragment;
 import com.gnusl.wow.Fragments.SettingsFragment;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
     TextView titleTv;
     Fragment currentFragment;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

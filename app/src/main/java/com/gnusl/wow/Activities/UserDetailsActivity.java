@@ -33,6 +33,7 @@ import com.gnusl.wow.Fragments.RoomSettingsFragment;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.WebRtcClient.PermissionChecker;
 import com.learnncode.mediachooser.MediaChooser;
@@ -62,6 +63,11 @@ public class UserDetailsActivity extends AppCompatActivity implements Connection
     private TextView userBirthdateTv;
     private TextView userSixTv;
     BroadcastReceiver imageBroadcastReceiver;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

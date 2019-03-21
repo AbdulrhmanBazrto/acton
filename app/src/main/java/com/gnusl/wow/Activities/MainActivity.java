@@ -1,40 +1,47 @@
 package com.gnusl.wow.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SubMenu;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Adapters.MainFragmentPagerAdapter;
+import com.gnusl.wow.Application.WowApplication;
 import com.gnusl.wow.Delegates.PagerDelegate;
 import com.gnusl.wow.Enums.FragmentTags;
 import com.gnusl.wow.Fragments.MessagesContainerFragment;
 import com.gnusl.wow.Fragments.MessagesFragment;
 import com.gnusl.wow.Models.User;
-import com.gnusl.wow.Styles.CustomTypefaceSpan;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Styles.CustomTypefaceSpan;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Views.FontedTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, PagerDelegate, SmartTabLayout.TabProvider {
 
@@ -45,8 +52,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Fragment mCurrentFragment;
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String ln = SharedPreferencesUtils.getLanguage(this);
+        Log.d("LANGUAGE in main", ln);
+
         setContentView(R.layout.activity_main);
 
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

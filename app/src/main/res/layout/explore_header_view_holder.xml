@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:text="Top"
+        android:text="@string/top"
         android:textColor="@color/room_item_title_text_color"
         android:textSize="18sp"
         android:layout_marginTop="8dp"

@@ -41,6 +41,7 @@ import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
 import com.gnusl.wow.Views.FontedEditText;
 import com.gnusl.wow.Views.FontedTextView;
@@ -77,6 +78,11 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
     GridView gridView;
     MediaGridViewAdapter adapter;
     private boolean mustBeRefreshPosts = false;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

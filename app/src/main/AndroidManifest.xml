@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.gnusl.wow">
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -51,8 +52,11 @@
         android:icon="@drawable/ic_launcher_acton"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher_acton"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme"
+        tools:replace="android:supportsRtl"
+
+        >
         <activity android:name=".Activities.FAQAnswerActivity"></activity>
         <activity android:name=".Activities.FAQActivity" />
         <activity

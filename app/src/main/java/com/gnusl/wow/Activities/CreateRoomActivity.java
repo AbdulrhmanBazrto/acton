@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.gnusl.wow.Models.Room;
 import com.gnusl.wow.Models.RoomType;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +37,11 @@ public class CreateRoomActivity extends AppCompatActivity implements ConnectionD
 
     private RoomTypesRecyclerViewAdapter roomTypesRecyclerViewAdapter;
     private RoomType roomType;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

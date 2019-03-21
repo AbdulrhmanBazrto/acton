@@ -167,7 +167,7 @@
     <string name="chating">الثرثرة</string>
     <string name="lock_setting">اعدادات القفل</string>
     <string name="special_id">رقم مميز</string>
-    <string name="store">Store</string>
+    <string name="store">المتجر</string>
     <string name="image__">صورة الواجهة</string>
     <string name="name__">الأسم</string>
     <string name="birthdate">تاريخ الميلاد</string>
@@ -204,5 +204,8 @@
     <string name="lock">قفل</string>
     <string name="mute">كتم</string>
     <string name="mute_voice">كتم الصوت</string>
+    <string name="top">الاعلى</string>
+    <string name="my_friends">اصدقائي</string>
+    <string name="system">النظام</string>
 
 </resources>

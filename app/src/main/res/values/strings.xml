@@ -204,5 +204,8 @@
     <string name="lock">Lock</string>
     <string name="mute">Mute</string>
     <string name="mute_voice">Mute</string>
+    <string name="top">Top</string>
+    <string name="my_friends">My Friends</string>
+    <string name="system">System</string>
 
 </resources>

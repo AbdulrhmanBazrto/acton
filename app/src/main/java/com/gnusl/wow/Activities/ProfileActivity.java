@@ -1,6 +1,7 @@
 package com.gnusl.wow.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.gnusl.wow.Models.RefreshGiftsDelegate;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
+import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Views.FontedTextView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -44,6 +46,11 @@ import org.json.JSONObject;
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class ProfileActivity extends AppCompatActivity implements PagerDelegate, SmartTabLayout.TabProvider, ConnectionDelegate {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     public final static String USER_ID = "user_id";
     private ProfileFragmentPagerAdapter profileFragmentPagerAdapter;

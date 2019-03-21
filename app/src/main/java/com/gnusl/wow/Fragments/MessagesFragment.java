@@ -52,8 +52,8 @@ public class MessagesFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         ArrayList<MessageSection> messageSections = new ArrayList<>();
-        messageSections.add(new MessageSection(R.drawable.friends, "My Friends"));
-        messageSections.add(new MessageSection(R.drawable.system, "System"));
+        messageSections.add(new MessageSection(R.drawable.friends, getString(R.string.my_friends)));
+        messageSections.add(new MessageSection(R.drawable.system, getString(R.string.system)));
        // messageSections.add(new MessageSection(R.drawable.acivity, "Activity"));
 
 
