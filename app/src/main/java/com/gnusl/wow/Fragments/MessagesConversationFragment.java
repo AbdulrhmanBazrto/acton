@@ -3,54 +3,39 @@ package com.gnusl.wow.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
-import com.gnusl.wow.Activities.RoomChatActivity;
 import com.gnusl.wow.Adapters.MessagesConversationRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Delegates.MessageImageDelegate;
 import com.gnusl.wow.Delegates.OnLoadMoreListener;
-import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Message;
-import com.gnusl.wow.Models.MicUser;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
-import com.gnusl.wow.Utils.APIUtils;
 import com.gnusl.wow.Utils.NetworkUtils;
 import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.gnusl.wow.Views.FontedEditText;
 import com.gnusl.wow.Views.FontedTextView;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
@@ -61,28 +46,18 @@ import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
-import static android.widget.Toast.LENGTH_LONG;
 import static com.gnusl.wow.Utils.PermissionsUtils.CALENDAR_PERMISSION;
-import static com.gnusl.wow.Utils.PermissionsUtils.CAMERA_PERMISSIONS_REQUEST;
-import static com.gnusl.wow.Utils.PermissionsUtils.checkCameraPermissions;
 
 public class MessagesConversationFragment extends Fragment implements ConnectionDelegate, OnLoadMoreListener, MessageImageDelegate {
 
@@ -112,6 +87,7 @@ public class MessagesConversationFragment extends Fragment implements Connection
             channelName = "Channel_" + user_id + "_" + SharedPreferencesUtils.getUser().getId();
         }
     }
+
 
     public static MessagesConversationFragment newInstance(int user_id) {
 
@@ -385,13 +361,15 @@ public class MessagesConversationFragment extends Fragment implements Connection
 
                 chatMessage.setCreated_at(message.getMessage().getAsJsonObject().get("date").getAsString());
 
-                getActivity().runOnUiThread(() -> {
-                    messagesConversationAdapter.getMessages().add(chatMessage);
-                    messagesConversationAdapter.notifyDataSetChanged();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        messagesConversationAdapter.getMessages().add(chatMessage);
+                        messagesConversationAdapter.notifyDataSetChanged();
 
-                    // smooth scroll
-                    recyclerView.smoothScrollToPosition(messagesConversationAdapter.getMessages().size() - 1);
-                });
+                        // smooth scroll
+                        recyclerView.smoothScrollToPosition(messagesConversationAdapter.getMessages().size() - 1);
+                    });
+                }
 
 
             }

@@ -15,9 +15,11 @@ import com.gnusl.wow.Activities.MainActivity;
 import com.gnusl.wow.Activities.MessagesConversationActivity;
 import com.gnusl.wow.Adapters.MessageRecyclerViewAdapter;
 import com.gnusl.wow.Delegates.MessageSectionDelegate;
+import com.gnusl.wow.Models.Message;
 import com.gnusl.wow.Models.MessageSection;
 import com.gnusl.wow.R;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 /**
@@ -33,6 +35,10 @@ public class MessagesFragment extends Fragment {
     @SuppressLint("ValidFragment")
     public MessagesFragment(MessageSectionDelegate messageSectionDelegate) {
         this.messageSectionDelegate=messageSectionDelegate;
+    }
+
+    public MessagesFragment(){
+
     }
 
     public static MessagesFragment newInstance(MessageSectionDelegate messageSectionDelegate) {

@@ -53,7 +53,7 @@ public class FAQActivity extends AppCompatActivity implements ConnectionDelegate
 
         rvTabs.setLayoutManager(new GridLayoutManager(this, 3));
 
-        rvQuestions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvQuestions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         faqTabsRecyclerViewAdapter = new FAQTabsRecyclerViewAdapter(this, new ArrayList<>(), this::onSelectFAQ);
         faqDetailsRecyclerViewAdapter = new FAQDetailsRecyclerViewAdapter(this, new ArrayList<>());

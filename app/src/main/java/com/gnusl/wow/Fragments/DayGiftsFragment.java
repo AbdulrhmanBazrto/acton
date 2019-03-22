@@ -47,6 +47,9 @@ public class DayGiftsFragment extends Fragment {
         return new DayGiftsFragment(parentFragment);
     }
 
+    public DayGiftsFragment() {
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

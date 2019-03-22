@@ -5,7 +5,7 @@ public enum APILinks {
     //Base_API_Url("http://gnusl.com/demo/wow/api/"),
     Base_API_Url("http://fat7al.com/wow/api/"),
     Base_Media_Url("http://fat7al.com/wow/public/uploads/"),
-    Base_Socket_Streaming_Url("http://gnusl.com:3000/streams/"),
+    Base_Socket_Streaming_Url("http://gnusl.com:3001/streams/"),
 
     // User
     Base_User_Url(Base_API_Url.getLink() + "user"),

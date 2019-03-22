@@ -8,7 +8,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.gnusl.wow.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -45,6 +43,9 @@ public class WeekGiftsFragment extends Fragment {
     public static WeekGiftsFragment newInstance(Fragment parentFragment) {
 
         return new WeekGiftsFragment(parentFragment);
+    }
+
+    public WeekGiftsFragment() {
     }
 
     @Override

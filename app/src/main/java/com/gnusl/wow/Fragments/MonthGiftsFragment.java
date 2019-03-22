@@ -46,6 +46,9 @@ public class MonthGiftsFragment extends Fragment {
         return new MonthGiftsFragment(parentFragment);
     }
 
+    public MonthGiftsFragment() {
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

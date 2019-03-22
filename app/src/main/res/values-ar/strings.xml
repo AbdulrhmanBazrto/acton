@@ -37,7 +37,7 @@
     <string name="rooms">غرف</string>
 
     <string name="host">gnusl.com</string>
-    <string name="port">3000</string>
+    <string name="port">3001</string>
 
 
     <string name="full_name">الاسم الكامل</string>
@@ -104,7 +104,7 @@
     <string name="something_to_filter">يجب ان تكتب شيئ</string>
     <string name="Ok">موافق</string>
     <string name="cancel">الغاء</string>
-    <string name="room_gifts_sent">الهدايا المرسلة في الغرف</string>
+    <string name="room_gifts_sent">الهدايا في الغرف</string>
     <string name="gifts_sent">الهدايا المرسلة</string>
     <string name="gifts_received">الهدايا المستلمة</string>
     <string name="just_met_you">Just Met You</string>

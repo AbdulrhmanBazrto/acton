@@ -19,7 +19,6 @@ public class FAQ {
 
         faq.setId(jsonObject.optInt("id"));
         faq.setImage(jsonObject.optString("image"));
-//        faq.setName(jsonObject.optString("name"));
         faq.setImageUrl(jsonObject.optString("image_url"));
         faq.setDetails(FAQDetails.parseArray(jsonObject.optJSONArray("faq_details")));
 

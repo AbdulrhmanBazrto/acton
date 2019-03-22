@@ -37,7 +37,7 @@
     <string name="rooms">Rooms</string>
 
     <string name="host">gnusl.com</string>
-    <string name="port">3000</string>
+    <string name="port">3001</string>
 
 
     <string name="full_name">Full name</string>

@@ -184,7 +184,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         APIConnectionNetwork.GetGifts(this);
 
         // animate entrance
-        animateEntranceUser(SharedPreferencesUtils.getUser());
+//        animateEntranceUser(SharedPreferencesUtils.getUser());
+        shareEnterenceOnPubNub();
 
         // animate news
         Timer timer = new Timer();
@@ -602,7 +603,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
         }, 2000);
 
-        shareEnterenceOnPubNub();
+//        shareEnterenceOnPubNub();
     }
 
     private void animateNewsLayout() {
@@ -785,17 +786,19 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 //        if (user != null) {
 
         // name
-        ((TextView) inflatedView.findViewById(R.id.user_name)).setText(room.getName());
+        if (activity.getRoom() != null) {
+            ((TextView) inflatedView.findViewById(R.id.user_name)).setText(activity.getRoom().getName());
 
-        // Id
-        ((TextView) inflatedView.findViewById(R.id.user_Id)).setText(String.valueOf("ID:" + room.getId()));
+            // Id
+            ((TextView) inflatedView.findViewById(R.id.user_Id)).setText(String.valueOf("ID:" + activity.getRoom().getId()));
 
-        // user image
-        if (room.getBackgroundUrl() != null && !room.getBackgroundUrl().isEmpty() && getActivity() != null)
-            Glide.with(getActivity())
-                    .load(room.getThumbnailUrl())
-                    .into(((ImageView) inflatedView.findViewById(R.id.user_image)));
+            // user image
+            if (activity.getRoom().getBackgroundUrl() != null && !activity.getRoom().getBackgroundUrl().isEmpty() && getActivity() != null)
+                Glide.with(getActivity())
+                        .load(activity.getRoom().getThumbnailUrl())
+                        .into(((ImageView) inflatedView.findViewById(R.id.user_image)));
 
+        }
 
     }
 
@@ -939,18 +942,27 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
 
                         if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId())
                             return;
-                        User user = new User();
-                        user.setId(message.getMessage().getAsJsonObject().get("USER_ID").getAsInt());
-                        user.setName(message.getMessage().getAsJsonObject().get("user_name").getAsString());
-                        user.setImage_url(message.getMessage().getAsJsonObject().get("user_image").getAsString());
-                        user.setLevel(message.getMessage().getAsJsonObject().get("user_level").getAsInt());
+                        User userUser = new User();
+                        userUser.setId(message.getMessage().getAsJsonObject().get("USER_ID").getAsInt());
+                        userUser.setName(message.getMessage().getAsJsonObject().get("user_name").getAsString());
+                        userUser.setImage_url(message.getMessage().getAsJsonObject().get("user_image").getAsString());
+                        userUser.setLevel(message.getMessage().getAsJsonObject().get("user_level").getAsInt());
 
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                animateEntranceUser(user);
+                                animateEntranceUser(userUser);
                             }
                         });
+
+
+                        break;
+                    }
+                    case "OUT_ROOM": {
+
+                        if (message.getMessage().getAsJsonObject().get("USER_ID").getAsInt() == SharedPreferencesUtils.getUser().getId())
+                            return;
+                        APIConnectionNetwork.GetMicUsers(activity.getRoom().getId(), RoomChatFragment.this);
 
 
                         break;
@@ -996,6 +1008,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         chatMessage.setGiftType(gift_type);
                         chatMessage.setUserName(userName);
                         chatMessage.setUserImage(userImage);
+
+                        activity.runOnUiThread(() -> {
+                            chatRecyclerViewAdapter.getChatMessages().add(chatMessage);
+                            chatRecyclerViewAdapter.notifyDataSetChanged();
+                            // smooth scroll
+                            chatRecyclerView.smoothScrollToPosition(chatRecyclerViewAdapter.getChatMessages().size() - 1);
+                        });
 
                         activity.runOnUiThread(new Runnable() {
                             @Override
@@ -1684,7 +1703,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onSelectUserOnMic(MicUser micUser) {
         if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && micUser.getUser().getId() != SharedPreferencesUtils.getUser().getId()) {
-            UserOptionRoomDialog.show(getActivity(), micUser.getUser(), new UserRoomActionsDelegate() {
+            UserOptionRoomDialog.show(getActivity(), micUser.getUser(), true, new UserRoomActionsDelegate() {
                 @Override
                 public void onActionClick(UserRoomActions userRoomActions, User user) {
                     switch (userRoomActions) {
@@ -1991,7 +2010,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onUserClick(User user) {
         if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && user.getId() != SharedPreferencesUtils.getUser().getId()) {
-            UserOptionRoomDialog.show(getActivity(), user, new UserRoomActionsDelegate() {
+            UserOptionRoomDialog.show(getActivity(), user, true, new UserRoomActionsDelegate() {
                 @Override
                 public void onActionClick(UserRoomActions userRoomActions, User user) {
                     switch (userRoomActions) {
@@ -2026,8 +2045,19 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                             if (micUsersRecyclerViewAdapter.getFirstEmptyMicId() != 0) {
                                 sendTakeGiveMicOnPubNub(user, micUsersRecyclerViewAdapter.getFirstEmptyMicId());
                             } else {
-                                Toast.makeText(getActivity(),  getString(R.string.no_empty_mics), LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getString(R.string.no_empty_mics), LENGTH_SHORT).show();
                             }
+                            break;
+                    }
+                }
+            });
+        } else if (activity.getRoom().getUserId() != SharedPreferencesUtils.getUser().getId() && user.getId() != SharedPreferencesUtils.getUser().getId()) {
+            UserOptionRoomDialog.show(getActivity(), user, false, new UserRoomActionsDelegate() {
+                @Override
+                public void onActionClick(UserRoomActions userRoomActions, User user) {
+                    switch (userRoomActions) {
+                        case Gift:
+                            showGiftsDialog(user);
                             break;
                     }
                 }

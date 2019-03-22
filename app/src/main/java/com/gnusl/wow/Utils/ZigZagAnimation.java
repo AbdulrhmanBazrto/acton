@@ -31,54 +31,55 @@ public class ZigZagAnimation extends Animation {
         display.getMetrics(metrics);
         int height = metrics.heightPixels;
 
+        float a = ((height / 10f) * 1);
+        float b = ((height / 10f) * 2);
+        float c = ((height / 10f) * 3);
+        float d = ((height / 10f) * 4);
+        float e = ((height / 10f) * 5);
+        float f = ((height / 10f) * 6);
+        float g = ((height / 10f) * 7);
+        float h = ((height / 10f) * 8);
+
         switch (i) {
             case 1: {
                 p.moveTo(0f, 0f);
-                p.lineTo(12f, -5f);
-                p.lineTo(12f, -50f);
-                p.lineTo(45f, -350f);
-                p.lineTo(45f, -400f);
-                p.lineTo(10f, -450f);
-                float f = ((height / 5f) * 2);
-                p.lineTo(10f, -f + 100);
+                p.lineTo(12f, -a);
+                p.lineTo(12f, -b);
+                p.lineTo(45f, -c);
+                p.lineTo(45f, -d);
+                p.lineTo(10f, -e);
+                p.lineTo(10f, -f);
+                p.lineTo(10f, -g);
+                p.lineTo(10f, -h + 100);
                 break;
             }
             case 2: {
                 p.moveTo(0f, 0f);
-                p.lineTo(15f, -200f);
-                p.lineTo(15f, -250f);
-                p.lineTo(45f, -300f);
-                p.lineTo(10f, -750f);
-                float f = ((height / 5f) * 2);
-                p.lineTo(10f, -f);
+                p.lineTo(15f, -a);
+                p.lineTo(15f, -b);
+                p.lineTo(45f, -c);
+                p.lineTo(10f, -d);
+                p.lineTo(10f, -h);
                 break;
             }
             case 3: {
                 p.moveTo(0f, 0f);
-                p.lineTo(25f, -5f);
-                p.lineTo(17f, -200f);
-                p.lineTo(13f, -250f);
-                p.lineTo(5f, -650f);
-                p.lineTo(5f, -900f);
-                float f = ((height / 5f) * 2);
+                p.lineTo(25f, -a);
+                p.lineTo(17f, -b);
+                p.lineTo(13f, -c);
+                p.lineTo(5f, -d);
+                p.lineTo(5f, -e);
                 p.lineTo(10f, -f - 100);
                 break;
             }
             default: {
                 p.moveTo(0f, 0f);
-                p.lineTo(15f, -5f);
-                p.lineTo(10f, -25f);
-                p.lineTo(14f, -85f);
-                p.lineTo(18f, -150f);
-                p.lineTo(12f, -200f);
-                p.lineTo(10f, -250f);
-                p.lineTo(27f, -300f);
-                p.lineTo(29f, -370f);
-                p.lineTo(27f, -400f);
-                p.lineTo(15f, -650f);
-                float f = ((height / 5f) * 2);
+                p.lineTo(15f, -a);
+                p.lineTo(10f, -b);
+                p.lineTo(14f, -c);
+                p.lineTo(18f, -d);
+                p.lineTo(12f, -e);
                 p.lineTo(10f, -f - 200);
-//                p.lineTo(15f, -1500f);
                 break;
             }
         }

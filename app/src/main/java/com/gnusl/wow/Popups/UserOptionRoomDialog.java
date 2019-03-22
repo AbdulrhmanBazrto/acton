@@ -1,38 +1,24 @@
 package com.gnusl.wow.Popups;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.gnusl.wow.Adapters.GiftsRecyclerViewAdapter;
-import com.gnusl.wow.Adapters.UsersSpinnerAdapter;
-import com.gnusl.wow.Delegates.ChooseUserDelegate;
-import com.gnusl.wow.Delegates.GiftDelegate;
-import com.gnusl.wow.Delegates.SendGiftClickDelegate;
 import com.gnusl.wow.Delegates.UserRoomActionsDelegate;
 import com.gnusl.wow.Enums.UserRoomActions;
-import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
 import com.rey.material.app.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UserOptionRoomDialog {
 
     public static boolean isOpened = false;
 
-    public static void show(final Context context, User user, UserRoomActionsDelegate userRoomActionsDelegate) {
+    public static void show(final Context context, User user, boolean isAdmin, UserRoomActionsDelegate userRoomActionsDelegate) {
         if (isOpened) return;
         isOpened = true;
         View dialogView = LayoutInflater.from(context).inflate(R.layout.user_options_dialog_layout, null);
@@ -45,6 +31,16 @@ public class UserOptionRoomDialog {
         ImageView ivGiveMic = dialogView.findViewById(R.id.iv_give_mic);
         ImageView tvMuteUnMute = dialogView.findViewById(R.id.tv_mute_unMute);
         ImageView tvGift = dialogView.findViewById(R.id.tv_gift);
+
+        View clActions = dialogView.findViewById(R.id.cl_actions);
+
+        if (isAdmin) {
+            clActions.setVisibility(View.VISIBLE);
+            tvMuteUnMute.setVisibility(View.VISIBLE);
+        } else {
+            clActions.setVisibility(View.GONE);
+            tvMuteUnMute.setVisibility(View.GONE);
+        }
 
         tvUsername.setText(user.getName());
         Picasso.with(context).load(user.getImage_url()).into(ivUserImage);

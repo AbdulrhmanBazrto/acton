@@ -114,7 +114,7 @@ public class RoomChatActivity extends AppCompatActivity implements WebRtcClient.
             setRoom(getIntent().getParcelableExtra(CHANNEL_KEY));
 
         // WebRtc implementation
-        // AudioConferenceWebRtcImplementation();
+         AudioConferenceWebRtcImplementation();
 
         // inflate room chat fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
