@@ -3,17 +3,14 @@ package com.gnusl.wow.Application;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.facebook.FacebookSdk;
 import com.gnusl.wow.Managers.FontManager;
 import com.gnusl.wow.Utils.LocaleManager;
-import com.gnusl.wow.Utils.SharedPreferencesUtils;
 import com.google.firebase.FirebaseApp;
 import com.twitter.sdk.android.core.Twitter;
 
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -45,7 +42,7 @@ public class WowApplication extends Application {
         Twitter.initialize(this);
 
         // initialize Android networking
-        AndroidNetworking.initialize(getApplicationContext(),new OkHttpClient().newBuilder().connectTimeout(6,TimeUnit.SECONDS).build());
+        AndroidNetworking.initialize(getApplicationContext(), new OkHttpClient().newBuilder().connectTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).build());
 
 
 //        String ln  = SharedPreferencesUtils.getLanguage();

@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,6 +58,7 @@ import com.gnusl.wow.Delegates.UserAttendenceDelegate;
 import com.gnusl.wow.Delegates.UserRoomActionsDelegate;
 import com.gnusl.wow.Enums.UserAttendanceType;
 import com.gnusl.wow.Enums.UserRoomActions;
+import com.gnusl.wow.Models.Aristocracy;
 import com.gnusl.wow.Models.ChatMessage;
 import com.gnusl.wow.Models.Gift;
 import com.gnusl.wow.Models.MicUser;
@@ -576,6 +578,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         // fill info
         ((TextView) inflatedView.findViewById(R.id.entrance_user_name)).setText(user.getName());
         inflatedView.findViewById(R.id.entrance_layout_animation).setVisibility(View.VISIBLE);
+        ImageView viewById = inflatedView.findViewById(R.id.arist_image);
+        if (user.getUserAristocracies().size() > 0) {
+            viewById.setVisibility(View.VISIBLE);
+            Picasso.with(getActivity()).load(user.getUserAristocracies().get(0).getImageUrl()).into(viewById);
+        } else {
+            viewById.setVisibility(View.GONE);
+        }
 
         new Handler().postDelayed(() -> {
 
@@ -947,6 +956,13 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                         userUser.setName(message.getMessage().getAsJsonObject().get("user_name").getAsString());
                         userUser.setImage_url(message.getMessage().getAsJsonObject().get("user_image").getAsString());
                         userUser.setLevel(message.getMessage().getAsJsonObject().get("user_level").getAsInt());
+                        if (message.getMessage().getAsJsonObject().has("user_aristocraty_image")) {
+                            List<Aristocracy> aristocracies = new ArrayList<>();
+                            Aristocracy aristocracy = new Aristocracy();
+                            aristocracy.setImageUrl(message.getMessage().getAsJsonObject().get("user_aristocraty_image").getAsString());
+                            aristocracies.add(aristocracy);
+                            userUser.setUserAristocracies(aristocracies);
+                        }
 
                         activity.runOnUiThread(new Runnable() {
                             @Override
@@ -1703,7 +1719,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onSelectUserOnMic(MicUser micUser) {
         if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && micUser.getUser().getId() != SharedPreferencesUtils.getUser().getId()) {
-            UserOptionRoomDialog.show(getActivity(), micUser.getUser(), true, new UserRoomActionsDelegate() {
+            UserOptionRoomDialog.show(getActivity(), micUser.getUser(), true, false, new UserRoomActionsDelegate() {
                 @Override
                 public void onActionClick(UserRoomActions userRoomActions, User user) {
                     switch (userRoomActions) {
@@ -1787,6 +1803,8 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         messageJsonObject.addProperty("user_name", currentUser.getId());
         messageJsonObject.addProperty("user_image", currentUser.getImage_url());
         messageJsonObject.addProperty("user_level", currentUser.getLevel());
+        if (activity.getRoom().getUser().getUserAristocracies().size() > 0)
+            messageJsonObject.addProperty("user_aristocraty_image", activity.getRoom().getUser().getUserAristocracies().get(0).getImageUrl());
 
         pubnub.publish().channel(channelName).message(messageJsonObject).async(new PNCallback<PNPublishResult>() {
             @Override
@@ -1843,7 +1861,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         ConstraintLayout rootView = inflatedView.findViewById(R.id.root_view);
 
         ImageView heartAnimation = new ImageView(getActivity());
-        heartAnimation.setLayoutParams(new android.view.ViewGroup.LayoutParams(75, 75));
+        heartAnimation.setLayoutParams(new android.view.ViewGroup.LayoutParams(65, 65));
         heartAnimation.setId(View.generateViewId());
         Random rander = new Random();
         int Max = 4;
@@ -1873,32 +1891,38 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
         constraintSet.clone(rootView);
 
         constraintSet.connect(heartAnimation.getId(), ConstraintSet.BOTTOM, rootView.getId(), ConstraintSet.BOTTOM, 150);
-        constraintSet.connect(heartAnimation.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT, 60);
+        constraintSet.connect(heartAnimation.getId(), ConstraintSet.RIGHT, rootView.getId(), ConstraintSet.RIGHT);
+        constraintSet.connect(heartAnimation.getId(), ConstraintSet.LEFT, rootView.getId(), ConstraintSet.LEFT);
 
 
         constraintSet.applyTo(rootView);
 
-        heartAnimation.startAnimation(new ZigZagAnimation(activity));
+//        heartAnimation.startAnimation(new ZigZagAnimation(activity));
+
+
+        AnimationSet animationSet = new AnimationSet(false);
+        animationSet.addAnimation(new ZigZagAnimation(activity));
+
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setStartOffset(1000);
+        fadeOut.setDuration(1000);
+
+        animationSet.addAnimation(fadeOut);
+
+        animationSet.start();
+
+        heartAnimation.startAnimation(animationSet);
 
         heartAnimation.getAnimation().setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (animation.getDuration() == 2000) {
-                    Animation fadeOut = new AlphaAnimation(1, 0);
-                    fadeOut.setDuration(1000);
-                    heartAnimation.startAnimation(fadeOut);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            heartAnimation.setVisibility(View.GONE);
-                            rootView.removeView(heartAnimation);
-                        }
-                    }, 1000);
+                    heartAnimation.setVisibility(View.GONE);
+                    rootView.removeView(heartAnimation);
                 } else {
                     heartAnimation.setVisibility(View.GONE);
                     rootView.removeView(heartAnimation);
@@ -2010,7 +2034,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
     @Override
     public void onUserClick(User user) {
         if (activity.getRoom().getUserId() == SharedPreferencesUtils.getUser().getId() && user.getId() != SharedPreferencesUtils.getUser().getId()) {
-            UserOptionRoomDialog.show(getActivity(), user, true, new UserRoomActionsDelegate() {
+            UserOptionRoomDialog.show(getActivity(), user, true, true, new UserRoomActionsDelegate() {
                 @Override
                 public void onActionClick(UserRoomActions userRoomActions, User user) {
                     switch (userRoomActions) {
@@ -2052,7 +2076,7 @@ public class RoomChatFragment extends Fragment implements ConnectionDelegate, On
                 }
             });
         } else if (activity.getRoom().getUserId() != SharedPreferencesUtils.getUser().getId() && user.getId() != SharedPreferencesUtils.getUser().getId()) {
-            UserOptionRoomDialog.show(getActivity(), user, false, new UserRoomActionsDelegate() {
+            UserOptionRoomDialog.show(getActivity(), user, false, true, new UserRoomActionsDelegate() {
                 @Override
                 public void onActionClick(UserRoomActions userRoomActions, User user) {
                     switch (userRoomActions) {

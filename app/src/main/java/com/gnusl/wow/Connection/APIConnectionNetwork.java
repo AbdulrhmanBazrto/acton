@@ -521,6 +521,7 @@ public class APIConnectionNetwork {
                 .setUploadProgressListener(new UploadProgressListener() {
                     @Override
                     public void onProgress(long bytesUploaded, long totalBytes) {
+                        Log.d("UPLOAD", "upload " + bytesUploaded + " from " + totalBytes);
 
                     }
                 })
@@ -986,7 +987,7 @@ public class APIConnectionNetwork {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Log.d("Change Name", response.toString());
+                        Log.d("Change thumbnail_path", response.toString());
 
                         // handle parse user data
                         if (connectionDelegate != null) {

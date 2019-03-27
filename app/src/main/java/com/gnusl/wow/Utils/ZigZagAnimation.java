@@ -30,6 +30,9 @@ public class ZigZagAnimation extends Animation {
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         int height = metrics.heightPixels;
+//        int width = metrics.widthPixels;
+        int width = 400;
+//        width -= 200;
 
         float a = ((height / 10f) * 1);
         float b = ((height / 10f) * 2);
@@ -42,44 +45,44 @@ public class ZigZagAnimation extends Animation {
 
         switch (i) {
             case 1: {
-                p.moveTo(0f, 0f);
-                p.lineTo(12f, -a);
-                p.lineTo(12f, -b);
-                p.lineTo(45f, -c);
-                p.lineTo(45f, -d);
-                p.lineTo(10f, -e);
-                p.lineTo(10f, -f);
-                p.lineTo(10f, -g);
-                p.lineTo(10f, -h + 100);
+                p.moveTo(width - 0f, 0f);
+                p.lineTo(width - 12f, -a);
+                p.lineTo(width - 12f, -b);
+                p.lineTo(width - 45f, -c);
+                p.lineTo(width - 45f, -d);
+                p.lineTo(width - 10f, -e);
+                p.lineTo(width - 10f, -f);
+                p.lineTo(width - 10f, -g);
+                p.lineTo(width - 10f, -h + 100);
                 break;
             }
             case 2: {
-                p.moveTo(0f, 0f);
-                p.lineTo(15f, -a);
-                p.lineTo(15f, -b);
-                p.lineTo(45f, -c);
-                p.lineTo(10f, -d);
-                p.lineTo(10f, -h);
+                p.moveTo(width - 0f, 0f);
+                p.lineTo(width - 15f, -a);
+                p.lineTo(width - 15f, -b);
+                p.lineTo(width - 45f, -c);
+                p.lineTo(width - 10f, -d);
+                p.lineTo(width - 10f, -h);
                 break;
             }
             case 3: {
-                p.moveTo(0f, 0f);
-                p.lineTo(25f, -a);
-                p.lineTo(17f, -b);
-                p.lineTo(13f, -c);
-                p.lineTo(5f, -d);
-                p.lineTo(5f, -e);
-                p.lineTo(10f, -f - 100);
+                p.moveTo(width - 0f, 0f);
+                p.lineTo(width - 25f, -a);
+                p.lineTo(width - 17f, -b);
+                p.lineTo(width - 13f, -c);
+                p.lineTo(width - 5f, -d);
+                p.lineTo(width - 5f, -e);
+                p.lineTo(width - 10f, -f - 100);
                 break;
             }
             default: {
-                p.moveTo(0f, 0f);
-                p.lineTo(15f, -a);
-                p.lineTo(10f, -b);
-                p.lineTo(14f, -c);
-                p.lineTo(18f, -d);
-                p.lineTo(12f, -e);
-                p.lineTo(10f, -f - 200);
+                p.moveTo(width - 0f, 0f);
+                p.lineTo(width - 15f, -a);
+                p.lineTo(width - 10f, -b);
+                p.lineTo(width - 14f, -c);
+                p.lineTo(width - 18f, -d);
+                p.lineTo(width - 12f, -e);
+                p.lineTo(width - 10f, -f - 200);
                 break;
             }
         }

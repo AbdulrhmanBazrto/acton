@@ -1,19 +1,13 @@
 package com.gnusl.wow.Popups;
 
-import android.animation.Animator;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 
 import com.gnusl.wow.R;
 
@@ -36,10 +30,16 @@ public class LoaderPopUp extends DialogFragment {
 
     public static void show(FragmentActivity fragmentActivity) {
 
+
         if (loaderPopUp == null)
             loaderPopUp = new LoaderPopUp();
         if (fragmentActivity == null)
             return;
+
+        if (loaderPopUp.isAdded()) {
+            return; //or return false/true, based on where you are calling from
+        }
+
         loaderPopUp.show(fragmentActivity.getSupportFragmentManager(), "");
     }
 

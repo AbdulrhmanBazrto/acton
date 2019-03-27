@@ -19,8 +19,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="false"
-        app:itemTextColor="@color/menu_navigation_text_color"
         app:headerLayout="@layout/nav_header_main"
+        app:itemIconTint="#9C579E"
+        app:itemTextColor="@color/menu_navigation_text_color"
         app:menu="@menu/wow_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -1,12 +1,15 @@
 package com.gnusl.wow.Popups;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gnusl.wow.Adapters.UsersAristRecyclerViewAdapter;
 import com.gnusl.wow.Delegates.UserRoomActionsDelegate;
 import com.gnusl.wow.Enums.UserRoomActions;
 import com.gnusl.wow.Models.User;
@@ -18,7 +21,7 @@ public class UserOptionRoomDialog {
 
     public static boolean isOpened = false;
 
-    public static void show(final Context context, User user, boolean isAdmin, UserRoomActionsDelegate userRoomActionsDelegate) {
+    public static void show(final Context context, User user, boolean isAdmin, boolean isAttendence, UserRoomActionsDelegate userRoomActionsDelegate) {
         if (isOpened) return;
         isOpened = true;
         View dialogView = LayoutInflater.from(context).inflate(R.layout.user_options_dialog_layout, null);
@@ -34,12 +37,32 @@ public class UserOptionRoomDialog {
 
         View clActions = dialogView.findViewById(R.id.cl_actions);
 
-        if (isAdmin) {
-            clActions.setVisibility(View.VISIBLE);
-            tvMuteUnMute.setVisibility(View.VISIBLE);
-        } else {
+        RecyclerView rvArist = dialogView.findViewById(R.id.arist_rv);
+        if (isAttendence) {
+            rvArist.setVisibility(View.VISIBLE);
             clActions.setVisibility(View.GONE);
             tvMuteUnMute.setVisibility(View.GONE);
+        } else {
+            rvArist.setVisibility(View.GONE);
+            if (isAdmin) {
+                clActions.setVisibility(View.VISIBLE);
+                tvMuteUnMute.setVisibility(View.VISIBLE);
+            } else {
+                clActions.setVisibility(View.GONE);
+                tvMuteUnMute.setVisibility(View.GONE);
+                rvArist.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+        if (user.getUserAristocracies().size() > 0) {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+
+            rvArist.setLayoutManager(linearLayoutManager);
+
+            UsersAristRecyclerViewAdapter usersAristRecyclerViewAdapter = new UsersAristRecyclerViewAdapter(context, user.getUserAristocracies());
+
+            rvArist.setAdapter(usersAristRecyclerViewAdapter);
         }
 
         tvUsername.setText(user.getName());

@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -251,7 +252,9 @@ public class HomeScreenMediaChooser extends AppCompatActivity implements ImageFr
                 if (view.getTag() != null) {
                     if (view.getTag().toString().equals(getResources().getString(R.string.video))) {
                         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                        fileUri = getOutputMediaFileUri(MediaChooserConstants.MEDIA_TYPE_VIDEO); // create a file to save the image
+                        fileUri = getOutputMediaFileUri(mContext, MediaChooserConstants.MEDIA_TYPE_VIDEO); // c// reate a file to save the image
+                        if (fileUri == null)
+                            return;
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
 
                         // start the image capture Intent
@@ -259,7 +262,10 @@ public class HomeScreenMediaChooser extends AppCompatActivity implements ImageFr
 
                     } else {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        fileUri = getOutputMediaFileUri(MediaChooserConstants.MEDIA_TYPE_IMAGE); // create a file to save the image
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        fileUri = getOutputMediaFileUri(mContext, MediaChooserConstants.MEDIA_TYPE_IMAGE); // create a file to save the image
+                        if (fileUri == null)
+                            return;
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
 
                         // start the image capture Intent
@@ -309,8 +315,14 @@ public class HomeScreenMediaChooser extends AppCompatActivity implements ImageFr
     };
 
 
-    private Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
+    private Uri getOutputMediaFileUri(Context context, int type) {
+        File outputMediaFile = getOutputMediaFile(type);
+        if (outputMediaFile != null)
+            return FileProvider.getUriForFile(context,
+                    "com.gnusl.acton" + ".fileprovider",
+                    outputMediaFile);
+        else
+            return null;
     }
 
     private File getOutputMediaFile(int type) {
@@ -324,13 +336,11 @@ public class HomeScreenMediaChooser extends AppCompatActivity implements ImageFr
 
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
+        File mediaFile = null;
         if (type == MediaChooserConstants.MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
         } else if (type == MediaChooserConstants.MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_" + timeStamp + ".mp4");
-        } else {
-            return null;
         }
 
         return mediaFile;

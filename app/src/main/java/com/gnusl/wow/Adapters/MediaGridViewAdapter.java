@@ -34,7 +34,7 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
     }
 
     public int getCount() {
-        return mediaFilePathList.size();
+        return mediaFilePathList.size() == 0 ? 0 : 1;
     }
 
     @Override
@@ -132,13 +132,13 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 
     public ArrayList<Bitmap> getImages() {
 
-        ArrayList<Bitmap> images=new ArrayList<>();
+        ArrayList<Bitmap> images = new ArrayList<>();
 
         for (String s : mediaFilePathList) {
             File mediaFile = new File(s);
             if (mediaFile.exists())
                 if (!mediaFile.getPath().contains("mp4") && !mediaFile.getPath().contains("wmv") ||
-                        !mediaFile.getPath().contains("avi") && !mediaFile.getPath().contains("3gp")){
+                        !mediaFile.getPath().contains("avi") && !mediaFile.getPath().contains("3gp")) {
 
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inPurgeable = true;
@@ -151,14 +151,14 @@ public class MediaGridViewAdapter extends ArrayAdapter<String> {
 
     public ArrayList<File> getImagesAsFiles() {
 
-        ArrayList<File> files=new ArrayList<>();
+        ArrayList<File> files = new ArrayList<>();
 
         for (String s : mediaFilePathList) {
             File mediaFile = new File(s);
             if (mediaFile.exists())
                 if (!mediaFile.getPath().contains("mp4") && !mediaFile.getPath().contains("wmv") ||
-                        !mediaFile.getPath().contains("avi") && !mediaFile.getPath().contains("3gp")){
-                files.add(mediaFile);
+                        !mediaFile.getPath().contains("avi") && !mediaFile.getPath().contains("3gp")) {
+                    files.add(mediaFile);
                 }
         }
         return files;

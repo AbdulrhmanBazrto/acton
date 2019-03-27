@@ -2,40 +2,30 @@ package com.gnusl.wow.Activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.GridView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.bumptech.glide.Glide;
 import com.gnusl.wow.Adapters.MediaGridViewAdapter;
+import com.gnusl.wow.Application.WowApplication;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
 import com.gnusl.wow.Models.FeaturePost;
@@ -44,7 +34,6 @@ import com.gnusl.wow.R;
 import com.gnusl.wow.Utils.LocaleManager;
 import com.gnusl.wow.Views.AutoFitFontedTextView;
 import com.gnusl.wow.Views.FontedEditText;
-import com.gnusl.wow.Views.FontedTextView;
 import com.learnncode.mediachooser.MediaChooser;
 import com.learnncode.mediachooser.activity.HomeScreenMediaChooser;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -55,29 +44,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static com.gnusl.wow.Utils.PermissionsUtils.CALENDAR_PERMISSION;
-import static com.gnusl.wow.Utils.PermissionsUtils.CAMERA_PERMISSIONS_REQUEST;
 import static com.gnusl.wow.Utils.PermissionsUtils.GALLERY_PERMISSIONS_REQUEST;
-import static com.gnusl.wow.Utils.PermissionsUtils.checkCameraPermissions;
 import static com.gnusl.wow.Utils.PermissionsUtils.checkReadGalleryPermissions;
+import static com.learnncode.mediachooser.Utilities.MediaChooserConstants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE;
 
 public class CreatePostActivity extends AppCompatActivity implements ConnectionDelegate {
 
-    public static String UPDATE_POST_KEY="update_post_key";
+    public static String UPDATE_POST_KEY = "update_post_key";
     private CircularImageView profile_image;
     private AutoFitFontedTextView name;
     private FontedEditText text;
     private FeaturePost featurePost;
-    private boolean isEditMode=false;
+    private boolean isEditMode = false;
     BroadcastReceiver videoBroadcastReceiver;
     BroadcastReceiver imageBroadcastReceiver;
     GridView gridView;
     MediaGridViewAdapter adapter;
     private boolean mustBeRefreshPosts = false;
+
+    private Uri photoURI;
+    private File photoFile;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -109,20 +103,20 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
         CheckEditMode();
     }
 
-    private void CheckEditMode(){
+    private void CheckEditMode() {
 
         // handle edit mode
-        if(getIntent().hasExtra(UPDATE_POST_KEY)){
-            isEditMode=true;
+        if (getIntent().hasExtra(UPDATE_POST_KEY)) {
+            isEditMode = true;
 
-            featurePost=getIntent().getParcelableExtra(UPDATE_POST_KEY);
+            featurePost = getIntent().getParcelableExtra(UPDATE_POST_KEY);
 
             // text
             text.setText(featurePost.getDescription());
             text.setSelection(featurePost.getDescription().length());
 
             // user image
-            if (featurePost.getUser() != null && featurePost.getUser().getImage_url()!=null && !featurePost.getUser().getImage_url().isEmpty())
+            if (featurePost.getUser() != null && featurePost.getUser().getImage_url() != null && !featurePost.getUser().getImage_url().isEmpty())
                 Glide.with(this)
                         .load(featurePost.getUser().getImage_url())
                         .into(profile_image);
@@ -138,7 +132,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         if (checkReadGalleryPermissions(this)) {
 
-            HomeScreenMediaChooser.startMediaChooser(this, true);
+            HomeScreenMediaChooser.startMediaChooser(this, false);
 
         } else {
 
@@ -159,8 +153,91 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         profile_image.setOnClickListener(v -> {
 
-            openGallery();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        CharSequence[] languages = new CharSequence[2];
+                        languages[0] = "from gallery";
+                        languages[1] = "from camera";
+
+                        builder.setItems(languages, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        openGallery();
+                                        break;
+                                    case 1:
+                                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                                        //creating file for camera photo
+                                        photoFile = null;
+                                        try {
+                                            photoFile = createCameraTempPhotoFile();
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
+                                        }
+
+                                        if (photoFile != null && takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                                            photoURI = FileProvider.getUriForFile(CreatePostActivity.this,
+                                                    //"ai.medicus.android.fileprovider",
+                                                    "com.gnusl.acton" + ".fileprovider",
+                                                    photoFile);
+
+                                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                            startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        });
+                        AlertDialog changeLangsDialog = builder.create();
+                        changeLangsDialog.setCancelable(true);
+                        changeLangsDialog.setCanceledOnTouchOutside(true);
+                        changeLangsDialog.show();
+                    }
+                }
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                        GALLERY_PERMISSIONS_REQUEST);
+            }
         });
+
+    }
+
+    public static File createCameraTempPhotoFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        File storageDir = WowApplication.getApplicationInstance().getFilesDir();
+        return File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+//            File file = new File(fileUri.getPath());
+//            handleMediaCapture(file);
+            handleMediaCapture(photoFile);
+
+        }
+    }
+
+    private void handleMediaCapture(File mediaFile) {
+
+        adapter.addAll(mediaFile.getPath());
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -171,26 +248,26 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         else {
 
-            ArrayList<File> files=adapter.getImagesAsFiles();
+            ArrayList<File> files = adapter.getImagesAsFiles();
 
-            if(!files.isEmpty()){
+            if (!files.isEmpty()) {
 
                 // make progress dialog
                 LoaderPopUp.show(this);
 
                 // upload image
-                APIConnectionNetwork.UploadImage(adapter.getImagesAsFiles().get(0),this);
+                APIConnectionNetwork.UploadImage(adapter.getImagesAsFiles().get(0), this);
 
-            }else
+            } else
                 sendUploadPostRequest(null);
 
         }
 
     }
 
-    private void sendUploadPostRequest(String imageName){
+    private void sendUploadPostRequest(String imageName) {
 
-        if(!isEditMode) {
+        if (!isEditMode) {
 
             // make progress dialog
             LoaderPopUp.show(this);
@@ -198,13 +275,13 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
             // send request
             APIConnectionNetwork.CreateNewPost(text.getText().toString(), imageName, this);
 
-        }else {
+        } else {
 
             // make progress dialog
             LoaderPopUp.show(this);
 
             // send request
-            APIConnectionNetwork.UpdatePost(featurePost.getId(),text.getText().toString(), this);
+            APIConnectionNetwork.UpdatePost(featurePost.getId(), text.getText().toString(), this);
 
         }
     }
@@ -242,7 +319,9 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
 
         IntentFilter imageIntentFilter = new IntentFilter(MediaChooser.IMAGE_SELECTED_ACTION_FROM_MEDIA_CHOOSER);
         registerReceiver(imageBroadcastReceiver, imageIntentFilter);
-        MediaChooser.showCameraVideoView(false);
+        MediaChooser.showCameraVideoView(true);
+        MediaChooser.setSelectionLimit(1);
+        MediaChooser.showOnlyImageTab();
 
     }
 
@@ -310,13 +389,13 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
             mustBeRefreshPosts = true;
             finish();
 
-        }else if(jsonObject.has("success")) { // update post
+        } else if (jsonObject.has("success")) { // update post
 
             Toast.makeText(this, getString(R.string.success_updating), Toast.LENGTH_SHORT).show();
             mustBeRefreshPosts = true;
             finish();
 
-        } else if(jsonObject.has("image")){
+        } else if (jsonObject.has("image")) {
 
             // upload post
             try {
@@ -345,7 +424,7 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED && permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
                         //Coming from profile
-                        HomeScreenMediaChooser.startMediaChooser(this, true);
+                        HomeScreenMediaChooser.startMediaChooser(this, false);
 
                     } else {
                         Toast.makeText(this, R.string.grant_equired_permissions_please, Toast.LENGTH_SHORT).show();
@@ -370,13 +449,13 @@ public class CreatePostActivity extends AppCompatActivity implements ConnectionD
             EventBus.getDefault().post("Refresh_Posts");
     }
 
-    public static void launch(Activity activity){
+    public static void launch(Activity activity) {
 
         Intent intent = new Intent(activity, CreatePostActivity.class);
         activity.startActivity(intent);
     }
 
-    public static void launchToEdit(Activity activity,FeaturePost post){
+    public static void launchToEdit(Activity activity, FeaturePost post) {
 
         Intent intent = new Intent(activity, CreatePostActivity.class);
         intent.putExtra(CreatePostActivity.UPDATE_POST_KEY, post);

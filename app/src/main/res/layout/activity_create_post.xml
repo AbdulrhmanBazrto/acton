@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -25,23 +24,6 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/profile_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center"
-            app:civ_border_color="#EEEEEE"
-            app:civ_border_width="2dp"
-            android:src="@drawable/img1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-
         <com.gnusl.wow.Views.AutoFitFontedTextView
             android:id="@+id/name"
             android:layout_width="0dp"
@@ -51,10 +33,10 @@
             android:lines="1"
             android:textColor="@color/teacher_text_color"
             android:textSize="21sp"
-            app:layout_constraintEnd_toStartOf="@id/profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/profile_image"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.25"
             app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
 
@@ -72,6 +54,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <com.gnusl.wow.Views.FontedEditText
@@ -88,6 +71,20 @@
                     android:textColorHint="@color/teacher_text_color"
                     android:textSize="21sp"
                     app:typefaceAsset="fonts/SFUIText-Regular.ttf" />
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center"
+                    android:src="@drawable/ic_action_camera"
+                    app:civ_border_color="#EEEEEE"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name" />
 
                 <com.gnusl.wow.Views.FontedTextView
                     android:id="@+id/tags"

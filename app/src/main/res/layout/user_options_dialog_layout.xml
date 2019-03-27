@@ -37,6 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_user_image" />
 
     <LinearLayout
+        android:id="@+id/gift_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -71,6 +72,16 @@
             app:srcCompat="@drawable/icon_gift_box_big" />
 
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/arist_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gift_linear" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

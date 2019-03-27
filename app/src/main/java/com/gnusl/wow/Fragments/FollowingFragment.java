@@ -1,6 +1,5 @@
 package com.gnusl.wow.Fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.gnusl.wow.Activities.CreatePostActivity;
+import com.gnusl.wow.Activities.SearchActivity;
 import com.gnusl.wow.Adapters.PostsRecyclerViewAdapter;
 import com.gnusl.wow.Connection.APIConnectionNetwork;
 import com.gnusl.wow.Delegates.ConnectionDelegate;
@@ -23,7 +23,6 @@ import com.gnusl.wow.Delegates.PostActionsDelegate;
 import com.gnusl.wow.Models.FeaturePost;
 import com.gnusl.wow.Popups.LoaderPopUp;
 import com.gnusl.wow.R;
-import com.gnusl.wow.Utils.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,6 +44,8 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
     private View inflatedView;
     private PostsRecyclerViewAdapter postsRecyclerViewAdapter;
 
+    View noDataView, followButton;
+
     public FollowingFragment() {
     }
 
@@ -60,6 +61,8 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
 
 
         RecyclerView recyclerView = inflatedView.findViewById(R.id.following_recycler_view);
+        noDataView = inflatedView.findViewById(R.id.no_data_view);
+        followButton = inflatedView.findViewById(R.id.follow_button);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -70,6 +73,16 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
 
         // send request
         APIConnectionNetwork.GetAllFollowingPosts(PAGE_SIZE_ITEMS, postsRecyclerViewAdapter.getFeaturePosts().size(), this);
+
+        followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra(SearchActivity.SEARCH_FOR_USERS, "");
+                getActivity().startActivity(intent);
+            }
+        });
+
 
         return inflatedView;
     }
@@ -153,6 +166,14 @@ public class FollowingFragment extends Fragment implements ConnectionDelegate, P
         if (postsRecyclerViewAdapter != null) {
             // parsing
             ArrayList<FeaturePost> featurePosts = FeaturePost.parseJSONArray(jsonArray);
+
+            if (featurePosts.size() == 0 && postsRecyclerViewAdapter.getFeaturePosts().size() == 0) {
+                postsRecyclerViewAdapter.setFeaturePosts(new ArrayList<>());
+                postsRecyclerViewAdapter.notifyDataSetChanged();
+                noDataView.setVisibility(View.VISIBLE);
+            } else {
+                noDataView.setVisibility(View.GONE);
+            }
 
             // disable loading
             postsRecyclerViewAdapter.setLoading(false);

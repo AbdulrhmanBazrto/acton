@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Parcelable {
 
@@ -22,8 +23,10 @@ public class User implements Parcelable {
     private String countryCode;
     private boolean isFollowed;
     private int level;
+    private List<Aristocracy> userAristocracies = new ArrayList<>();
 
-    public User(){}
+    public User() {
+    }
 
 
     protected User(Parcel in) {
@@ -36,6 +39,7 @@ public class User implements Parcelable {
         countryCode = in.readString();
         isFollowed = in.readByte() != 0;
         imageResource = in.readInt();
+        userAristocracies = in.createTypedArrayList(Aristocracy.CREATOR);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -64,23 +68,27 @@ public class User implements Parcelable {
         user.setBirthday(jsonObject.optString("birthday"));
         user.setGender(jsonObject.optString("gender"));
 
-        if(jsonObject.has("is_followed"))
+        if (jsonObject.has("is_followed"))
             user.setFollowed(jsonObject.optBoolean("is_followed"));
         else
             user.setFollowed(false);
 
-        if(jsonObject.has("level"))
+        if (jsonObject.has("level"))
             user.setLevel(jsonObject.optInt("level"));
         else
             user.setLevel(0);
 
         // country code
-        if(jsonObject.has("country_code")){
+        if (jsonObject.has("country_code")) {
             try {
                 user.setCountryCode(jsonObject.getJSONObject("country_code").optString("name"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+
+        if (jsonObject.has("is_aristocraty")) {
+            user.setUserAristocracies(Aristocracy.parseJSONArray(jsonObject.optJSONArray("is_aristocraty")));
         }
 
         return user;
@@ -91,8 +99,8 @@ public class User implements Parcelable {
             return null;
         }
 
-        ArrayList<User> users=new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++) {
+        ArrayList<User> users = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 users.add(User.newInstance(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
@@ -210,5 +218,14 @@ public class User implements Parcelable {
         parcel.writeString(countryCode);
         parcel.writeByte((byte) (isFollowed ? 1 : 0));
         parcel.writeInt(imageResource);
+        parcel.writeTypedList(userAristocracies);
+    }
+
+    public List<Aristocracy> getUserAristocracies() {
+        return userAristocracies;
+    }
+
+    public void setUserAristocracies(List<Aristocracy> userAristocracies) {
+        this.userAristocracies = userAristocracies;
     }
 }

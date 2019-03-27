@@ -45,7 +45,7 @@ public class DialyLoginPopUp extends DialogFragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = getActivity().getLayoutInflater().inflate(R.layout.daily_login_popup_layout, null);
         dialog.setContentView(view);
-        setCancelable(true);
+        setCancelable(false);
         dialog.show();
 
         iv_first_check = view.findViewById(R.id.iv_first_check);
@@ -173,6 +173,7 @@ public class DialyLoginPopUp extends DialogFragment {
 
             @Override
             public void onConnectionSuccess(JSONObject jsonObject) {
+                setCancelable(true);
                 daysCount = jsonObject.optInt("daily");
                 dailyDialog.getTv_login_count().setText(String.format(Locale.getDefault(), getString(R.string.daily_record), daysCount));
                 switch (jsonObject.optInt("daily")) {

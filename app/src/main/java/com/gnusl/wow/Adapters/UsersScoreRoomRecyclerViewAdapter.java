@@ -1,7 +1,6 @@
 package com.gnusl.wow.Adapters;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.gnusl.wow.Delegates.UserAttendenceDelegate;
 import com.gnusl.wow.Models.User;
 import com.gnusl.wow.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,12 +53,14 @@ public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView userImage;
+        private ImageView user_arist;
         private TextView userName;
 
         public UserViewHolder(View itemView) {
             super(itemView);
 
             userImage = itemView.findViewById(R.id.user_image);
+            user_arist = itemView.findViewById(R.id.user_arist);
             userName = itemView.findViewById(R.id.user_name);
 
         }
@@ -82,6 +84,14 @@ public class UsersScoreRoomRecyclerViewAdapter extends RecyclerView.Adapter<Recy
                         userAttendenceDelegate.onUserClick(user);
                 }
             });
+
+            if (user.getUserAristocracies().size() > 0) {
+                user_arist.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(user.getUserAristocracies().get(0).getImageUrl()).into(user_arist);
+            } else {
+                user_arist.setVisibility(View.GONE);
+            }
+
         }
 
     }
